@@ -1,8 +1,12 @@
-package main.java.pl.oblivion.core;
+package pl.oblivion.core;
 
 public class Timer {
 
     private double lastLoopTime;
+
+    public Timer() {
+        this.init();
+    }
 
     public void init() {
         lastLoopTime = getTime();
@@ -22,5 +26,4 @@ public class Timer {
     public double getLastLoopTime() {
         return lastLoopTime;
     }
-
 }
