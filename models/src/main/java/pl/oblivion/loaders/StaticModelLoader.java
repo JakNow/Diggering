@@ -10,7 +10,7 @@ public class StaticModelLoader {
         mesh.bind();
         mesh.createIndexBuffer(staticMeshData.getIndices());
         mesh.createAttribute(0, staticMeshData.getVertices(), 3);
-
+        mesh.createAttribute(1, staticMeshData.getTextures(),2);
         mesh.unbind();
 
         return mesh;

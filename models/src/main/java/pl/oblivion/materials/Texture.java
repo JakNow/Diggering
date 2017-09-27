@@ -3,14 +3,13 @@ package pl.oblivion.materials;
 
 import org.lwjgl.system.MemoryStack;
 import pl.oblivion.base.Config;
-import pl.oblivion.utils.MyFile;
-
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.stb.STBImage.*;
 
 public class Texture {
@@ -79,35 +78,9 @@ public class Texture {
 
 			/* Load image */
             stbi_set_flip_vertically_on_load(true);
-            image = stbi_load("assets/textures/" + path, w, h, comp, 4);
+            image = stbi_load(Config.TEXTURES + path, w, h, comp, 4);
             if (image == null) {
-                System.err.println(path);
-                throw new RuntimeException("Failed to load a texture file!" + System.lineSeparator() + stbi_failure_reason());
-            }
-
-			/* Get width and height of image */
-            width = w.get();
-            height = h.get();
-        }
-
-        return createTexture(width, height, image);
-    }
-
-    public static Texture loadTexture(MyFile file) {
-        ByteBuffer image;
-        int width, height;
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            /* Prepare image buffers */
-            IntBuffer w = stack.mallocInt(1);
-            IntBuffer h = stack.mallocInt(1);
-            IntBuffer comp = stack.mallocInt(1);
-
-			/* Load image */
-            stbi_set_flip_vertically_on_load(true);
-            InputStream in = file.getInputStream();
-            image = stbi_load(Config.TEXTURES + in, w, h, comp, 4);
-            if (image == null) {
-                System.err.println(in);
+                System.err.println(Config.TEXTURES + path);
                 throw new RuntimeException("Failed to load a texture file!" + System.lineSeparator() + stbi_failure_reason());
             }
 

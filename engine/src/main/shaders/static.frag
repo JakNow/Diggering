@@ -1,7 +1,11 @@
-#version 330
+#version 400
 
-out vec4 out_Color;
+in vec2 pass_textures;
 
-void main() {
-	out_Color = vec4(0.0,0.5,0.5,1.0);
+out vec4 outColour;
+
+uniform sampler2D diffuseTexture;
+
+void main(void) {
+	outColour = texture(diffuseTexture,pass_textures);
 }

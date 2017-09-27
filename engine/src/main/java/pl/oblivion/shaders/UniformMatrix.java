@@ -3,6 +3,7 @@ package pl.oblivion.shaders;
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.system.MemoryStack;
 
 import java.nio.FloatBuffer;
 
@@ -15,8 +16,10 @@ public class UniformMatrix extends Uniform {
     }
 
     public void loadMatrix(Matrix4f matrix) {
-        matrix.get(matrixBuffer);
-        matrixBuffer.flip();
-        GL20.glUniformMatrix4fv(super.getLocation(), false, matrixBuffer);
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            FloatBuffer fb = stack.mallocFloat(16);
+            matrix.get(fb);
+            GL20.glUniformMatrix4fv(super.getLocation(), false, fb);
+        }
     }
 }

@@ -1,13 +1,23 @@
 package pl.oblivion.base;
 
+import pl.oblivion.objParser.ParsedObjectData;
+
 public abstract class MeshData {
 
     private float[] vertices;
     private int[] indices;
+    private float[] textures;
 
-    public MeshData(float[] vertices, int[] indices) {
+    public MeshData(float[] vertices, int[] indices, float[] textures) {
         this.vertices = vertices;
         this.indices = indices;
+        this.textures = textures;
+    }
+
+    public MeshData(ParsedObjectData parsedObjectData){
+        this.vertices = parsedObjectData.getVertices();
+        this.indices = parsedObjectData.getIndices();
+        this.textures = parsedObjectData.getTextures();
     }
 
     public float[] getVertices() {
@@ -24,5 +34,9 @@ public abstract class MeshData {
 
     public void setIndices(int[] indices) {
         this.indices = indices;
+    }
+
+    public float[] getTextures() {
+        return textures;
     }
 }

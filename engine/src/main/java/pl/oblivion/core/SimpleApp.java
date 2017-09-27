@@ -5,6 +5,7 @@ import pl.oblivion.game.RendererHandler;
 
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
 
 public abstract class SimpleApp {
 
@@ -26,6 +27,7 @@ public abstract class SimpleApp {
     public abstract void logicUpdate(float delta);
 
     private void renderUpdate() {
+        glClearColor(Config.RED,Config.GREEN,Config.BLUE,Config.ALPHA);
         rendererHandler.render();
 
     }
