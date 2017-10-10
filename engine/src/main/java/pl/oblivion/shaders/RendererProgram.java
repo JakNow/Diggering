@@ -1,15 +1,34 @@
 package pl.oblivion.shaders;
 
-import pl.oblivion.game.RendererHandler;
+import org.joml.Matrix4f;
+import pl.oblivion.core.Window;
+import pl.oblivion.game.Camera;
 
 public abstract class RendererProgram {
 
+    public ShaderProgram shaderProgram;
+    public RendererHandler rendererHandler;
+    public Matrix4f projectionMatrix;
 
-    public RendererProgram() {
-        RendererHandler.rendererProgramList.add(this);
+    public RendererProgram(ShaderProgram shaderProgram, RendererHandler rendererHandler, Window window) {
+        this.shaderProgram = shaderProgram;
+        this.rendererHandler = rendererHandler;
+        this.projectionMatrix = window.getProjectionMatrix();
     }
 
-    public abstract void render();
+    public abstract void render(Window window, Camera camera);
 
-    public abstract void cleanUp();
+    public abstract void update();
+
+    public void cleanUp() {
+        shaderProgram.cleanUp();
+        rendererHandler.delete();
+    }
+
+    public abstract void delete();
+
+    public abstract ShaderProgram getShaderProgram();
+
+    public abstract RendererHandler getRendererHandler();
+
 }

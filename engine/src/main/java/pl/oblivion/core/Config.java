@@ -7,9 +7,11 @@ public class Config {
     public static final int TARGET_UPS = 30;
     public static final String STATIC_VERT = "static.vert";
     public static final String STATIC_FRAG = "static.frag";
+    public static final float FOV = 70;
+    public static final float NEAR = 0.1f;
+    public static final float FAR = 1000f;
     public static int WIDTH = 600;
     public static int HEIGHT = WIDTH * 9 / 16;
-
     public static float RED = 0.1f;
     public static float GREEN = 0.5f;
     public static float BLUE = 0.4f;

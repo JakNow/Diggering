@@ -1,5 +1,6 @@
 package pl.oblivion.core;
 
+import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -16,6 +17,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class Window {
 
 
+    private final Matrix4f projectionMatrix;
     // The window handle
     private long window;
     private int width;
@@ -30,7 +32,13 @@ public class Window {
         this.title = Config.TITLE;
         this.resized = false;
         this.vSync = true;
+        projectionMatrix = new Matrix4f();
         this.init();
+    }
+
+    public static Matrix4f updateProjectionMatrix(Matrix4f matrix, int width, int height) {
+        float aspectRatio = (float) width / (float) height;
+        return matrix.setPerspective(Config.FOV, aspectRatio, Config.NEAR, Config.FAR);
     }
 
     public void destroy() {
@@ -133,5 +141,30 @@ public class Window {
 
     public void setvSync(boolean vSync) {
         this.vSync = vSync;
+    }
+
+    public Matrix4f updateProjectionMatrix() {
+        float aspectRatio = (float) width / (float) height;
+        return projectionMatrix.setPerspective(Config.FOV, aspectRatio, Config.NEAR, Config.FAR);
+    }
+
+    public Matrix4f getProjectionMatrix() {
+        return projectionMatrix;
+    }
+
+    public long getWindowHandle() {
+        return window;
+    }
+
+    public boolean isKeyPressed(int keyCode) {
+        return glfwGetKey(window, keyCode) == GLFW_PRESS;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }

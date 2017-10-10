@@ -3,13 +3,12 @@ package pl.oblivion.materials;
 
 import org.lwjgl.system.MemoryStack;
 import pl.oblivion.base.Config;
+
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.stb.STBImage.*;
 
 public class Texture {
@@ -48,8 +47,6 @@ public class Texture {
         Texture texture = new Texture();
         texture.setWidth(width);
         texture.setHeight(height);
-
-        texture.bind();
 
         texture.setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
         texture.setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
@@ -95,7 +92,8 @@ public class Texture {
     /**
      * Binds the texture.
      */
-    public void bind() {
+    public void bind(int unit) {
+        glActiveTexture(GL_TEXTURE0 + unit);
         glBindTexture(GL_TEXTURE_2D, id);
     }
 

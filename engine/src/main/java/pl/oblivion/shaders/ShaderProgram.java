@@ -6,11 +6,9 @@ import pl.oblivion.utils.MyFile;
 
 import java.io.BufferedReader;
 
-import static org.lwjgl.opengl.GL20.*;
-
 public abstract class ShaderProgram {
 
-    private int programID;
+    public int programID;
 
     public ShaderProgram(MyFile vertexFile, MyFile fragmentFile, String... inVariables) {
         int vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);
@@ -26,9 +24,10 @@ public abstract class ShaderProgram {
         GL20.glDeleteShader(fragmentShaderID);
     }
 
-    protected void storeAllUniformLocations(Uniform... uniforms){
-        for(Uniform uniform : uniforms){
+    protected void storeAllUniformLocations(Uniform... uniforms) {
+        for (Uniform uniform : uniforms) {
             uniform.storeUniformLocation(programID);
+
         }
         GL20.glValidateProgram(programID);
     }
@@ -46,8 +45,8 @@ public abstract class ShaderProgram {
         GL20.glDeleteProgram(programID);
     }
 
-    private void bindAttributes(String[] inVariables){
-        for(int i=0;i<inVariables.length;i++){
+    private void bindAttributes(String[] inVariables) {
+        for (int i = 0; i < inVariables.length; i++) {
             GL20.glBindAttribLocation(programID, i, inVariables[i]);
         }
     }
@@ -71,7 +70,7 @@ public abstract class ShaderProgram {
         GL20.glCompileShader(shaderID);
         if (GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
             System.out.println(GL20.glGetShaderInfoLog(shaderID, 500));
-            System.err.println("Could not compile shader "+ file);
+            System.err.println("Could not compile shader " + file);
             System.exit(-1);
         }
         return shaderID;

@@ -8,7 +8,7 @@ public abstract class Uniform {
     private String name;
     private int location;
 
-    protected Uniform(String name) {
+    public Uniform(String name) {
         this.name = name;
     }
 

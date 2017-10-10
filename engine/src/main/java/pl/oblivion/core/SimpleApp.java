@@ -1,25 +1,24 @@
 package pl.oblivion.core;
 
-import org.lwjgl.opengl.GL11;
-import pl.oblivion.game.RendererHandler;
-
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
+import pl.oblivion.game.Camera;
+import pl.oblivion.game.MouseInput;
+import pl.oblivion.game.Renderer;
 
 public abstract class SimpleApp {
 
 
-    private final Window window;
+    public final Window window;
+    public final Renderer rendererHandler;
+    public final Camera camera;
+    public final MouseInput mouseInput;
     private final Timer timer;
-    private final RendererHandler rendererHandler;
-
 
     public SimpleApp() {
         this.window = new Window();
+        this.mouseInput = new MouseInput(window);
         this.timer = new Timer();
-        this.rendererHandler = new RendererHandler();
-
+        this.rendererHandler = new Renderer(window);
+        this.camera = new Camera(window);
     }
 
     public abstract void input();
@@ -27,9 +26,9 @@ public abstract class SimpleApp {
     public abstract void logicUpdate(float delta);
 
     private void renderUpdate() {
-        glClearColor(Config.RED,Config.GREEN,Config.BLUE,Config.ALPHA);
-        rendererHandler.render();
-
+        rendererHandler.update();
+        rendererHandler.prepare();
+        rendererHandler.render(window, camera);
     }
 
 
@@ -44,14 +43,13 @@ public abstract class SimpleApp {
         float interval = 1f / Config.TARGET_UPS;
 
         while (!window.windowShouldClose()) {
-            glClear(GL11.GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-            GL11.glClearColor(Config.RED, Config.GREEN, Config.BLUE, Config.ALPHA);
             elapsedTime = timer.getElapsedTime();
             accumulator += elapsedTime;
 
             input();
 
             while (accumulator >= interval) {
+                camera.update(0.5f);
                 logicUpdate(interval);
                 accumulator -= interval;
             }

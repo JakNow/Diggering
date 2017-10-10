@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL20;
 
 public class UniformVec4 extends Uniform {
 
-    UniformVec4(String name) {
+    public UniformVec4(String name) {
         super(name);
     }
 

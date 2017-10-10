@@ -1,16 +1,58 @@
 package pl.oblivion.staticModels;
 
-import pl.oblivion.base.MeshData;
-import pl.oblivion.objParser.ParsedObjectData;
+public class StaticMeshData {
 
-public class StaticMeshData extends MeshData {
+    private int[] indices;
+    private float[] vertices;
+    private float[] textures;
+    private float[] normals;
+    private float[] tangents;
 
-
-    public StaticMeshData(float[] vertices, int[] indices, float[] textures) {
-        super(vertices, indices,textures);
+    public StaticMeshData(int[] indices, float[] vertices, float[] textures, float[] normals, float[] tangents) {
+        this.indices = indices;
+        this.vertices = vertices;
+        this.textures = textures;
+        this.normals = normals;
+        this.tangents = tangents;
     }
 
-    public StaticMeshData(ParsedObjectData parsedObjectData) {
-        super(parsedObjectData);
+    public int[] getIndices() {
+        return indices;
+    }
+
+    public void setIndices(int[] indices) {
+        this.indices = indices;
+    }
+
+    public float[] getVertices() {
+        return vertices;
+    }
+
+    public void setVertices(float[] vertices) {
+        this.vertices = vertices;
+    }
+
+    public float[] getTextures() {
+        return textures;
+    }
+
+    public void setTextures(float[] textures) {
+        this.textures = textures;
+    }
+
+    public float[] getNormals() {
+        return normals;
+    }
+
+    public void setNormals(float[] normals) {
+        this.normals = normals;
+    }
+
+    public float[] getTangents() {
+        return tangents;
+    }
+
+    public void setTangents(float[] tangents) {
+        this.tangents = tangents;
     }
 }
