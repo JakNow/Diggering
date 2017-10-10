@@ -1,11 +1,14 @@
 package pl.oblivion.main;
 
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import pl.oblivion.assimp.StaticMeshLoader;
 import pl.oblivion.base.ModelView;
 import pl.oblivion.components.moveable.MoveComponent;
 import pl.oblivion.components.moveable.RotateComponent;
+import pl.oblivion.core.Config;
 import pl.oblivion.core.SimpleApp;
+import pl.oblivion.game.MouseInput;
 import pl.oblivion.staticModels.StaticModel;
 import pl.oblivion.staticModels.StaticRenderer;
 
@@ -43,13 +46,15 @@ public class Main extends SimpleApp {
     }
 
     @Override
-    public void input() {
-
-
+    public void input(MouseInput mouseInput) {
+        if (mouseInput.isRightButtonPressed()) {
+            Vector2f rotVec = mouseInput.getDisplVec();
+            camera.rotate(rotVec.x * Config.MOUSE_SENSITIVITY, rotVec.y * Config.MOUSE_SENSITIVITY,0);
+        }
     }
 
     @Override
-    public void logicUpdate(float delta) {
+    public void logicUpdate(float delta, MouseInput mouseInput) {
 
     }
 }

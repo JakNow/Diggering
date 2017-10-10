@@ -16,5 +16,6 @@ public class Config {
     public static float GREEN = 0.5f;
     public static float BLUE = 0.4f;
     public static float ALPHA = 1.0f;
+    public static final float MOUSE_SENSITIVITY = 0.2f;
 
 }

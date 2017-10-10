@@ -21,9 +21,9 @@ public abstract class SimpleApp {
         this.camera = new Camera(window);
     }
 
-    public abstract void input();
+    public abstract void input(MouseInput mouseInput);
 
-    public abstract void logicUpdate(float delta);
+    public abstract void logicUpdate(float delta, MouseInput mouseInput);
 
     private void renderUpdate() {
         rendererHandler.update();
@@ -46,11 +46,12 @@ public abstract class SimpleApp {
             elapsedTime = timer.getElapsedTime();
             accumulator += elapsedTime;
 
-            input();
+            input(mouseInput);
 
             while (accumulator >= interval) {
                 camera.update(0.5f);
-                logicUpdate(interval);
+                mouseInput.input();
+                logicUpdate(interval,mouseInput);
                 accumulator -= interval;
             }
 

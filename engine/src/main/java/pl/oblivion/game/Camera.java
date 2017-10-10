@@ -41,7 +41,7 @@ public class Camera {
             this.position.y += speed;
     }
 
-    private void move(float offsetX, float offsetY, float offsetZ) {
+    public void move(float offsetX, float offsetY, float offsetZ) {
         if (offsetZ != 0) {
             this.position.x += (float) Math.sin(Math.toRadians(rotation.y)) * -1.0f * offsetZ;
             this.position.z += (float) Math.cos(Math.toRadians(rotation.y)) * offsetZ;
@@ -53,7 +53,7 @@ public class Camera {
         position.y += offsetY;
     }
 
-    private void rotate(float offsetX, float offsetY, float offsetZ) {
+    public void rotate(float offsetX, float offsetY, float offsetZ) {
         this.rotation.x += offsetX;
         this.rotation.y += offsetY;
         this.rotation.z += offsetZ;
