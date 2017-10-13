@@ -30,12 +30,6 @@ public class Renderer {
         glClearColor(Config.RED, Config.GREEN, Config.BLUE, Config.ALPHA);
     }
 
-    public void update() {
-        for (RendererProgram rendererProgram : rendererProgramList) {
-            rendererProgram.update();
-        }
-    }
-
     public void render(Window window, Camera camera) {
         for (RendererProgram rendererProgram : rendererProgramList) {
             rendererProgram.render(window, camera);

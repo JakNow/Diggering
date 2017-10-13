@@ -2,6 +2,7 @@ package pl.oblivion.game;
 
 import org.joml.Vector2d;
 import org.joml.Vector2f;
+import org.lwjgl.glfw.GLFWScrollCallback;
 import pl.oblivion.core.Window;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -12,19 +13,29 @@ public class MouseInput {
     private final Vector2d currentPos;
     private final Vector2f displVec;
 
+    private double previousWheel;
+    private double currentWheel;
+    private float wheelVec;
+
     private boolean inWindow = false;
 
     private boolean leftButtonPressed = false;
     private boolean rightButtonPressed = false;
     private boolean middleButtonPressed = false;
+    private boolean wheelScroll  = false;
 
     private Window window;
+    private GLFWScrollCallback sCallback;
+
+    double mouseYoffset;
 
     public MouseInput(Window window) {
         this.window = window;
         previousPos = new Vector2d(-1, -1);
         currentPos = new Vector2d(0, 0);
         displVec = new Vector2f();
+
+
         this.init();
     }
 
@@ -43,10 +54,19 @@ public class MouseInput {
             rightButtonPressed = button == GLFW_MOUSE_BUTTON_2 && action == GLFW_PRESS;
             middleButtonPressed = button == GLFW_MOUSE_BUTTON_3 && action == GLFW_PRESS;
         });
+
+        glfwSetScrollCallback(window.getWindowHandle(),(windowHandle,xoffset, yoffset) ->{
+            currentWheel += yoffset;
+
+        });
     }
 
     public Vector2f getDisplVec() {
         return displVec;
+    }
+
+    public float getWheelY(){
+        return wheelVec;
     }
 
     public void input() {
@@ -69,6 +89,19 @@ public class MouseInput {
 
         previousPos.x = currentPos.x;
         previousPos.y = currentPos.y;
+
+
+        wheelVec = 0;
+
+        if(previousWheel != 0 && inWindow){
+             double deltaY = currentWheel - previousWheel;
+            boolean rotateY = deltaY != 0;
+
+            if(rotateY)
+                wheelVec = (float) deltaY;
+        }
+        previousWheel = currentWheel;
+
     }
 
     public boolean isLeftButtonPressed() {

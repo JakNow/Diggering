@@ -9,9 +9,4 @@ public class StaticModel extends Model {
     public StaticModel(Vector3f position, Vector3f rotation, float scale, ModelView modelView) {
         super(position, rotation, scale, modelView);
     }
-
-    @Override
-    public void update() {
-
-    }
 }

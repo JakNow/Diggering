@@ -6,9 +6,9 @@ import pl.oblivion.components.BaseComponent;
 
 public class MoveComponent extends BaseComponent {
 
-    final Model model;
+    private final Model model;
 
-    float moveSpeed;
+    private float moveSpeed;
 
     public MoveComponent(Model model) {
         this.model = model;
@@ -28,12 +28,12 @@ public class MoveComponent extends BaseComponent {
             model.getPosition().z += moveSpeed;
     }
 
+
     public void move(Vector3f move) {
         model.getPosition().x += move.x;
         model.getPosition().y += move.y;
         model.getPosition().z += move.z;
     }
-
 
     public Model getModel() {
         return model;

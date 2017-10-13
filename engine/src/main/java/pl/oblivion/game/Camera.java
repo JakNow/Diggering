@@ -1,81 +1,82 @@
 package pl.oblivion.game;
 
 import org.joml.Vector3f;
+import pl.oblivion.base.Model;
 import pl.oblivion.core.Window;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Camera {
 
-    private final Vector3f position;
-    private final Vector3f rotation;
-    private final Window window;
+    private float distanceFromPlayer = 10;
+    private float angleAroundPlayer = 0;
 
-    public Camera(Window window) {
-        this.window = window;
-        this.position = new Vector3f(0, 0, 0);
-        this.rotation = new Vector3f(0, 0, 0);
+    private Vector3f position = new Vector3f(0,0,0);
+    private Vector3f rotation = new Vector3f(0,0,0);
+    private final Model model;
+    private final MouseInput mouseInput;
+
+    public Camera(Model model, MouseInput mouseInput) {
+        this.model = model;
+        this.mouseInput = mouseInput;
     }
 
-    public Camera(Window window, Vector3f position, Vector3f rotation) {
-        this.window = window;
-        this.position = position;
-        this.rotation = rotation;
+    public void update(){
+        cameraMove();
+        System.out.println(angleAroundPlayer);
     }
 
-    public void update(float speed) {
-        if (window.isKeyPressed(GLFW_KEY_W))
-            this.position.z -= speed;
-        if (window.isKeyPressed(GLFW_KEY_S)) {
-            this.position.z += speed;
+    private void cameraMove(){
+        calculateZoom();
+        calculatePitch();
+        calculateAngleAroundPlayer();
+
+        float horizontalDistance = calculateHorizontalDistance();
+        float verticalDistance = calculateVerticalDistance();
+
+        calculateCameraPosition(horizontalDistance,verticalDistance);
+        this.rotation.y = 180 - (model.getRotation().y + angleAroundPlayer);
+
+    }
+    private void calculateCameraPosition(float horizontalDistance, float verticalDistance){
+        float theta = model.getRotation().y + angleAroundPlayer;
+        float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(theta)));
+        float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(theta)));
+        position.x = model.getPosition().x - offsetX;
+        position.z = model.getPosition().z - offsetZ;
+        position.y = model.getPosition().y + verticalDistance;
+    }
+    private float calculateHorizontalDistance(){
+        return (float)(distanceFromPlayer * Math.cos(Math.toRadians(rotation.x)));
+    }
+
+    private float calculateVerticalDistance(){
+        return (float)(distanceFromPlayer * Math.sin(Math.toRadians(rotation.x)));
+    }
+
+    private void calculateZoom(){
+        float zoomLevel = mouseInput.getWheelY();
+        distanceFromPlayer -= zoomLevel;
+    }
+
+    private void calculatePitch(){
+        if(mouseInput.isRightButtonPressed()){
+            float pitchChange = mouseInput.getDisplVec().x * 0.1f;
+            rotation.x +=pitchChange;
         }
-
-        if (window.isKeyPressed(GLFW_KEY_A))
-            this.position.x -= speed;
-        if (window.isKeyPressed(GLFW_KEY_D))
-            this.position.x += speed;
-
-        if (window.isKeyPressed(GLFW_KEY_Q))
-            this.position.y -= speed;
-        if (window.isKeyPressed(GLFW_KEY_E))
-            this.position.y += speed;
     }
 
-    private void move(float offsetX, float offsetY, float offsetZ) {
-        if (offsetZ != 0) {
-            this.position.x += (float) Math.sin(Math.toRadians(rotation.y)) * -1.0f * offsetZ;
-            this.position.z += (float) Math.cos(Math.toRadians(rotation.y)) * offsetZ;
+    private void calculateAngleAroundPlayer(){
+        if(mouseInput.isRightButtonPressed()){
+            float angleChange = mouseInput.getDisplVec().y * 0.3f;
+            angleAroundPlayer -= angleChange;
         }
-        if (offsetX != 0) {
-            this.position.x += (float) Math.sin(Math.toRadians(rotation.y - 90)) * -1.0f * offsetX;
-            this.position.z += (float) Math.cos(Math.toRadians(rotation.y - 90)) * offsetX;
-        }
-        position.y += offsetY;
     }
-
-    private void rotate(float offsetX, float offsetY, float offsetZ) {
-        this.rotation.x += offsetX;
-        this.rotation.y += offsetY;
-        this.rotation.z += offsetZ;
-    }
-
     public Vector3f getPosition() {
         return position;
     }
 
     public Vector3f getRotation() {
         return rotation;
-    }
-
-    public void setRotation(float x, float y, float z) {
-        this.rotation.x = x;
-        this.rotation.y = y;
-        this.rotation.z = z;
-    }
-
-    public void setPosition(float x, float y, float z) {
-        this.position.x = x;
-        this.position.y = y;
-        this.position.z = z;
     }
 }

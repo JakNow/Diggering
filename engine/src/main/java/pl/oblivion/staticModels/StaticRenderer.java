@@ -54,18 +54,8 @@ public class StaticRenderer extends RendererProgram {
     }
 
     @Override
-    public void update() {
-        rendererHandler.getStaticModel().getComponent(RotateComponent.class).rotate(false, true, false);
-    }
-
-    @Override
     public void delete() {
         rendererHandler.getStaticModel().delete();
-    }
-
-    @Override
-    public ShaderProgram getShaderProgram() {
-        return shader;
     }
 
     @Override

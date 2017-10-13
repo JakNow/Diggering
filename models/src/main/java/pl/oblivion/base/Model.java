@@ -21,8 +21,6 @@ public abstract class Model {
         this.modelView = modelView;
     }
 
-    public abstract void update();
-
     public void delete() {
         for (ModelPart modelPart : modelView.getModelParts()) {
             for (TexturedMesh texturedMesh : modelPart.getTexturedMeshes()) {
