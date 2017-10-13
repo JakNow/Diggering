@@ -1,5 +1,8 @@
 package pl.oblivion.core;
 
+/**
+ * Rendering engine config
+ */
 public class Config {
 
     public static final String TITLE = "Diggering";
@@ -16,6 +19,4 @@ public class Config {
     public static float GREEN = 0.5f;
     public static float BLUE = 0.4f;
     public static float ALPHA = 1.0f;
-    public static final float MOUSE_SENSITIVITY = 0.2f;
-
 }

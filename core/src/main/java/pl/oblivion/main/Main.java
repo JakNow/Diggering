@@ -8,7 +8,9 @@ import pl.oblivion.components.moveable.MoveComponent;
 import pl.oblivion.components.moveable.RotateComponent;
 import pl.oblivion.core.Config;
 import pl.oblivion.core.SimpleApp;
+import pl.oblivion.game.Camera;
 import pl.oblivion.game.MouseInput;
+import pl.oblivion.player.Player;
 import pl.oblivion.staticModels.StaticModel;
 import pl.oblivion.staticModels.StaticRenderer;
 
@@ -16,8 +18,9 @@ import java.io.File;
 
 public class Main extends SimpleApp {
 
-
+Player player;
     public Main() {
+
         StaticRenderer staticRenderer = new StaticRenderer(window);
         rendererHandler.addRendererProgram(staticRenderer);
 
@@ -30,14 +33,11 @@ public class Main extends SimpleApp {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        StaticModel staticModel = new StaticModel(new Vector3f(0, 0, -1), new Vector3f(0, 0, 0), 1, test);
 
-        staticModel.addComponent(new RotateComponent(staticModel));
-        staticModel.getComponent(RotateComponent.class).setRotateSpeed(1.0f);
 
-        staticModel.addComponent(new MoveComponent(staticModel, 0.5f));
-
-        staticRenderer.getRendererHandler().setStaticModel(staticModel);
+        player = new Player(test);
+        staticRenderer.getRendererHandler().setStaticModel(player);
+        this.camera = new Camera(player,mouseInput);
 
     }
 
@@ -47,14 +47,12 @@ public class Main extends SimpleApp {
 
     @Override
     public void input(MouseInput mouseInput) {
-        if (mouseInput.isRightButtonPressed()) {
-            Vector2f rotVec = mouseInput.getDisplVec();
-            camera.rotate(rotVec.x * Config.MOUSE_SENSITIVITY, rotVec.y * Config.MOUSE_SENSITIVITY,0);
-        }
+
     }
 
     @Override
     public void logicUpdate(float delta, MouseInput mouseInput) {
-
+        camera.update();
+    player.update(window,delta);
     }
 }

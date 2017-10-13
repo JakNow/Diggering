@@ -9,8 +9,8 @@ public abstract class SimpleApp {
 
     public final Window window;
     public final Renderer rendererHandler;
-    public final Camera camera;
     public final MouseInput mouseInput;
+    public Camera camera;
     private final Timer timer;
 
     public SimpleApp() {
@@ -18,7 +18,6 @@ public abstract class SimpleApp {
         this.mouseInput = new MouseInput(window);
         this.timer = new Timer();
         this.rendererHandler = new Renderer(window);
-        this.camera = new Camera(window);
     }
 
     public abstract void input(MouseInput mouseInput);
@@ -26,7 +25,6 @@ public abstract class SimpleApp {
     public abstract void logicUpdate(float delta, MouseInput mouseInput);
 
     private void renderUpdate() {
-        rendererHandler.update();
         rendererHandler.prepare();
         rendererHandler.render(window, camera);
     }
@@ -46,10 +44,9 @@ public abstract class SimpleApp {
             elapsedTime = timer.getElapsedTime();
             accumulator += elapsedTime;
 
-            input(mouseInput);
 
             while (accumulator >= interval) {
-                camera.update(0.5f);
+                input(mouseInput);
                 mouseInput.input();
                 logicUpdate(interval,mouseInput);
                 accumulator -= interval;
