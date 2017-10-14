@@ -79,7 +79,6 @@ public class Window {
             throw new RuntimeException("Failed to create the GLFW window");
 
 
-
         // Get the thread stack and push a new frame
         try (MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1); // int*

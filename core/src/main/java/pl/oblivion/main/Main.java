@@ -1,27 +1,23 @@
 package pl.oblivion.main;
 
-import org.joml.Vector2f;
-import org.joml.Vector3f;
 import pl.oblivion.assimp.StaticMeshLoader;
 import pl.oblivion.base.ModelView;
-import pl.oblivion.components.moveable.MoveComponent;
-import pl.oblivion.components.moveable.RotateComponent;
-import pl.oblivion.core.Config;
 import pl.oblivion.core.SimpleApp;
 import pl.oblivion.game.Camera;
 import pl.oblivion.game.MouseInput;
 import pl.oblivion.player.Player;
-import pl.oblivion.staticModels.StaticModel;
 import pl.oblivion.staticModels.StaticRenderer;
 
 import java.io.File;
 
 public class Main extends SimpleApp {
 
-Player player;
+    Player player;
+    StaticRenderer staticRenderer;
+
     public Main() {
 
-        StaticRenderer staticRenderer = new StaticRenderer(window);
+        staticRenderer = new StaticRenderer(window);
         rendererHandler.addRendererProgram(staticRenderer);
 
 
@@ -36,8 +32,8 @@ Player player;
 
 
         player = new Player(test);
-        staticRenderer.getRendererHandler().setStaticModel(player);
-        this.camera = new Camera(player,mouseInput);
+        this.camera = new Camera(player, mouseInput);
+        staticRenderer.getRendererHandler().processModel(player);
 
     }
 
@@ -53,6 +49,6 @@ Player player;
     @Override
     public void logicUpdate(float delta, MouseInput mouseInput) {
         camera.update();
-    player.update(window,delta);
+        player.update(window, delta);
     }
 }

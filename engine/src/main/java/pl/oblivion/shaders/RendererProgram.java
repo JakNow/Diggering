@@ -6,9 +6,10 @@ import pl.oblivion.game.Camera;
 
 public abstract class RendererProgram {
 
-    public ShaderProgram shaderProgram;
-    public RendererHandler rendererHandler;
-    public Matrix4f projectionMatrix;
+    private ShaderProgram shaderProgram;
+    private RendererHandler rendererHandler;
+    private Matrix4f projectionMatrix;
+
 
     public RendererProgram(ShaderProgram shaderProgram, RendererHandler rendererHandler, Window window) {
         this.shaderProgram = shaderProgram;
@@ -27,4 +28,7 @@ public abstract class RendererProgram {
 
     public abstract RendererHandler getRendererHandler();
 
+    public Matrix4f getProjectionMatrix() {
+        return projectionMatrix;
+    }
 }

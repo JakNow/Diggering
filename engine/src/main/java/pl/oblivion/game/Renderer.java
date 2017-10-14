@@ -20,6 +20,7 @@ public class Renderer {
 
     public Renderer(Window window) {
         this.window = window;
+        enableCullFace();
     }
 
     public void prepare() {
@@ -53,6 +54,16 @@ public class Renderer {
 
     public void addRendererProgram(RendererProgram rendererProgram) {
         rendererProgramList.add(rendererProgram);
+    }
+
+    public void enableCullFace() {
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+    }
+
+    public void disableCullFace() {
+        glDisable(GL_CULL_FACE);
+
     }
 
 }

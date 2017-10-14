@@ -5,15 +5,14 @@ import pl.oblivion.game.MouseInput;
 import pl.oblivion.game.Renderer;
 
 public abstract class SimpleApp {
-
-
-    public final Window window;
-    public final Renderer rendererHandler;
-    public final MouseInput mouseInput;
-    public Camera camera;
+    
+    protected final Window window;
+    protected final Renderer rendererHandler;
+    protected final MouseInput mouseInput;
     private final Timer timer;
+    protected Camera camera;
 
-    public SimpleApp() {
+    protected SimpleApp() {
         this.window = new Window();
         this.mouseInput = new MouseInput(window);
         this.timer = new Timer();
@@ -48,7 +47,7 @@ public abstract class SimpleApp {
             while (accumulator >= interval) {
                 input(mouseInput);
                 mouseInput.input();
-                logicUpdate(interval,mouseInput);
+                logicUpdate(interval, mouseInput);
                 accumulator -= interval;
             }
 
