@@ -11,6 +11,7 @@ public class Camera {
     private float angleAroundPlayer = 0;
     private Vector3f position = new Vector3f(0, 0, 0);
     private Vector3f rotation = new Vector3f(0, 0, 0);
+    private float overHead = 1.5f;
 
     public Camera(Model model, MouseInput mouseInput) {
         this.model = model;
@@ -40,7 +41,7 @@ public class Camera {
         float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(theta)));
         position.x = model.getPosition().x - offsetX;
         position.z = model.getPosition().z - offsetZ;
-        position.y = model.getPosition().y + verticalDistance;
+        position.y = model.getPosition().y + verticalDistance+overHead;
     }
 
     private float calculateHorizontalDistance() {

@@ -17,13 +17,14 @@ public class StaticRenderer extends RendererProgram {
         shader.start();
         shader.projectionMatrix.loadMatrix(this.getProjectionMatrix());
         shader.stop();
+
     }
 
 
     @Override
     public void render(Window window, Camera camera) {
         prepare(window, camera);
-        for (ModelView modelView : rendererHandler.models.keySet()) {
+        for (ModelView modelView : rendererHandler.getModels().keySet()) {
             rendererHandler.prepareModel(modelView);
             rendererHandler.unbindTexturedMesh(modelView);
         }

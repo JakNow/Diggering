@@ -8,6 +8,8 @@ import pl.oblivion.base.ModelView;
 import pl.oblivion.base.TexturedMesh;
 import pl.oblivion.shaders.RendererHandler;
 import pl.oblivion.utils.Maths;
+import pl.oblivion.world.Scene;
+import pl.oblivion.world.World;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,10 +18,10 @@ import java.util.Map;
 
 public class StaticRendererHandler extends RendererHandler {
 
-    public Map<ModelView, List<StaticModel>> models = new HashMap<>();
+    private Map<ModelView, List<StaticModel>> models = new HashMap<>();
     private StaticShader shader;
 
-    protected StaticRendererHandler(StaticShader shader) {
+    StaticRendererHandler(StaticShader shader) {
         this.shader = shader;
         bindingAttributes = new int[]{0, 1};
     }
@@ -32,6 +34,14 @@ public class StaticRendererHandler extends RendererHandler {
                 model.delete();
             }
         }
+    }
+
+    public void processWorld(World world){
+       for(Object scene : world){
+           for(Object model : (Scene)scene){
+               processModel((Model) model);
+           }
+       }
     }
 
     @Override
@@ -81,5 +91,9 @@ public class StaticRendererHandler extends RendererHandler {
             newBatch.add((StaticModel) model);
             models.put(modelView, newBatch);
         }
+    }
+
+    Map<ModelView, List<StaticModel>> getModels() {
+        return models;
     }
 }

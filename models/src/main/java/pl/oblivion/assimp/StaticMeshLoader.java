@@ -1,12 +1,12 @@
 package pl.oblivion.assimp;
 
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
 import pl.oblivion.base.ModelPart;
 import pl.oblivion.base.ModelView;
 import pl.oblivion.base.TexturedMesh;
-import pl.oblivion.loaders.StaticModelLoader;
 import pl.oblivion.materials.Material;
 import pl.oblivion.materials.Texture;
 import pl.oblivion.staticModels.StaticMeshData;
@@ -24,7 +24,7 @@ public class StaticMeshLoader {
         return load(resourcePath, texturesDir, aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_FixInfacingNormals);
     }
 
-    public static ModelView load(String resourcePath, String texturesDir, int flags) throws Exception {
+    private static ModelView load(String resourcePath, String texturesDir, int flags) throws Exception {
         AIScene aiScene = aiImportFile(resourcePath, flags);
 
         if (aiScene == null)
@@ -53,19 +53,18 @@ public class StaticMeshLoader {
             AINode part = AINode.create(aiParts.get(i));
             int numMeshesInPart = part.mNumMeshes();
             TexturedMesh[] texturedMeshes = new TexturedMesh[numMeshesInPart];
+
             for (int j = 0; j < numMeshesInPart; j++) {
                 AIMesh aiMesh = AIMesh.create(aiMeshes.get(pointer));
                 TexturedMesh texturedMesh = processMesh(aiMesh, materials);
                 texturedMeshes[j] = texturedMesh;
                 pointer++;
-
             }
-            modelParts[i] = new ModelPart(null, texturedMeshes);
+
+            modelParts[i] = new ModelPart(texturedMeshes);
         }
 
-        ModelView modelView = new StaticModelView(modelParts);
-
-        return modelView;
+        return new StaticModelView(modelParts);
     }
 
     private static void processMaterial(AIMaterial aiMaterial, List<Material> materials, String texturesDir) throws Exception {
@@ -76,7 +75,8 @@ public class StaticMeshLoader {
         String textPath = path.dataString();
 
         Texture diffuseTexture = null;
-        if (textPath != null & textPath.length() > 0) {
+        assert textPath != null;
+        if (textPath.length() > 0) {
             TextureCache textCache = TextureCache.getInstance();
             diffuseTexture = textCache.getTexture(texturesDir + "/" + textPath);
         }
@@ -119,8 +119,7 @@ public class StaticMeshLoader {
         List<Float> normals = new ArrayList<>();
         List<Integer> indices = new ArrayList<>();
 
-
-        processVertices(aiMesh, vertices);
+        float furthestPoint = processVertices(aiMesh, vertices);
         processNormals(aiMesh, normals);
         processTextCoords(aiMesh, textures);
         processIndices(aiMesh, indices);
@@ -134,19 +133,25 @@ public class StaticMeshLoader {
         } else {
             material = new Material();
         }
-        TexturedMesh texturedMesh = new TexturedMesh(StaticModelLoader.createMesh(mesh), material);
-
-        return texturedMesh;
+       return new TexturedMesh(mesh,material, furthestPoint);
     }
 
-    private static void processVertices(AIMesh aiMesh, List<Float> vertices) {
+    private static float  processVertices(AIMesh aiMesh, List<Float> vertices) {
         AIVector3D.Buffer aiVertices = aiMesh.mVertices();
+        float furthestPoint = 0;
         while (aiVertices.remaining() > 0) {
             AIVector3D aiVertex = aiVertices.get();
-            vertices.add(aiVertex.x());
-            vertices.add(aiVertex.y());
-            vertices.add(aiVertex.z());
+            Vector3f vertex = new Vector3f(aiVertex.x(),aiVertex.y(), aiVertex.z());
+            if(vertex.length() > furthestPoint){
+                furthestPoint = vertex.length();
+            }
+
+            vertices.add(vertex.x);
+            vertices.add(vertex.y);
+            vertices.add(vertex.z);
         }
+
+        return furthestPoint;
     }
 
     private static void processNormals(AIMesh aiMesh, List<Float> normals) {
