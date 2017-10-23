@@ -133,16 +133,16 @@ public class StaticMeshLoader {
         } else {
             material = new Material();
         }
-       return new TexturedMesh(mesh,material, furthestPoint);
+        return new TexturedMesh(mesh, material, furthestPoint);
     }
 
-    private static float  processVertices(AIMesh aiMesh, List<Float> vertices) {
+    private static float processVertices(AIMesh aiMesh, List<Float> vertices) {
         AIVector3D.Buffer aiVertices = aiMesh.mVertices();
         float furthestPoint = 0;
         while (aiVertices.remaining() > 0) {
             AIVector3D aiVertex = aiVertices.get();
-            Vector3f vertex = new Vector3f(aiVertex.x(),aiVertex.y(), aiVertex.z());
-            if(vertex.length() > furthestPoint){
+            Vector3f vertex = new Vector3f(aiVertex.x(), aiVertex.y(), aiVertex.z());
+            if (vertex.length() > furthestPoint) {
                 furthestPoint = vertex.length();
             }
 

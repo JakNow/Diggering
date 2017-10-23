@@ -36,12 +36,12 @@ public class StaticRendererHandler extends RendererHandler {
         }
     }
 
-    public void processWorld(World world){
-       for(Object scene : world){
-           for(Object model : (Scene)scene){
-               processModel((Model) model);
-           }
-       }
+    public void processWorld(World world) {
+        for (Object scene : world) {
+            for (Object model : (Scene) scene) {
+                processModel((Model) model);
+            }
+        }
     }
 
     @Override

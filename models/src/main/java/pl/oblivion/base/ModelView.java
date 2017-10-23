@@ -8,8 +8,8 @@ public abstract class ModelView {
     public ModelView(ModelPart... modelParts) {
         this.modelParts = modelParts;
         float currentFurthestPoint = 0;
-        for(ModelPart modelPart : modelParts){
-            if(modelPart.getFurthestPoint() > currentFurthestPoint){
+        for (ModelPart modelPart : modelParts) {
+            if (modelPart.getFurthestPoint() > currentFurthestPoint) {
                 currentFurthestPoint = modelPart.getFurthestPoint();
             }
         }

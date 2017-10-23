@@ -41,7 +41,7 @@ public class Camera {
         float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(theta)));
         position.x = model.getPosition().x - offsetX;
         position.z = model.getPosition().z - offsetZ;
-        position.y = model.getPosition().y + verticalDistance+overHead;
+        position.y = model.getPosition().y + verticalDistance + overHead;
     }
 
     private float calculateHorizontalDistance() {

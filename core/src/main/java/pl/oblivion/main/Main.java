@@ -1,15 +1,14 @@
 package pl.oblivion.main;
 
 import pl.oblivion.assimp.StaticMeshLoader;
-import pl.oblivion.base.ModelPart;
 import pl.oblivion.base.ModelView;
-import pl.oblivion.base.TexturedMesh;
 import pl.oblivion.core.SimpleApp;
 import pl.oblivion.game.Camera;
 import pl.oblivion.game.MouseInput;
 import pl.oblivion.player.Player;
+import pl.oblivion.shapes.AABB;
+import pl.oblivion.shapes.CylinderCollider;
 import pl.oblivion.staticModels.StaticRenderer;
-import pl.oblivion.world.GenerateCollisionShapes;
 import pl.oblivion.world.Scene;
 import pl.oblivion.world.World;
 
@@ -43,9 +42,8 @@ public class Main extends SimpleApp {
         world.add(testScene);
         testScene.add(player);
 
-        GenerateCollisionShapes.getSpehereCollider(player);
-
-       staticRenderer.getRendererHandler().processWorld(world);
+        CylinderCollider.createFullMapCylidernCollider(player);
+        staticRenderer.getRendererHandler().processWorld(world);
     }
 
     public static void main(String[] args) {

@@ -1,4 +1,6 @@
 package pl.oblivion.shapes;
 
-public abstract class CollisionShape {
+import pl.oblivion.collision.CollisionIntersection;
+
+public abstract class CollisionShape implements CollisionIntersection {
 }

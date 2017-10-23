@@ -41,7 +41,7 @@ public class Player extends StaticModel {
         float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotation().y)));
 
         upwardSpeed += Config.GRAVITY * delta;
-        moveComponent.move(new Vector3f(dx*delta, upwardSpeed * delta, dz*delta));
+        moveComponent.move(new Vector3f(dx * delta, upwardSpeed * delta, dz * delta));
         if (super.getPosition().y < 0) {
             upwardSpeed = 0;
             super.getPosition().y = 0;

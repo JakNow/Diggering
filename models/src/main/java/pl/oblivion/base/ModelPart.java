@@ -10,8 +10,8 @@ public class ModelPart {
         this.texturedMeshes = texturedMeshes;
 
         float currentFurthestPoint = 0;
-        for(TexturedMesh texturedMesh : texturedMeshes){
-            if(texturedMesh.getFurthestPoint()>currentFurthestPoint){
+        for (TexturedMesh texturedMesh : texturedMeshes) {
+            if (texturedMesh.getFurthestPoint() > currentFurthestPoint) {
                 currentFurthestPoint = texturedMesh.getFurthestPoint();
             }
         }

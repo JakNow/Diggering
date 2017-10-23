@@ -2,7 +2,6 @@ package pl.oblivion.staticModels;
 
 import pl.oblivion.base.ModelPart;
 import pl.oblivion.base.ModelView;
-import pl.oblivion.base.TexturedMesh;
 
 public class StaticModelView extends ModelView {
 
@@ -13,8 +12,8 @@ public class StaticModelView extends ModelView {
         this.modelParts = modelParts;
         float currentFurthestPoint = 0;
 
-        for(ModelPart modelPart : modelParts){
-            if(modelPart.getFurthestPoint()>currentFurthestPoint){
+        for (ModelPart modelPart : modelParts) {
+            if (modelPart.getFurthestPoint() > currentFurthestPoint) {
                 currentFurthestPoint = modelPart.getFurthestPoint();
             }
         }
@@ -25,7 +24,7 @@ public class StaticModelView extends ModelView {
         return modelParts;
     }
 
-    public float getFurthestPoint(){
+    public float getFurthestPoint() {
         return furthestPoint;
     }
 }

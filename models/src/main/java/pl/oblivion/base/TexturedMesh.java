@@ -26,7 +26,7 @@ public class TexturedMesh {
         return staticMeshData;
     }
 
-    public Mesh getMesh(){
+    public Mesh getMesh() {
         return mesh;
     }
 
