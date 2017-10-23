@@ -12,6 +12,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="engine" />
     <orderEntry type="module" module-name="models" />
+    <orderEntry type="module" module-name="physicsEngine" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl:3.1.2" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-assimp:3.1.2" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-bgfx:3.1.2" level="project" />

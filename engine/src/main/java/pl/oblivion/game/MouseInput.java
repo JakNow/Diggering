@@ -12,22 +12,17 @@ public class MouseInput {
     private final Vector2d previousPos;
     private final Vector2d currentPos;
     private final Vector2f displVec;
-
+    double mouseYoffset;
     private double previousWheel;
     private double currentWheel;
     private float wheelVec;
-
     private boolean inWindow = false;
-
     private boolean leftButtonPressed = false;
     private boolean rightButtonPressed = false;
     private boolean middleButtonPressed = false;
-    private boolean wheelScroll  = false;
-
+    private boolean wheelScroll = false;
     private Window window;
     private GLFWScrollCallback sCallback;
-
-    double mouseYoffset;
 
     public MouseInput(Window window) {
         this.window = window;
@@ -55,7 +50,7 @@ public class MouseInput {
             middleButtonPressed = button == GLFW_MOUSE_BUTTON_3 && action == GLFW_PRESS;
         });
 
-        glfwSetScrollCallback(window.getWindowHandle(),(windowHandle,xoffset, yoffset) ->{
+        glfwSetScrollCallback(window.getWindowHandle(), (windowHandle, xoffset, yoffset) -> {
             currentWheel += yoffset;
 
         });
@@ -65,7 +60,7 @@ public class MouseInput {
         return displVec;
     }
 
-    public float getWheelY(){
+    public float getWheelY() {
         return wheelVec;
     }
 
@@ -93,11 +88,11 @@ public class MouseInput {
 
         wheelVec = 0;
 
-        if(previousWheel != 0 && inWindow){
-             double deltaY = currentWheel - previousWheel;
+        if (previousWheel != 0 && inWindow) {
+            double deltaY = currentWheel - previousWheel;
             boolean rotateY = deltaY != 0;
 
-            if(rotateY)
+            if (rotateY)
                 wheelVec = (float) deltaY;
         }
         previousWheel = currentWheel;

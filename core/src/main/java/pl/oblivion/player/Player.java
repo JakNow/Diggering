@@ -9,16 +9,12 @@ import pl.oblivion.main.Config;
 import pl.oblivion.staticModels.StaticModel;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_Q;
 
 public class Player extends StaticModel {
 
-    private static Vector3f POSITION = new Vector3f(0,0,-10);
-    private static Vector3f ROTATION = new Vector3f(0,0,0);
     private static final float SCALE = 1f;
-
-
+    private static Vector3f POSITION = new Vector3f(0, 0, -10);
+    private static Vector3f ROTATION = new Vector3f(0, 0, 0);
     private float currentSpeed = 0;
     private float currentTurnSpeed = 0;
     private float upwardSpeed = 0;
@@ -26,26 +22,27 @@ public class Player extends StaticModel {
     private boolean isInAir = false;
     private MoveComponent moveComponent;
     private RotateComponent rotateComponent;
+
     public Player(ModelView modelView) {
         super(POSITION, ROTATION, SCALE, modelView);
 
         moveComponent = new MoveComponent(this, Config.RUN_SPEED);
-        rotateComponent = new RotateComponent(this,Config.ROTATION_SPEED);
+        rotateComponent = new RotateComponent(this, Config.ROTATION_SPEED);
 
         this.addComponent(moveComponent);
         this.addComponent(rotateComponent);
     }
 
-    public void update(Window window, float delta){
+    public void update(Window window, float delta) {
         checkInputs(window);
-        rotateComponent.rotate(new Vector3f(0,currentTurnSpeed * delta,0));
+        rotateComponent.rotate(new Vector3f(0, currentTurnSpeed * delta, 0));
         float distance = currentSpeed * delta;
-        float dx = (float)(distance * Math.sin(Math.toRadians(super.getRotation().y)));
-        float dz = (float)(distance * Math.cos(Math.toRadians(super.getRotation().y)));
+        float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotation().y)));
+        float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotation().y)));
 
-        upwardSpeed+=Config.GRAVITY * delta;
-        moveComponent.move(new Vector3f(dx,upwardSpeed*delta,dz));
-        if(super.getPosition().y < 0 ){
+        upwardSpeed += Config.GRAVITY * delta;
+        moveComponent.move(new Vector3f(dx * delta, upwardSpeed * delta, dz * delta));
+        if (super.getPosition().y < 0) {
             upwardSpeed = 0;
             super.getPosition().y = 0;
             isInAir = false;
@@ -53,24 +50,24 @@ public class Player extends StaticModel {
 
     }
 
-    private void checkInputs(Window window){
-        if(window.isKeyPressed(GLFW_KEY_W)) {
+    private void checkInputs(Window window) {
+        if (window.isKeyPressed(GLFW_KEY_W)) {
             this.currentSpeed = Config.RUN_SPEED;
-        } else if(window.isKeyPressed(GLFW_KEY_S)) {
+        } else if (window.isKeyPressed(GLFW_KEY_S)) {
             this.currentSpeed = -Config.RUN_SPEED;
-        }else{
+        } else {
             this.currentSpeed = 0;
         }
 
-        if(window.isKeyPressed(GLFW_KEY_D)){
+        if (window.isKeyPressed(GLFW_KEY_D)) {
             this.currentTurnSpeed = -Config.ROTATION_SPEED;
-        }else if(window.isKeyPressed(GLFW_KEY_A)){
+        } else if (window.isKeyPressed(GLFW_KEY_A)) {
             this.currentTurnSpeed = Config.ROTATION_SPEED;
-        }else{
+        } else {
             this.currentTurnSpeed = 0;
         }
 
-        if(window.isKeyPressed(GLFW_KEY_SPACE)){
+        if (window.isKeyPressed(GLFW_KEY_SPACE)) {
             jump();
         }
     }

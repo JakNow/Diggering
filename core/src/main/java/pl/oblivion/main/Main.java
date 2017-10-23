@@ -1,27 +1,27 @@
 package pl.oblivion.main;
 
-import org.joml.Vector2f;
-import org.joml.Vector3f;
 import pl.oblivion.assimp.StaticMeshLoader;
 import pl.oblivion.base.ModelView;
-import pl.oblivion.components.moveable.MoveComponent;
-import pl.oblivion.components.moveable.RotateComponent;
-import pl.oblivion.core.Config;
 import pl.oblivion.core.SimpleApp;
 import pl.oblivion.game.Camera;
 import pl.oblivion.game.MouseInput;
 import pl.oblivion.player.Player;
-import pl.oblivion.staticModels.StaticModel;
+import pl.oblivion.shapes.AABB;
+import pl.oblivion.shapes.CylinderCollider;
 import pl.oblivion.staticModels.StaticRenderer;
+import pl.oblivion.world.Scene;
+import pl.oblivion.world.World;
 
 import java.io.File;
 
 public class Main extends SimpleApp {
 
-Player player;
-    public Main() {
+    private Player player;
+    private StaticRenderer staticRenderer;
 
-        StaticRenderer staticRenderer = new StaticRenderer(window);
+    private Main() {
+
+        staticRenderer = new StaticRenderer(window);
         rendererHandler.addRendererProgram(staticRenderer);
 
 
@@ -34,11 +34,16 @@ Player player;
             e.printStackTrace();
         }
 
-
         player = new Player(test);
-        staticRenderer.getRendererHandler().setStaticModel(player);
-        this.camera = new Camera(player,mouseInput);
+        this.camera = new Camera(player, mouseInput);
 
+        World world = new World();
+        Scene testScene = new Scene();
+        world.add(testScene);
+        testScene.add(player);
+
+        CylinderCollider.createFullMapCylidernCollider(player);
+        staticRenderer.getRendererHandler().processWorld(world);
     }
 
     public static void main(String[] args) {
@@ -53,6 +58,6 @@ Player player;
     @Override
     public void logicUpdate(float delta, MouseInput mouseInput) {
         camera.update();
-    player.update(window,delta);
+        player.update(window, delta);
     }
 }
