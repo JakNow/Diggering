@@ -36,11 +36,11 @@ public class Player extends StaticModel {
     public void update(Window window, float delta) {
         checkInputs(window);
         rotateComponent.rotate(new Vector3f(0, currentTurnSpeed * delta, 0));
-        float distance = currentSpeed * delta;
+        float distance = currentSpeed;
         float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotation().y)));
         float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotation().y)));
 
-        upwardSpeed += Config.GRAVITY * delta;
+        upwardSpeed += Config.GRAVITY;
         moveComponent.move(new Vector3f(dx * delta, upwardSpeed * delta, dz * delta));
         if (super.getPosition().y < 0) {
             upwardSpeed = 0;
