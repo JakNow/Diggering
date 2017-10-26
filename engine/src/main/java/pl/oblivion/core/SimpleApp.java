@@ -9,6 +9,7 @@ public abstract class SimpleApp {
     protected final Window window;
     protected final Renderer rendererHandler;
     protected final MouseInput mouseInput;
+    protected final PhysicsState physicsState;
     private final Timer timer;
     protected Camera camera;
 
@@ -17,6 +18,8 @@ public abstract class SimpleApp {
         this.mouseInput = new MouseInput(window);
         this.timer = new Timer();
         this.rendererHandler = new Renderer(window);
+        physicsState = new PhysicsState();
+
     }
 
     public abstract void input(MouseInput mouseInput);
@@ -47,7 +50,7 @@ public abstract class SimpleApp {
             input(mouseInput);
             mouseInput.input();
             while (accumulator >= interval) {
-
+                physicsState.update();
                 logicUpdate(interval, mouseInput);
                 accumulator -= interval;
             }

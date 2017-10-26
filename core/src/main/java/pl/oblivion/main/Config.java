@@ -11,6 +11,6 @@ public class Config {
     public static final float RUN_SPEED = 10;
     public static final float ROTATION_SPEED = 10;
     public static final float GRAVITY = -10;
-    public static final float JUMP_POWER = 4;
+    public static final float JUMP_POWER = 40;
 
 }

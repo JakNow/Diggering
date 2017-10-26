@@ -23,7 +23,7 @@ hs_err_pid*
 
 #Intellij
 .idea/
-Diggering.iml
+*.iml
 out/
 
 #Libraries

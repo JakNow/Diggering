@@ -1,13 +1,13 @@
 package pl.oblivion.main;
 
+import org.joml.Vector3f;
 import pl.oblivion.assimp.StaticMeshLoader;
 import pl.oblivion.base.ModelView;
 import pl.oblivion.core.SimpleApp;
 import pl.oblivion.game.Camera;
 import pl.oblivion.game.MouseInput;
 import pl.oblivion.player.Player;
-import pl.oblivion.shapes.AABB;
-import pl.oblivion.shapes.CylinderCollider;
+import pl.oblivion.staticModels.StaticModel;
 import pl.oblivion.staticModels.StaticRenderer;
 import pl.oblivion.world.Scene;
 import pl.oblivion.world.World;
@@ -17,11 +17,10 @@ import java.io.File;
 public class Main extends SimpleApp {
 
     private Player player;
-    private StaticRenderer staticRenderer;
 
     private Main() {
 
-        staticRenderer = new StaticRenderer(window);
+        StaticRenderer staticRenderer = new StaticRenderer(window);
         rendererHandler.addRendererProgram(staticRenderer);
 
 
@@ -37,12 +36,13 @@ public class Main extends SimpleApp {
         player = new Player(test);
         this.camera = new Camera(player, mouseInput);
 
+        StaticModel staticModel = new StaticModel(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), 1f, test);
         World world = new World();
         Scene testScene = new Scene();
         world.add(testScene);
         testScene.add(player);
+        testScene.add(staticModel);
 
-        CylinderCollider.createFullMapCylidernCollider(player);
         staticRenderer.getRendererHandler().processWorld(world);
     }
 
