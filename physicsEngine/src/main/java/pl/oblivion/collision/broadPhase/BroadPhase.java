@@ -27,8 +27,8 @@ public class BroadPhase {
                 if (model.getComponent(CollidableComponent.class).isMoveAble()) {
                     for (Model model2 : broadPhaseCollisionMap.keySet()) {
                         if (!model.equals(model2)) {
-                            CollisionShape cs1 = model.getComponent(CollidableComponent.class).getCollisionShape();
-                            CollisionShape cs2 = model2.getComponent(CollidableComponent.class).getCollisionShape();
+                            CollisionShape cs1 = model.getComponent(CollidableComponent.class).getModelCollisionShape();
+                            CollisionShape cs2 = model2.getComponent(CollidableComponent.class).getModelCollisionShape();
                             if (checkCollision(cs1, cs2)) {
                                 narrowPhase.narrowPhaseCollisionMap.put(model, model);
                                 narrowPhase.narrowPhaseCollisionMap.put(model2, model2);

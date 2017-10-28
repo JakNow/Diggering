@@ -19,6 +19,8 @@ public abstract class RendererProgram {
 
     public abstract void render(Window window, Camera camera);
 
+    public abstract void prepare(Window window, Camera camera);
+
     public void cleanUp() {
         shaderProgram.cleanUp();
         rendererHandler.delete();

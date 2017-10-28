@@ -35,6 +35,12 @@ public class MoveComponent extends BaseComponent {
         model.getPosition().z += move.z;
     }
 
+    public void move(float dx, float dy, float dz) {
+        model.getPosition().x += dx;
+        model.getPosition().y += dy;
+        model.getPosition().z += dz;
+    }
+
     public Model getModel() {
         return model;
     }

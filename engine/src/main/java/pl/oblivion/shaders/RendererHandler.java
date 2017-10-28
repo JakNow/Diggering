@@ -1,7 +1,8 @@
 package pl.oblivion.shaders;
 
 import pl.oblivion.base.Model;
-import pl.oblivion.base.ModelView;
+import pl.oblivion.base.TexturedMesh;
+import pl.oblivion.world.World;
 
 public abstract class RendererHandler {
 
@@ -12,11 +13,14 @@ public abstract class RendererHandler {
 
     public abstract void delete();
 
-    public abstract void prepareModel(ModelView modelView);
+    public abstract void prepareModel(TexturedMesh texturedMesh);
 
     public abstract void prepareInstance(Model model);
 
-    public abstract void unbindTexturedMesh(ModelView modelView);
+    public abstract void unbindTexturedMesh(TexturedMesh texturedMesh);
 
     public abstract void processModel(Model model);
+
+    public abstract void processWorld(World world);
+
 }
