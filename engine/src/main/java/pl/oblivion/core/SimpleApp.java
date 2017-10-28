@@ -22,8 +22,6 @@ public abstract class SimpleApp {
 
     }
 
-    public abstract void input(MouseInput mouseInput);
-
     public abstract void logicUpdate(float delta, MouseInput mouseInput);
 
     private void renderUpdate() {
@@ -47,9 +45,8 @@ public abstract class SimpleApp {
             elapsedTime = timer.getElapsedTime();
             accumulator += elapsedTime;
 
-            input(mouseInput);
-            mouseInput.input();
             while (accumulator >= interval) {
+                mouseInput.input();
                 physicsState.update();
                 logicUpdate(interval, mouseInput);
                 accumulator -= interval;

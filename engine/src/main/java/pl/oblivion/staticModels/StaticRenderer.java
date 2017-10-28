@@ -1,10 +1,13 @@
 package pl.oblivion.staticModels;
 
 
-import pl.oblivion.base.ModelView;
+import org.lwjgl.opengl.GL11;
+import pl.oblivion.base.TexturedMesh;
 import pl.oblivion.core.Window;
 import pl.oblivion.game.Camera;
 import pl.oblivion.shaders.RendererProgram;
+
+import java.util.List;
 
 public class StaticRenderer extends RendererProgram {
 
@@ -20,18 +23,23 @@ public class StaticRenderer extends RendererProgram {
 
     }
 
-
     @Override
     public void render(Window window, Camera camera) {
         prepare(window, camera);
-        for (ModelView modelView : rendererHandler.getModels().keySet()) {
-            rendererHandler.prepareModel(modelView);
-            rendererHandler.unbindTexturedMesh(modelView);
+        for (TexturedMesh texturedMesh : rendererHandler.getTexturedMeshMap().keySet()) {
+            rendererHandler.prepareModel(texturedMesh);
+            List<StaticModel> batch = rendererHandler.getTexturedMeshMap().get(texturedMesh);
+            for (StaticModel staticModel : batch) {
+                rendererHandler.prepareInstance(staticModel);
+                GL11.glDrawElements(GL11.GL_TRIANGLES, texturedMesh.getMesh().getIndexCount(), GL11.GL_UNSIGNED_INT, 0);
+            }
+            rendererHandler.unbindTexturedMesh(texturedMesh);
         }
         end();
     }
 
-    private void prepare(Window window, Camera camera) {
+    @Override
+    public void prepare(Window window, Camera camera) {
         shader.start();
         shader.projectionMatrix.loadMatrix(window.getProjectionMatrix());
         shader.loadViewMatrix(camera);
