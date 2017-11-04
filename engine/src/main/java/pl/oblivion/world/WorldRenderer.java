@@ -1,28 +1,24 @@
-package pl.oblivion.staticModels;
-
+package pl.oblivion.world;
 
 import org.lwjgl.opengl.GL11;
 import pl.oblivion.base.TexturedMesh;
 import pl.oblivion.core.Window;
 import pl.oblivion.game.Camera;
 import pl.oblivion.shaders.RendererProgram;
+import pl.oblivion.staticModels.StaticModel;
 
 import java.util.List;
 
-public class StaticRenderer extends RendererProgram {
+public class WorldRenderer extends RendererProgram {
 
-    private static StaticShader shader = new StaticShader();
-    private static StaticRendererHandler rendererHandler = new StaticRendererHandler(shader);
+    private static WorldShader shader = new WorldShader();
+    private static WorldRendererHandler rendererHandler = new WorldRendererHandler(shader);
 
-    public StaticRenderer(Window window) {
+    public WorldRenderer(Window window) {
         super(shader, rendererHandler, window);
-
         shader.start();
         shader.projectionMatrix.loadMatrix(this.getProjectionMatrix());
         shader.stop();
-
-        GL11.glEnable(GL11.GL_CULL_FACE);
-        GL11.glCullFace(GL11.GL_BACK);
     }
 
     @Override
@@ -45,7 +41,11 @@ public class StaticRenderer extends RendererProgram {
         shader.start();
         shader.projectionMatrix.loadMatrix(window.getProjectionMatrix());
         shader.loadViewMatrix(camera);
+    }
 
+    @Override
+    public void delete() {
+        rendererHandler.delete();
     }
 
     @Override
@@ -55,14 +55,7 @@ public class StaticRenderer extends RendererProgram {
     }
 
     @Override
-    public void delete() {
-        rendererHandler.delete();
-    }
-
-    @Override
-    public StaticRendererHandler getRendererHandler() {
+    public WorldRendererHandler getRendererHandler() {
         return rendererHandler;
     }
-
-
 }

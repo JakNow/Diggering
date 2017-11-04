@@ -10,6 +10,8 @@ public class Config {
     public static final int TARGET_UPS = 30;
     public static final String STATIC_VERT = "static.vert";
     public static final String STATIC_FRAG = "static.frag";
+    public static final String WORLD_VERT = "world.vert";
+    public static final String WORLD_FRAG = "world.frag";
     public static final float FOV = 70;
     public static final float NEAR = 0.1f;
     public static final float FAR = 1000f;

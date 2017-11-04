@@ -3,7 +3,7 @@ package pl.oblivion.shapes;
 import org.joml.Vector3f;
 
 public class Vertex {
-    private final Vector3f position;
+    private Vector3f position;
     private final Vector3f normal;
 
     public Vertex(Vector3f position, Vector3f normal) {
@@ -13,6 +13,10 @@ public class Vertex {
 
     public Vector3f getPosition() {
         return position;
+    }
+
+    public void setPosition(Vector3f position) {
+        this.position = position;
     }
 
     public Vector3f getNormal() {

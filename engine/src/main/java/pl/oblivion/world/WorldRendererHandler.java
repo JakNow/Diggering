@@ -1,30 +1,28 @@
-package pl.oblivion.staticModels;
+package pl.oblivion.world;
 
 import org.joml.Matrix4f;
 import pl.oblivion.base.Model;
 import pl.oblivion.base.ModelPart;
 import pl.oblivion.base.TexturedMesh;
 import pl.oblivion.shaders.RendererHandler;
+import pl.oblivion.staticModels.StaticModel;
 import pl.oblivion.utils.Maths;
-import pl.oblivion.world.Scene;
-import pl.oblivion.world.World;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StaticRendererHandler extends RendererHandler {
+public class WorldRendererHandler extends RendererHandler {
 
     private Map<TexturedMesh, List<StaticModel>> texturedMeshMap = new HashMap<>();
 
-    private StaticShader shader;
+    private WorldShader shader;
 
-    StaticRendererHandler(StaticShader shader) {
+    WorldRendererHandler(WorldShader shader) {
         this.shader = shader;
         bindingAttributes = new int[]{0, 1};
     }
-
 
     @Override
     public void delete() {
@@ -36,14 +34,21 @@ public class StaticRendererHandler extends RendererHandler {
     }
 
     @Override
-    public void processWorld(World world) {
-        for (Object scene : world) {
-            for (Object model : (Scene) scene) {
-                processModel((Model) model);
-            }
-        }
+    public void prepareModel(TexturedMesh texturedMesh) {
+        texturedMesh.getMesh().bind(bindingAttributes);
+        shader.material.loadMaterial(texturedMesh.getMaterial());
     }
 
+    @Override
+    public void prepareInstance(Model model) {
+        Matrix4f transformationMatrix = Maths.createTransformationMatrix(model);
+        shader.transformationMatrix.loadMatrix(transformationMatrix);
+    }
+
+    @Override
+    public void unbindTexturedMesh(TexturedMesh texturedMesh) {
+        texturedMesh.getMesh().unbind(bindingAttributes);
+    }
 
     @Override
     public void processModel(Model model) {
@@ -62,20 +67,12 @@ public class StaticRendererHandler extends RendererHandler {
     }
 
     @Override
-    public void prepareModel(TexturedMesh texturedMesh) {
-        texturedMesh.getMesh().bind(bindingAttributes);
-        shader.material.loadMaterial(texturedMesh.getMaterial());
-    }
-
-    @Override
-    public void unbindTexturedMesh(TexturedMesh texturedMesh) {
-        texturedMesh.getMesh().unbind(bindingAttributes);
-    }
-
-    @Override
-    public void prepareInstance(Model model) {
-        Matrix4f transformationMatrix = Maths.createTransformationMatrix(model);
-        shader.transformationMatrix.loadMatrix(transformationMatrix);
+    public void processWorld(World world) {
+        for (Object scene : world) {
+            for (Object model : (Scene) scene) {
+                processModel((Model) model);
+            }
+        }
     }
 
     Map<TexturedMesh, List<StaticModel>> getTexturedMeshMap() {

@@ -28,6 +28,8 @@ public abstract class RendererProgram {
 
     public abstract void delete();
 
+    public abstract void end();
+
     public abstract RendererHandler getRendererHandler();
 
     public Matrix4f getProjectionMatrix() {

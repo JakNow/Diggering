@@ -35,4 +35,9 @@ public class Face {
     public void setPoint3(Vertex point3) {
         this.point3 = point3;
     }
+
+    public String toString() {
+
+        return "Face: " + point1.getPosition() + "/" + point1.getNormal() + " " + point2.getPosition() + "/" + point2.getNormal() + " " + point3.getPosition() + "/" + point3.getNormal();
+    }
 }
