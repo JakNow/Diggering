@@ -63,7 +63,6 @@ public class Renderer {
 
     public void disableCullFace() {
         glDisable(GL_CULL_FACE);
-
     }
 
 }

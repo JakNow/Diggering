@@ -14,8 +14,4 @@ public class StaticModel extends Model {
     public StaticModel(Vector3f position, Vector3f rotation, float scale, String modelPath, String texturesPath) throws Exception {
         super(position, rotation, scale, StaticMeshLoader.load(modelPath, texturesPath));
     }
-
-    public StaticModel(String modelPath, String texturesPath) throws Exception {
-        super(null, null, 1f, StaticMeshLoader.load(modelPath, texturesPath));
-    }
 }

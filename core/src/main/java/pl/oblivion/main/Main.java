@@ -3,23 +3,20 @@ package pl.oblivion.main;
 import org.joml.Vector3f;
 import pl.oblivion.assimp.StaticMeshLoader;
 import pl.oblivion.base.ModelView;
-import pl.oblivion.components.moveable.MoveComponent;
 import pl.oblivion.core.SimpleApp;
 import pl.oblivion.game.Camera;
 import pl.oblivion.game.MouseInput;
 import pl.oblivion.player.Player;
 import pl.oblivion.staticModels.StaticModel;
 import pl.oblivion.staticModels.StaticRenderer;
-import pl.oblivion.world.Scene;
-import pl.oblivion.world.World;
+import pl.oblivion.world.WorldRenderer;
 
 import java.io.File;
 
 public class Main extends SimpleApp {
 
-    StaticModel staticModel;
     private Player player;
-
+    private StaticModel testModel;
     private Main() {
 
         StaticRenderer staticRenderer = new StaticRenderer(window);
@@ -38,15 +35,18 @@ public class Main extends SimpleApp {
         player = new Player(test);
         this.camera = new Camera(player, mouseInput);
 
-        staticModel = new StaticModel(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), 1f, test);
-        World world = new World();
-        Scene testScene = new Scene();
-        world.add(testScene);
-        testScene.add(staticModel);
-        testScene.add(player);
-        staticModel.addComponent(new MoveComponent(staticModel, 0.05f));
+        try {
+            testModel = new StaticModel(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), 3f, "core/resources/assets/models/test_floor.obj", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        staticRenderer.getRendererHandler().processWorld(world);
+        WorldRenderer worldRenderer = new WorldRenderer(window);
+        rendererHandler.addRendererProgram(worldRenderer);
+
+        staticRenderer.getRendererHandler().processModel(player);
+        worldRenderer.getRendererHandler().processModel(testModel);
+
     }
 
     public static void main(String[] args) {
