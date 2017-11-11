@@ -40,6 +40,7 @@ public class StaticRenderer extends RendererProgram {
         end();
     }
 
+
     @Override
     public void prepare(Window window, Camera camera) {
         shader.start();
@@ -63,6 +64,4 @@ public class StaticRenderer extends RendererProgram {
     public StaticRendererHandler getRendererHandler() {
         return rendererHandler;
     }
-
-
 }

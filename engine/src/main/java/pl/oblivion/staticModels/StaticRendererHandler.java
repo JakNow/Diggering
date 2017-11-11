@@ -6,8 +6,6 @@ import pl.oblivion.base.ModelPart;
 import pl.oblivion.base.TexturedMesh;
 import pl.oblivion.shaders.RendererHandler;
 import pl.oblivion.utils.Maths;
-import pl.oblivion.world.Scene;
-import pl.oblivion.world.World;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,16 +32,6 @@ public class StaticRendererHandler extends RendererHandler {
             }
         }
     }
-
-    @Override
-    public void processWorld(World world) {
-        for (Object scene : world) {
-            for (Object model : (Scene) scene) {
-                processModel((Model) model);
-            }
-        }
-    }
-
 
     @Override
     public void processModel(Model model) {

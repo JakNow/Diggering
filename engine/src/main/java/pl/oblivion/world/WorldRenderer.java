@@ -51,7 +51,6 @@ public class WorldRenderer extends RendererProgram {
     @Override
     public void end() {
         shader.stop();
-
     }
 
     @Override

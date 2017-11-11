@@ -2,13 +2,10 @@ package pl.oblivion.player;
 
 import org.joml.Vector3f;
 import pl.oblivion.base.ModelView;
-import pl.oblivion.components.collidable.CollidableComponent;
 import pl.oblivion.components.moveable.MoveComponent;
 import pl.oblivion.components.moveable.RotateComponent;
-import pl.oblivion.core.ColliderGenerator;
 import pl.oblivion.core.Window;
 import pl.oblivion.main.Config;
-import pl.oblivion.shapes.TypeOfShape;
 import pl.oblivion.staticModels.StaticModel;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -34,9 +31,6 @@ public class Player extends StaticModel {
 
         this.addComponent(moveComponent);
         this.addComponent(rotateComponent);
-
-        CollidableComponent collidableComponent = new CollidableComponent(this, TypeOfShape.AABB,true);
-        this.addComponent(collidableComponent);
     }
 
     public void update(Window window, float delta) {

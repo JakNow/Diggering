@@ -66,15 +66,6 @@ public class WorldRendererHandler extends RendererHandler {
         }
     }
 
-    @Override
-    public void processWorld(World world) {
-        for (Object scene : world) {
-            for (Object model : (Scene) scene) {
-                processModel((Model) model);
-            }
-        }
-    }
-
     Map<TexturedMesh, List<StaticModel>> getTexturedMeshMap() {
         return texturedMeshMap;
     }
