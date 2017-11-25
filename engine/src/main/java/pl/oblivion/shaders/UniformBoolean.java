@@ -13,7 +13,7 @@ public class UniformBoolean extends Uniform {
 
     public void loadBoolean(boolean bool) {
         if (!used || currentBool != bool) {
-            GL20.glUniform1f(super.getLocation(), bool ? 1f : 0f);
+            GL20.glUniform1i(super.getLocation(), bool ? 1 : 0);
             used = true;
             currentBool = bool;
         }

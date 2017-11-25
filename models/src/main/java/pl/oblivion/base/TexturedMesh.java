@@ -18,6 +18,13 @@ public class TexturedMesh {
         this.mesh = StaticModelLoader.createMesh((StaticMeshData) meshData);
     }
 
+    public TexturedMesh(Mesh mesh, Material material) {
+        this.mesh = mesh;
+        this.material = material;
+        this.meshData = null;
+        this.furthestPoint = 0f;
+    }
+
     public float getFurthestPoint() {
         return furthestPoint;
     }

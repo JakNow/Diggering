@@ -4,6 +4,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
+import pl.oblivion.base.Config;
 import pl.oblivion.base.ModelPart;
 import pl.oblivion.base.ModelView;
 import pl.oblivion.base.TexturedMesh;
@@ -21,12 +22,11 @@ import static org.lwjgl.assimp.Assimp.*;
 public class StaticMeshLoader {
 
     public static ModelView load(String resourcePath, String texturesDir) throws Exception {
-        return load(resourcePath, texturesDir, aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_FixInfacingNormals);
+        return load(Config.MODELS + resourcePath, texturesDir, aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_FixInfacingNormals);
     }
 
     private static ModelView load(String resourcePath, String texturesDir, int flags) throws Exception {
         AIScene aiScene = aiImportFile(resourcePath, flags);
-
         if (aiScene == null)
             throw new Exception("Error loading model");
 
@@ -75,10 +75,16 @@ public class StaticMeshLoader {
         String textPath = path.dataString();
 
         Texture diffuseTexture = null;
-        assert textPath != null;
-        if (textPath.length() > 0) {
+        if (texturesDir != null) {
+
             TextureCache textCache = TextureCache.getInstance();
-            diffuseTexture = textCache.getTexture(texturesDir + "/" + textPath);
+            diffuseTexture = textCache.getTexture(Config.TEXTURES + texturesDir);
+        } else {
+            assert textPath != null;
+            if (textPath.length() > 0) {
+                TextureCache textCache = TextureCache.getInstance();
+                diffuseTexture = textCache.getTexture(textPath);
+            }
         }
 
         Vector4f ambient = Material.DEFAULT_COLOUR;

@@ -8,9 +8,9 @@ import java.util.HashMap;
 public abstract class Model {
 
     private final ModelView modelView;
-    private final Vector3f position;
-    private final Vector3f rotation;
-    private final float scale;
+    private Vector3f position;
+    private Vector3f rotation;
+    private float scale;
 
     private HashMap<Class, BaseComponent> componentHashMap = new HashMap<>();
 
@@ -38,12 +38,24 @@ public abstract class Model {
         return position;
     }
 
+    public void setPosition(Vector3f position) {
+        this.position = position;
+    }
+
     public Vector3f getRotation() {
         return rotation;
     }
 
+    public void setRotation(Vector3f rotation) {
+        this.rotation = rotation;
+    }
+
     public float getScale() {
         return scale;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
     }
 
     public void addComponent(BaseComponent component) {
