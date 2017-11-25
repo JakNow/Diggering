@@ -24,8 +24,7 @@ public class StaticShader extends ShaderProgram {
 
     public StaticShader() {
         super(new MyFile(Config.STATIC_VERT), new MyFile(Config.STATIC_FRAG), "in_position", "in_textures");
-        super.storeAllUniformLocations(projectionMatrix, viewMatrix, transformationMatrix, diffuseTexture, normalTexture);
-        this.storeMaterialUniforms();
+        super.storeAllUniformLocations(projectionMatrix, viewMatrix, transformationMatrix, diffuseTexture, normalTexture, material.ambientColour, material.diffuseColour, material.specularColour, material.hasTexture, material.hasNormalMap);
         connectTextureUnits();
     }
 
@@ -36,14 +35,6 @@ public class StaticShader extends ShaderProgram {
         super.stop();
     }
 
-    private void storeMaterialUniforms() {
-        material.ambientColour.storeUniformLocation(this.programID);
-        material.diffuseColour.storeUniformLocation(this.programID);
-        material.specularColour.storeUniformLocation(this.programID);
-
-        material.hasTexture.storeUniformLocation(this.programID);
-        material.hasNormalMap.storeUniformLocation(this.programID);
-    }
 
     public void loadViewMatrix(Camera camera) {
         viewMatrix.loadMatrix(Maths.getViewMatrix(camera));

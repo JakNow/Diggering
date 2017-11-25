@@ -32,3 +32,5 @@ lib/
 #Project
 assets/
 schemas/
+*.blend
+*.blend*

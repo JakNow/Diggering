@@ -29,5 +29,6 @@ public class UniformMaterial extends Uniform {
 
         hasTexture.loadBoolean(material.isTextured());
         hasNormalMap.loadBoolean(material.isNormal());
+
     }
 }

@@ -1,5 +1,6 @@
 package pl.oblivion.player;
 
+import components.CollisionComponent;
 import org.joml.Vector3f;
 import pl.oblivion.base.ModelView;
 import pl.oblivion.components.moveable.MoveComponent;
@@ -13,7 +14,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Player extends StaticModel {
 
     private static final float SCALE = 1f;
-    private static Vector3f POSITION = new Vector3f(0, 0, -10);
+    private static Vector3f POSITION = new Vector3f(0, 0, 0);
     private static Vector3f ROTATION = new Vector3f(0, 0, 0);
     private float currentSpeed = 0;
     private float currentTurnSpeed = 0;
@@ -26,8 +27,8 @@ public class Player extends StaticModel {
     public Player(ModelView modelView) {
         super(POSITION, ROTATION, SCALE, modelView);
 
-        moveComponent = new MoveComponent(this, Config.RUN_SPEED);
-        rotateComponent = new RotateComponent(this, Config.ROTATION_SPEED);
+        moveComponent = new MoveComponent(this);
+        rotateComponent = new RotateComponent(this);
 
         this.addComponent(moveComponent);
         this.addComponent(rotateComponent);
@@ -35,13 +36,12 @@ public class Player extends StaticModel {
 
     public void update(Window window, float delta) {
         checkInputs(window);
-        rotateComponent.rotate(new Vector3f(0, currentTurnSpeed * delta, 0));
-        float distance = currentSpeed * delta;
-        float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotation().y)));
-        float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotation().y)));
+        rotateComponent.rotate(0, currentTurnSpeed, 0, delta);
+        float dx = (float) (currentSpeed * Math.sin(Math.toRadians(super.getRotation().y)));
+        float dz = (float) (currentSpeed * Math.cos(Math.toRadians(super.getRotation().y)));
 
         upwardSpeed += Config.GRAVITY;
-        moveComponent.move(dx, upwardSpeed * delta, dz);
+        moveComponent.move(dx, upwardSpeed, dz, delta);
         if (super.getPosition().y < 0) {
             upwardSpeed = 0;
             super.getPosition().y = 0;
@@ -70,6 +70,11 @@ public class Player extends StaticModel {
         if (window.isKeyPressed(GLFW_KEY_SPACE)) {
             jump();
         }
+        if (this.currentSpeed != 0 || isInAir)
+            this.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().setMoving(true);
+        else
+            this.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().setMoving(false);
+
     }
 
     private void jump() {

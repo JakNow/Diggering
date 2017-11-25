@@ -46,13 +46,11 @@ public class StaticRenderer extends RendererProgram {
         shader.start();
         shader.projectionMatrix.loadMatrix(window.getProjectionMatrix());
         shader.loadViewMatrix(camera);
-
     }
 
     @Override
     public void end() {
         shader.stop();
-
     }
 
     @Override

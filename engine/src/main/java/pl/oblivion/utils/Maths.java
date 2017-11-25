@@ -11,6 +11,11 @@ public class Maths {
         return new Matrix4f().identity().translate(model.getPosition()).rotateX((float) Math.toRadians(model.getRotation().x)).rotateY((float) Math.toRadians(model.getRotation().y)).rotateZ((float) Math.toRadians(model.getRotation().z)).scale(model.getScale());
     }
 
+    public static Matrix4f createTransformationMatrixMesh(Model model) {
+        return new Matrix4f().identity().translate(model.getPosition());//.scale(model.getScale());
+    }
+
+
     public static Matrix4f getViewMatrix(Camera camera) {
         Vector3f cameraPos = camera.getPosition();
         Vector3f negativeCameraPos = new Vector3f(-cameraPos.x, -cameraPos.y, -cameraPos.z);

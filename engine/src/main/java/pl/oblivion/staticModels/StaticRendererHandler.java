@@ -4,6 +4,7 @@ import org.joml.Matrix4f;
 import pl.oblivion.base.Model;
 import pl.oblivion.base.ModelPart;
 import pl.oblivion.base.TexturedMesh;
+import pl.oblivion.materials.Material;
 import pl.oblivion.shaders.RendererHandler;
 import pl.oblivion.utils.Maths;
 
@@ -52,6 +53,9 @@ public class StaticRendererHandler extends RendererHandler {
     @Override
     public void prepareModel(TexturedMesh texturedMesh) {
         texturedMesh.getMesh().bind(bindingAttributes);
+        if (texturedMesh.getMaterial().getDiffuseTexture() != null) {
+            texturedMesh.getMaterial().getDiffuseTexture().bind(Material.DIFFUSE_TEXTURE_UNIT);
+        }
         shader.material.loadMaterial(texturedMesh.getMaterial());
     }
 

@@ -25,7 +25,7 @@ public class TextureCache {
     public Texture getTexture(String path) throws Exception {
         Texture texture = texturesMap.get(path);
         if (texture == null) {
-            texture = Texture.loadTexture(path);
+            texture = new Texture(path);
             texturesMap.put(path, texture);
         }
         return texture;
