@@ -13,7 +13,7 @@ public class CylinderCollider extends CollisionShape {
     private Vector3f tempCenter;
     private float height, radius;
 
-    public CylinderCollider(Model model, Vector3f center, float height, float radius) {
+    private CylinderCollider(Model model, Vector3f center, float height, float radius) {
         super(model);
         this.center = center;
         this.tempCenter = center;
@@ -39,7 +39,7 @@ public class CylinderCollider extends CollisionShape {
     }
 
     private static float getRadius(float comp1, float comp2) {
-        if (isInscribed)//(a>b?a:b);
+        if (isInscribed)
             return comp1 > comp2 ? comp1 : comp2;
         else
             return (float) (Math.sqrt(Math.pow(comp1, 2) + Math.pow(comp2, 2)));
@@ -56,13 +56,13 @@ public class CylinderCollider extends CollisionShape {
         }
 
         AABB aabb = AABB.create(getModel());
-        float radius = getRadius(aabb.getDepth(), aabb.getWidth());
 
+        assert texturedMesh != null;
         float[] cylinderVertices = texturedMesh.getMeshData().vertices;
         for (int i = 0; i < cylinderVertices.length; i += 3) {
-            cylinderVertices[i] = cylinderVertices[i] * radius + aabb.getCenter().x;
-            cylinderVertices[i + 1] = cylinderVertices[i + 1] * aabb.getHeight() + aabb.getCenter().y;
-            cylinderVertices[i + 2] = cylinderVertices[i + 2] * radius + aabb.getCenter().z;
+            cylinderVertices[i] = cylinderVertices[i] * this.radius;
+            cylinderVertices[i + 1] = cylinderVertices[i + 1] * aabb.getHeight() + aabb.getHeight();
+            cylinderVertices[i + 2] = cylinderVertices[i + 2] * this.radius;
         }
         Mesh mesh = Mesh.create();
         mesh.bind();
@@ -84,21 +84,32 @@ public class CylinderCollider extends CollisionShape {
     public boolean intersection(AABB aabb) {
         boolean isIntersecting = false;
 
-        if ((Math.abs(this.tempCenter.x - aabb.getTempCenter().x) < (this.radius + aabb.getWidth())) &&
-                (Math.abs(this.tempCenter.y - aabb.getTempCenter().y) < (this.height + aabb.getHeight())) &&
-                (Math.abs(this.tempCenter.z - aabb.getTempCenter().z) < (this.radius + aabb.getDepth())))
-            isIntersecting = true;
-        changeColour(isIntersecting, aabb);
+        float dx = Math.max(aabb.getTempMin().x, Math.min(this.tempCenter.x, aabb.getTempMax().x));
+        float dz = Math.max(aabb.getTempMin().z, Math.min(this.tempCenter.z, aabb.getTempMax().z));
 
+        float distance = (float) Math.sqrt((dx - this.tempCenter.x) * (dx - this.tempCenter.x) +
+                (dz - this.tempCenter.z) * (dz - this.tempCenter.z));
+
+        if (distance < this.radius && (Math.abs(this.tempCenter.y - aabb.getTempCenter().y) < (this.height + aabb.getHeight())))
+            isIntersecting = true;
+
+        changeColour(isIntersecting, aabb);
         return isIntersecting;
+
     }
 
+    //Not perfect
     @Override
     public boolean intersection(SphereCollider sphereCollider) {
         boolean isIntersecting = false;
 
-        if ((Math.abs(this.tempCenter.x - sphereCollider.getTempCenter().x) < (this.radius + sphereCollider.getRadius())) && (Math.abs(this.tempCenter.y - sphereCollider.getTempCenter().y) < (this.height + sphereCollider.getRadius())) && (Math.abs(this.tempCenter.z - sphereCollider.getTempCenter().z) < (this.radius + sphereCollider.getRadius())))
+        float dy = Math.max(this.tempCenter.y - height, Math.min(sphereCollider.getTempCenter().y, this.tempCenter.y + height));
+
+        float distance = (float) Math.sqrt((this.tempCenter.x - sphereCollider.getTempCenter().x) * (this.tempCenter.x - sphereCollider.getTempCenter().x) + (dy - sphereCollider.getTempCenter().y) * (dy - sphereCollider.getTempCenter().y) + (this.tempCenter.z - sphereCollider.getTempCenter().z) * (this.tempCenter.z - sphereCollider.getTempCenter().z));
+
+        if (distance < sphereCollider.getRadius() + this.radius)
             isIntersecting = true;
+
         changeColour(isIntersecting, sphereCollider);
 
         return isIntersecting;
@@ -108,9 +119,9 @@ public class CylinderCollider extends CollisionShape {
     public boolean intersection(CylinderCollider cylinderCollider) {
         boolean isIntersecting = false;
 
-        if (Math.abs(this.tempCenter.x - cylinderCollider.tempCenter.x) < (this.radius + cylinderCollider.radius) &&
-                (Math.abs(this.tempCenter.y - cylinderCollider.tempCenter.y) < (this.height + cylinderCollider.height) &&
-                        (Math.abs(this.tempCenter.z - cylinderCollider.tempCenter.z) < (this.radius + cylinderCollider.radius))))
+        if (Math.abs(this.tempCenter.x - cylinderCollider.getTempCenter().x) < (this.radius + cylinderCollider.getRadius()) &&
+                (Math.abs(this.tempCenter.y - cylinderCollider.getTempCenter().y) < (this.height + cylinderCollider.getHeight()) &&
+                        (Math.abs(this.tempCenter.z - cylinderCollider.getTempCenter().z) < (this.radius + cylinderCollider.getRadius()))))
             isIntersecting = true;
 
         changeColour(isIntersecting, cylinderCollider);
@@ -118,10 +129,6 @@ public class CylinderCollider extends CollisionShape {
         return isIntersecting;
     }
 
-    @Override
-    public boolean intersection(CapsuleCollider capsuleCollider) {
-        return false;
-    }
 
     public Vector3f getTempCenter() {
         return tempCenter;

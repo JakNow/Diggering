@@ -12,8 +12,6 @@ public interface Intersection {
 
     boolean intersection(CylinderCollider cylinderCollider);
 
-    boolean intersection(CapsuleCollider capsuleCollider);
-
     void changeColour(boolean isIntersecting, CollisionShape collisionShape);
 
 }

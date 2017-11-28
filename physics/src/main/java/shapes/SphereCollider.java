@@ -12,7 +12,7 @@ public class SphereCollider extends CollisionShape {
     private Vector3f tempCenter;
     private float radius;
 
-    public SphereCollider(Model model, Vector3f center, float radius) {
+    private SphereCollider(Model model, Vector3f center, float radius) {
         super(model);
         this.center = center;
         this.tempCenter = center;
@@ -36,12 +36,15 @@ public class SphereCollider extends CollisionShape {
         }
 
         AABB aabb = AABB.create(getModel());
+
         float radius = aabb.getCenter().distance(aabb.getCornerMin());
+
+        assert texturedMesh != null;
         float[] sphereVertices = texturedMesh.getMeshData().vertices;
         for (int i = 0; i < sphereVertices.length; i += 3) {
-            sphereVertices[i] = sphereVertices[i] * radius + aabb.getCenter().x;
-            sphereVertices[i + 1] = sphereVertices[i + 1] * radius + aabb.getCenter().y;
-            sphereVertices[i + 2] = sphereVertices[i + 2] * radius + aabb.getCenter().z;
+            sphereVertices[i] = sphereVertices[i] * radius;
+            sphereVertices[i + 1] = sphereVertices[i + 1] * radius + aabb.getHeight();
+            sphereVertices[i + 2] = sphereVertices[i + 2] * radius;
         }
 
         Mesh mesh = Mesh.create();
@@ -64,9 +67,16 @@ public class SphereCollider extends CollisionShape {
     @Override
     public boolean intersection(AABB aabb) {
         boolean isIntersecting = false;
-        if ((Math.abs(this.tempCenter.x - aabb.getTempCenter().x) < (this.radius + aabb.getWidth())) &&
-                (Math.abs(this.tempCenter.y - aabb.getTempCenter().y) < (this.radius + aabb.getHeight())) &&
-                (Math.abs(this.tempCenter.z - aabb.getTempCenter().z) < (this.radius + aabb.getDepth())))
+
+        float dx = Math.max(aabb.getTempMin().x, Math.min(this.tempCenter.x, aabb.getTempMax().x));
+        float dy = Math.max(aabb.getTempMin().y, Math.min(this.tempCenter.y, aabb.getTempMax().y));
+        float dz = Math.max(aabb.getTempMin().z, Math.min(this.tempCenter.z, aabb.getTempMax().z));
+
+        float distance = (float) Math.sqrt((dx - this.tempCenter.x) * (dx - this.tempCenter.x) +
+                (dy - this.tempCenter.y) * (dy - this.tempCenter.y) +
+                (dz - this.tempCenter.z) * (dz - this.tempCenter.z));
+
+        if (distance < this.radius)
             isIntersecting = true;
 
         changeColour(isIntersecting, aabb);
@@ -85,23 +95,23 @@ public class SphereCollider extends CollisionShape {
         return isIntersecting;
     }
 
+    //Not perfect
     @Override
     public boolean intersection(CylinderCollider cylinderCollider) {
         boolean isIntersecting = false;
 
-        if ((Math.abs(this.tempCenter.x - cylinderCollider.getTempCenter().x) < (this.radius + cylinderCollider.getRadius())) &&
-                (Math.abs(this.tempCenter.y - cylinderCollider.getTempCenter().y) < (this.radius + cylinderCollider.getHeight())) &&
-                (Math.abs(this.tempCenter.z - cylinderCollider.getTempCenter().z) < (this.radius + cylinderCollider.getRadius())))
+        float dy = Math.max(cylinderCollider.getTempCenter().y - cylinderCollider.getHeight(), Math.min(this.tempCenter.y, cylinderCollider.getTempCenter().y + cylinderCollider.getHeight()));
+
+        float distance = (float) Math.sqrt((this.tempCenter.x - cylinderCollider.getTempCenter().x) * (this.tempCenter.x - cylinderCollider.getTempCenter().x) + (dy - cylinderCollider.getTempCenter().y) * (dy - cylinderCollider.getTempCenter().y) + (this.tempCenter.z - cylinderCollider.getTempCenter().z) * (this.tempCenter.z - cylinderCollider.getTempCenter().z));
+
+        if (distance < cylinderCollider.getRadius() + this.radius)
             isIntersecting = true;
+
         changeColour(isIntersecting, cylinderCollider);
 
         return isIntersecting;
     }
 
-    @Override
-    public boolean intersection(CapsuleCollider capsuleCollider) {
-        return false;
-    }
 
     public Vector3f getCenter() {
         return center;
