@@ -12,18 +12,21 @@ import utils.Maths;
 
 public class AABB extends CollisionShape {
 
-    private Vector3f cornerMin, cornerMax;
-
+    private final float meshThickness = 0.02f;
+    private Vector3f cornerMin, cornerMax, tempMin, tempMax;
     private Vector3f center, tempCenter;
     private float width, height, depth;
 
     public AABB(Model model, Vector3f cornerMin, Vector3f cornerMax) {
         super(model);
         this.cornerMin = cornerMin;
+        this.tempMin = cornerMin;
         this.cornerMax = cornerMax;
-        processShape();
+        this.tempMax = cornerMax;
 
         this.setTexturedMesh(createTexturedMesh());
+
+        processShape();
 
         this.center = new Vector3f(cornerMin).add(cornerMax).div(2);
         this.width = Math.abs(cornerMax.x - cornerMin.x) / 2;
@@ -47,6 +50,7 @@ public class AABB extends CollisionShape {
                 }
             }
         }
+
         return new AABB(model, tempMin, tempMax);
     }
 
@@ -91,8 +95,8 @@ public class AABB extends CollisionShape {
             tempMax = getMax(vector4f, tempMax);
         }
 
-        this.cornerMax.set(tempMax);
-        this.cornerMin.set(tempMin);
+        cornerMax.set(tempMax);
+        cornerMin.set(tempMin);
     }
 
     @Override
@@ -139,6 +143,8 @@ public class AABB extends CollisionShape {
     public void update() {
         if (isMoving()) {
             this.tempCenter = new Vector3f(getModel().getPosition()).add(this.getTranslation());
+            this.tempMax = new Vector3f(tempCenter.x + width, tempCenter.y + height, tempCenter.z + depth);
+            this.tempMin = new Vector3f(tempCenter.x - width, tempCenter.y - height, tempCenter.z - depth);
         }
     }
 
@@ -158,11 +164,17 @@ public class AABB extends CollisionShape {
     @Override
     public boolean intersection(SphereCollider sphereCollider) {
         boolean isIntersecting = false;
-        if ((Math.abs(this.tempCenter.x - sphereCollider.getTempCenter().x) < (this.width + sphereCollider.getRadius())) &&
-                (Math.abs(this.tempCenter.y - sphereCollider.getTempCenter().y) < (this.height + sphereCollider.getRadius())) &&
-                (Math.abs(this.tempCenter.z - sphereCollider.getTempCenter().z) < (this.width + sphereCollider.getRadius())))
-            isIntersecting = true;
 
+        float dx = Math.max(this.tempMin.x, Math.min(sphereCollider.getTempCenter().x, this.tempMax.x));
+        float dy = Math.max(this.tempMin.y, Math.min(sphereCollider.getTempCenter().y, this.tempMax.y));
+        float dz = Math.max(this.tempMin.z, Math.min(sphereCollider.getTempCenter().z, this.tempMax.z));
+
+        float distance = (float) Math.sqrt((dx - sphereCollider.getTempCenter().x) * (dx - sphereCollider.getTempCenter().x) +
+                (dy - sphereCollider.getTempCenter().y) * (dy - sphereCollider.getTempCenter().y) +
+                (dz - sphereCollider.getTempCenter().z) * (dz - sphereCollider.getTempCenter().z));
+
+        if (distance < sphereCollider.getRadius())
+            isIntersecting = true;
 
         changeColour(isIntersecting, sphereCollider);
 
@@ -171,13 +183,21 @@ public class AABB extends CollisionShape {
 
     @Override
     public boolean intersection(CylinderCollider cylinderCollider) {
-        return false;
+        boolean isIntersecting = false;
+
+        float dx = Math.max(this.tempMin.x, Math.min(cylinderCollider.getTempCenter().x, this.tempMax.x));
+        float dz = Math.max(this.tempMin.z, Math.min(cylinderCollider.getTempCenter().z, this.tempMax.z));
+
+        float distance = (float) Math.sqrt((dx - cylinderCollider.getTempCenter().x) * (dx - cylinderCollider.getTempCenter().x) +
+                (dz - cylinderCollider.getTempCenter().z) * (dz - cylinderCollider.getTempCenter().z));
+
+        if (distance < cylinderCollider.getRadius() && (Math.abs(this.tempCenter.y - cylinderCollider.getTempCenter().y) < (this.height + cylinderCollider.getHeight())))
+            isIntersecting = true;
+
+        changeColour(isIntersecting, cylinderCollider);
+        return isIntersecting;
     }
 
-    @Override
-    public boolean intersection(CapsuleCollider capsuleCollider) {
-        return false;
-    }
 
     public Vector3f getCornerMin() {
         return cornerMin;
@@ -205,5 +225,13 @@ public class AABB extends CollisionShape {
 
     public float getDepth() {
         return depth;
+    }
+
+    public Vector3f getTempMin() {
+        return tempMin;
+    }
+
+    public Vector3f getTempMax() {
+        return tempMax;
     }
 }

@@ -8,7 +8,6 @@ import utils.Color;
 
 public abstract class CollisionShape implements Intersection {
 
-    protected final float meshThickness = 0.02f;
     private final Color isIntersectingColour = new Color(255, 0, 0, 255);
     private final Color isNotIntersectingColour = new Color(42, 135, 211, 255);
     private final Model model;
@@ -16,9 +15,11 @@ public abstract class CollisionShape implements Intersection {
     private TexturedMesh mesh;
     private Vector4f meshColour = isNotIntersectingColour.getFloats();
     private Vector3f translation;
+    private Vector3f center;
 
     public CollisionShape(Model model) {
         this.model = model;
+        this.center = model.getPosition();
     }
 
     @Override
@@ -60,7 +61,7 @@ public abstract class CollisionShape implements Intersection {
         return meshColour;
     }
 
-    void setMeshColour(Color color) {
+    private void setMeshColour(Color color) {
         this.meshColour = color.getFloats();
     }
 
@@ -72,4 +73,7 @@ public abstract class CollisionShape implements Intersection {
         this.translation = translation;
     }
 
+    public Vector3f getCenter() {
+        return center;
+    }
 }
