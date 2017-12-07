@@ -6,7 +6,7 @@ import pl.oblivion.base.ModelPart;
 import pl.oblivion.base.TexturedMesh;
 import pl.oblivion.shaders.RendererHandler;
 import pl.oblivion.staticModels.StaticModel;
-import pl.oblivion.utils.Maths;
+import pl.oblivion.utils.PMaths;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +41,7 @@ public class WorldRendererHandler extends RendererHandler {
 
     @Override
     public void prepareInstance(Model model) {
-        Matrix4f transformationMatrix = Maths.createTransformationMatrix(model);
+        Matrix4f transformationMatrix = PMaths.createTransformationMatrix(model);
         shader.transformationMatrix.loadMatrix(transformationMatrix);
     }
 

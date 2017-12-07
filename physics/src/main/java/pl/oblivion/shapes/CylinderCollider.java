@@ -1,4 +1,4 @@
-package shapes;
+package pl.oblivion.shapes;
 
 import org.joml.Vector3f;
 import pl.oblivion.assimp.StaticMeshLoader;
@@ -127,6 +127,11 @@ public class CylinderCollider extends CollisionShape {
         changeColour(isIntersecting, cylinderCollider);
 
         return isIntersecting;
+    }
+
+    @Override
+    public boolean intersection(MeshCollider meshCollider) {
+        return false;
     }
 
 

@@ -1,6 +1,7 @@
-package shapes;
+package pl.oblivion.shapes;
 
 import org.joml.Matrix4f;
+import org.joml.Planef;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import pl.oblivion.assimp.StaticMeshLoader;
@@ -8,7 +9,9 @@ import pl.oblivion.base.Mesh;
 import pl.oblivion.base.Model;
 import pl.oblivion.base.ModelPart;
 import pl.oblivion.base.TexturedMesh;
-import utils.Maths;
+import pl.oblivion.utils.PMaths;
+
+import static org.joml.Intersectionf.testAabPlane;
 
 public class AABB extends CollisionShape {
 
@@ -77,7 +80,7 @@ public class AABB extends CollisionShape {
     }
 
     private void processShape() {
-        Matrix4f transformationMatrix = Maths.createTransformationMatrix(this.getModel());
+        Matrix4f transformationMatrix = PMaths.createTransformationMatrix(this.getModel());
         Vector4f[] corners = {
                 new Vector4f(cornerMin.x, cornerMin.y, cornerMax.z, 1.0f).mul(transformationMatrix),
                 new Vector4f(cornerMax.x, cornerMin.y, cornerMax.z, 1.0f).mul(transformationMatrix),
@@ -146,6 +149,20 @@ public class AABB extends CollisionShape {
             this.tempMax = new Vector3f(tempCenter.x + width, tempCenter.y + height, tempCenter.z + depth);
             this.tempMin = new Vector3f(tempCenter.x - width, tempCenter.y - height, tempCenter.z - depth);
         }
+    }
+
+
+    @Override
+    public boolean intersection(MeshCollider meshCollider) {
+        for (ModelPart modelPart : meshCollider.getFaces().keySet()) {
+            for (Face face : meshCollider.getFaces().get(modelPart)) {
+                Planef plane = face.getPlane();
+                boolean test = testAabPlane(this.getTempMin(), this.getTempMax(), plane.a, plane.b, plane.c, plane.d);
+                System.out.println(test);
+
+            }
+        }
+        return false;
     }
 
     @Override

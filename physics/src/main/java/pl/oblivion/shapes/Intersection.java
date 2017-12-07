@@ -1,4 +1,4 @@
-package shapes;
+package pl.oblivion.shapes;
 
 /*
 Interface used for CollisionShape to set up intersection between different CollisionShapes
@@ -11,6 +11,8 @@ public interface Intersection {
     boolean intersection(SphereCollider sphereCollider);
 
     boolean intersection(CylinderCollider cylinderCollider);
+
+    boolean intersection(MeshCollider meshCollider);
 
     void changeColour(boolean isIntersecting, CollisionShape collisionShape);
 

@@ -6,7 +6,7 @@ import pl.oblivion.core.Window;
 import pl.oblivion.game.Camera;
 import pl.oblivion.shaders.RendererHandler;
 import pl.oblivion.shaders.RendererProgram;
-import shapes.CollisionShape;
+import pl.oblivion.shapes.CollisionShape;
 
 import java.util.List;
 

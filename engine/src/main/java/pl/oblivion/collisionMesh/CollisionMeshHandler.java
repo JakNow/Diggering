@@ -1,12 +1,12 @@
 package pl.oblivion.collisionMesh;
 
-import components.CollisionComponent;
 import org.joml.Matrix4f;
 import pl.oblivion.base.Model;
 import pl.oblivion.base.TexturedMesh;
+import pl.oblivion.components.CollisionComponent;
 import pl.oblivion.shaders.RendererHandler;
+import pl.oblivion.shapes.CollisionShape;
 import pl.oblivion.utils.Maths;
-import shapes.CollisionShape;
 
 import java.util.ArrayList;
 import java.util.HashMap;

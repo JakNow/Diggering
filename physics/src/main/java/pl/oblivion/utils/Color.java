@@ -1,4 +1,4 @@
-package utils;
+package pl.oblivion.utils;
 
 import org.joml.Vector4f;
 

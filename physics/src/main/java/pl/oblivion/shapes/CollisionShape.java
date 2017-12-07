@@ -1,10 +1,10 @@
-package shapes;
+package pl.oblivion.shapes;
 
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import pl.oblivion.base.Model;
 import pl.oblivion.base.TexturedMesh;
-import utils.Color;
+import pl.oblivion.utils.Color;
 
 public abstract class CollisionShape implements Intersection {
 
