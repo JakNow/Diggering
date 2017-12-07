@@ -1,8 +1,8 @@
 package pl.oblivion.player;
 
-import components.CollisionComponent;
 import org.joml.Vector3f;
 import pl.oblivion.base.ModelView;
+import pl.oblivion.components.CollisionComponent;
 import pl.oblivion.components.moveable.MoveComponent;
 import pl.oblivion.components.moveable.RotateComponent;
 import pl.oblivion.core.Window;

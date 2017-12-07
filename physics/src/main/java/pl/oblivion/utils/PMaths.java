@@ -1,9 +1,9 @@
-package utils;
+package pl.oblivion.utils;
 
 import org.joml.Matrix4f;
 import pl.oblivion.base.Model;
 
-public class Maths {
+public class PMaths {
 
 
     public static Matrix4f createTransformationMatrix(Model model) {

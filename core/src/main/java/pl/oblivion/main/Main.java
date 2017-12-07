@@ -1,20 +1,21 @@
 package pl.oblivion.main;
 
-import components.CollisionComponent;
 import org.joml.Vector3f;
 import pl.oblivion.assimp.StaticMeshLoader;
 import pl.oblivion.base.ModelView;
 import pl.oblivion.collisionMesh.CollisionMeshRenderer;
+import pl.oblivion.components.CollisionComponent;
 import pl.oblivion.core.SimpleApp;
 import pl.oblivion.game.Camera;
 import pl.oblivion.game.MouseInput;
 import pl.oblivion.player.Player;
+import pl.oblivion.shapes.AABB;
+import pl.oblivion.shapes.CylinderCollider;
+import pl.oblivion.shapes.MeshCollider;
+import pl.oblivion.shapes.SphereCollider;
 import pl.oblivion.staticModels.StaticModel;
 import pl.oblivion.staticModels.StaticRenderer;
 import pl.oblivion.world.WorldRenderer;
-import shapes.AABB;
-import shapes.CylinderCollider;
-import shapes.SphereCollider;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_F1;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_F2;
@@ -25,6 +26,8 @@ public class Main extends SimpleApp {
     private StaticModel aabb;
     private StaticModel cylinder;
     private StaticModel sphere;
+
+    private StaticModel plane;
 
     private Main() {
 
@@ -62,7 +65,7 @@ public class Main extends SimpleApp {
         staticRenderer.getRendererHandler().processModel(sphere);
 
 
-        player.addComponent(new CollisionComponent(SphereCollider.create(player), null));
+        player.addComponent(new CollisionComponent(AABB.create(player), null));
 
 
         CollisionMeshRenderer collisionMeshRenderer = new CollisionMeshRenderer(window);
@@ -73,6 +76,16 @@ public class Main extends SimpleApp {
         collisionMeshRenderer.getRendererHandler().processModel(aabb);
         collisionMeshRenderer.getRendererHandler().processModel(cylinder);
         collisionMeshRenderer.getRendererHandler().processModel(sphere);
+
+        try {
+            plane = new StaticModel(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), 3f, StaticMeshLoader.load("test_floor.obj", null));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        staticRenderer.getRendererHandler().processModel(plane);
+
+        plane.addComponent(new CollisionComponent(AABB.create(plane), MeshCollider.create(plane)));
+
 
     }
 
@@ -87,6 +100,8 @@ public class Main extends SimpleApp {
         camera.update();
 
         player.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().update();
+
+        player.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().intersection((MeshCollider) plane.getComponent(CollisionComponent.class).getNarrowPhaseCollisionShape());
 
         player.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().intersection((AABB) aabb.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape());
         player.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().intersection((SphereCollider) sphere.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape());
