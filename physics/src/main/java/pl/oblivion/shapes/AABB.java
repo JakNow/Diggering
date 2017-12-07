@@ -154,14 +154,6 @@ public class AABB extends CollisionShape {
 
     @Override
     public boolean intersection(MeshCollider meshCollider) {
-        for (ModelPart modelPart : meshCollider.getFaces().keySet()) {
-            for (Face face : meshCollider.getFaces().get(modelPart)) {
-                Planef plane = face.getPlane();
-                boolean test = testAabPlane(this.getTempMin(), this.getTempMax(), plane.a, plane.b, plane.c, plane.d);
-                System.out.println(test);
-
-            }
-        }
         return false;
     }
 

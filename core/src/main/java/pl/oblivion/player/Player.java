@@ -1,12 +1,12 @@
 package pl.oblivion.player;
 
-import main.java.oblivion.main.Config;
 import org.joml.Vector3f;
 import pl.oblivion.base.ModelView;
 import pl.oblivion.components.CollisionComponent;
 import pl.oblivion.components.moveable.MoveComponent;
 import pl.oblivion.components.moveable.RotateComponent;
 import pl.oblivion.core.Window;
+import pl.oblivion.main.Config;
 import pl.oblivion.staticModels.StaticModel;
 
 import static org.lwjgl.glfw.GLFW.*;

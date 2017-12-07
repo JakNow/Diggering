@@ -1,4 +1,4 @@
-package main.java.oblivion.main;
+package pl.oblivion.main;
 
 /**
  * Core config
