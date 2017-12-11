@@ -6,6 +6,8 @@ import pl.oblivion.base.ModelView;
 import pl.oblivion.collisionMesh.CollisionMeshRenderer;
 import pl.oblivion.components.CollisionComponent;
 import pl.oblivion.core.SimpleApp;
+import pl.oblivion.dataStructure.Octree;
+import pl.oblivion.dataStructure.OctreeNode;
 import pl.oblivion.game.Camera;
 import pl.oblivion.game.MouseInput;
 import pl.oblivion.player.Player;
@@ -28,6 +30,7 @@ public class Main extends SimpleApp {
     private StaticModel sphere;
 
     private StaticModel plane;
+   private Octree octree;
 
     private Main() {
 
@@ -82,11 +85,20 @@ public class Main extends SimpleApp {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        staticRenderer.getRendererHandler().processModel(plane);
+        //  staticRenderer.getRendererHandler().processModel(plane);
 
-        plane.addComponent(new CollisionComponent(AABB.create(plane), MeshCollider.create(plane)));
+        //  plane.addComponent(new CollisionComponent(AABB.create(plane), MeshCollider.create(plane)));
 
-
+        octree = new Octree(128, 4);
+        octree.insertObject(player);
+        octree.insertObject(aabb);
+        octree.insertObject(cylinder);
+        octree.insertObject(sphere);
+        for (int i = 0; i < 150; i++){
+            StaticModel testModel = new StaticModel(new Vector3f((float) (Math.random()*100-50), (float) (Math.random()*100-50), (float) (Math.random()*100-50)), new Vector3f(0, 0, 0), 1f, test);
+            testModel.addComponent(new CollisionComponent(AABB.create(testModel), null));
+            octree.insertObject(testModel);
+        }
     }
 
     public static void main(String[] args) {
@@ -98,10 +110,10 @@ public class Main extends SimpleApp {
     public void logicUpdate(float delta, MouseInput mouseInput) {
         player.update(window, delta);
         camera.update();
-
+    octree.update();
         player.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().update();
 
-        player.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().intersection((MeshCollider) plane.getComponent(CollisionComponent.class).getNarrowPhaseCollisionShape());
+//        player.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().intersection((MeshCollider) plane.getComponent(CollisionComponent.class).getNarrowPhaseCollisionShape());
 
         player.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().intersection((AABB) aabb.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape());
         player.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().intersection((SphereCollider) sphere.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape());
