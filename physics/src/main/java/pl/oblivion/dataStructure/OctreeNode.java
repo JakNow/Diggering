@@ -13,11 +13,13 @@ public class OctreeNode {
 
     private final ArrayList<Model> objects;
 
+    private ArrayList<Model> tempObjects;
+
     OctreeNode(Vector3f pos, float halfWidth, int stopDepth) {
         this.currentDepth = stopDepth;
         this.center = pos;
         this.objects = new ArrayList<>();
-
+        this.tempObjects = new ArrayList<>();
         Vector3f offset = new Vector3f();
 
         if(stopDepth > 0){
@@ -76,9 +78,30 @@ public class OctreeNode {
     }
 
     public void update(){
+        this.tempObjects.clear();
+        createTempObjectsList();
         if(currentDepth > 0){
             for(OctreeNode child : children){
                 child.update();
+            }
+        }
+    }
+
+    private void createTempObjectsList(){
+        this.tempObjects.addAll(objects);
+        if(currentDepth>0){
+            for(OctreeNode child : children){
+                child.createTempObjectsList();
+            }
+        }
+        if(this.tempObjects.size() != 0)
+            collisionCheck();
+    }
+
+    private void collisionCheck(){
+        for(int i =0; i < tempObjects.size();i++){
+            for(int j = 1; j < tempObjects.size();j++){
+                //TODO find the closest object (by center<=>center or min<=>max) to create a pair to find if collision occurs.
             }
         }
     }

@@ -53,6 +53,7 @@ public class Main extends SimpleApp {
         aabb = new StaticModel(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), 1f, test);
         aabb.addComponent(new CollisionComponent(AABB.create(aabb), null));
 
+
         cylinder = new StaticModel(new Vector3f(-5, 0, 0), new Vector3f(0, 0, 0), 1f, test);
         cylinder.addComponent(new CollisionComponent(CylinderCollider.create(cylinder), null));
         sphere = new StaticModel(new Vector3f(-10, 0, 0), new Vector3f(0, 0, 0), 1f, test);

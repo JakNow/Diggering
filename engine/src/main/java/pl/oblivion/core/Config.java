@@ -17,10 +17,10 @@ public class Config {
     public static final float FOV = 70;
     public static final float NEAR = 0.1f;
     public static final float FAR = 1000f;
-    public static int WIDTH = 600;
+    public static int WIDTH = 1000;
     public static int HEIGHT = WIDTH * 9 / 16;
-    public static float RED = 0.1f;
-    public static float GREEN = 0.5f;
-    public static float BLUE = 0.4f;
+    public static float RED = 0.0f;
+    public static float GREEN = 0.0f;
+    public static float BLUE = 0.0f;
     public static float ALPHA = 1.0f;
 }
