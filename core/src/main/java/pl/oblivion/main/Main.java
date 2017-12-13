@@ -50,13 +50,13 @@ public class Main extends SimpleApp {
         this.camera = new Camera(player, mouseInput);
 
 
-        aabb = new StaticModel(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), 1f, test);
+        aabb = new StaticModel(new Vector3f(0.5f, 0.5f, 0.5f), new Vector3f(0, 0, 0), 1f, test);
         aabb.addComponent(new CollisionComponent(AABB.create(aabb), null));
 
 
-        cylinder = new StaticModel(new Vector3f(-5, 0, 0), new Vector3f(0, 0, 0), 1f, test);
+        cylinder = new StaticModel(new Vector3f(-16, -0.5f, -16f), new Vector3f(0, 0, 0), 1f, test);
         cylinder.addComponent(new CollisionComponent(CylinderCollider.create(cylinder), null));
-        sphere = new StaticModel(new Vector3f(-10, 0, 0), new Vector3f(0, 0, 0), 1f, test);
+        sphere = new StaticModel(new Vector3f(16, -0.5f, 16f), new Vector3f(0, 0, 0), 1f, test);
         sphere.addComponent(new CollisionComponent(SphereCollider.create(sphere), null));
 
 
@@ -90,21 +90,21 @@ public class Main extends SimpleApp {
 
         //  plane.addComponent(new CollisionComponent(AABB.create(plane), MeshCollider.create(plane)));
 
-        octree = new Octree(128, 4);
+        octree = new Octree(32, 3);
         octree.insertObject(player);
         octree.insertObject(aabb);
         octree.insertObject(cylinder);
         octree.insertObject(sphere);
-        for (int i = 0; i < 150; i++){
+     /*   for (int i = 0; i < 150; i++){
             StaticModel testModel = new StaticModel(new Vector3f((float) (Math.random()*100-50), (float) (Math.random()*100-50), (float) (Math.random()*100-50)), new Vector3f(0, 0, 0), 1f, test);
             testModel.addComponent(new CollisionComponent(AABB.create(testModel), null));
             octree.insertObject(testModel);
-        }
+        }*/
     }
 
     public static void main(String[] args) {
         new Main().run();
-    }
+        }
 
 
     @Override

@@ -2,8 +2,16 @@ package pl.oblivion.dataStructure;
 
 import org.joml.Vector3f;
 import pl.oblivion.base.Model;
+import pl.oblivion.components.CollisionComponent;
+import pl.oblivion.shapes.AABB;
+import pl.oblivion.shapes.CollisionShape;
+import pl.oblivion.shapes.CylinderCollider;
+import pl.oblivion.shapes.SphereCollider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class OctreeNode {
 
@@ -11,15 +19,15 @@ public class OctreeNode {
     private final Vector3f center;
     private final OctreeNode[] children;
 
-    private final ArrayList<Model> objects;
+    private final Map<Model,Model> objects;
 
-    private ArrayList<Model> tempObjects;
+    private Map<Model,Model> tempObjects;
 
     OctreeNode(Vector3f pos, float halfWidth, int stopDepth) {
         this.currentDepth = stopDepth;
         this.center = pos;
-        this.objects = new ArrayList<>();
-        this.tempObjects = new ArrayList<>();
+        this.objects = new HashMap<>();
+        this.tempObjects = new HashMap<>();
         Vector3f offset = new Vector3f();
 
         if(stopDepth > 0){
@@ -62,7 +70,7 @@ public class OctreeNode {
         if(!straddle && currentDepth >0)
             children[index].insertModel(model);
         else {
-            objects.add(model);
+            objects.put(model,model);
         }
 
     }
@@ -88,7 +96,7 @@ public class OctreeNode {
     }
 
     private void createTempObjectsList(){
-        this.tempObjects.addAll(objects);
+        this.tempObjects.putAll(objects);
         if(currentDepth>0){
             for(OctreeNode child : children){
                 child.createTempObjectsList();
@@ -99,10 +107,28 @@ public class OctreeNode {
     }
 
     private void collisionCheck(){
-        for(int i =0; i < tempObjects.size();i++){
-            for(int j = 1; j < tempObjects.size();j++){
-                //TODO find the closest object (by center<=>center or min<=>max) to create a pair to find if collision occurs.
-            }
-        }
+        List<ModelPair> pairList = new ArrayList<>();
+        Map<Model,Model> tempMap = new HashMap<>(tempObjects);
+
+       for(Model model : tempObjects.keySet()){
+           tempMap.remove(model);
+           CollisionShape collisionShape1 = tempObjects.get(model).getComponent(CollisionComponent.class).getBroadPhaseCollisionShape();
+           for(Model testModel : tempMap.keySet()){
+               CollisionShape collisionShape2 = tempObjects.get(testModel).getComponent(CollisionComponent.class).getBroadPhaseCollisionShape();
+               if(intersection(collisionShape1,collisionShape2))
+                   pairList.add(new ModelPair(tempObjects.get(model),tempObjects.get(testModel)));
+
+           }
+       }
+    }
+
+    private boolean intersection(CollisionShape collisionShape1, CollisionShape collisionShape2){
+        String className = collisionShape2.getClass().getName();
+        if(className.contains("AABB"))
+            return collisionShape1.intersection((AABB) collisionShape2);
+        else if (className.contains("CylinderCollider"))
+            return collisionShape1.intersection((CylinderCollider) collisionShape2);
+        else
+            return className.contains("SphereCollider") && collisionShape1.intersection((SphereCollider) collisionShape2);
     }
 }
