@@ -5,28 +5,24 @@ import pl.oblivion.base.Model;
 
 public class Octree implements BroadPhase {
 
-    private final OctreeNode node;
+	private final OctreeNode node;
 
-    public Octree(final float worldExtends, int worldDepth){
-        node = new OctreeNode(new Vector3f(0,0,0),worldExtends,worldDepth);
-    }
+	public Octree(final float worldExtends, int worldDepth) {
+		node = new OctreeNode(new Vector3f(0, 0, 0), worldExtends, worldDepth, null);
+	}
 
-    public Octree(Vector3f initPoint, final float worldExtends, int worldDepth){
-        node = new OctreeNode(initPoint,worldExtends,worldDepth);
-    }
+	@Override
+	public void insertObject(final Model model) {
+		node.insertModel(model);
+	}
 
-    @Override
-    public void insertObject(final Model model) {
-        node.insertModel(model);
-    }
+	@Override
+	public void clean() {
+		node.clean();
+	}
 
-    @Override
-    public void clean() {
-        node.clean();
-    }
-
-    @Override
-    public void update() {
-        node.update();
-    }
+	@Override
+	public void update() {
+		node.update();
+	}
 }

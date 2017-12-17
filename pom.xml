@@ -12,7 +12,7 @@
         <module>engine</module>
         <module>models</module>
         <module>core</module>
-        <module>physicsEngine</module>
+        <module>physic</module>
     </modules>
 
     <properties>

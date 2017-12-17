@@ -6,14 +6,14 @@ Adding new CollisionShape requires adding new boolean to check intersection with
  */
 public interface Intersection {
 
-    boolean intersection(AABB aabb);
+	boolean intersection(AABB aabb);
 
-    boolean intersection(SphereCollider sphereCollider);
+	boolean intersection(SphereCollider sphereCollider);
 
-    boolean intersection(CylinderCollider cylinderCollider);
+	boolean intersection(CylinderCollider cylinderCollider);
 
-    boolean intersection(MeshCollider meshCollider);
+	boolean intersection(MeshCollider meshCollider);
 
-    void changeColour(boolean isIntersecting, CollisionShape collisionShape);
+	void changeColour(boolean isIntersecting, CollisionShape collisionShape);
 
 }

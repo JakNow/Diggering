@@ -7,29 +7,27 @@ import java.util.Map;
 
 public class TextureCache {
 
-    private static TextureCache INSTANCE;
+	private static TextureCache INSTANCE;
 
-    private Map<String, Texture> texturesMap;
+	private Map<String, Texture> texturesMap;
 
-    private TextureCache() {
-        texturesMap = new HashMap<>();
-    }
+	private TextureCache() {
+		texturesMap = new HashMap<>();
+	}
 
-    public static synchronized TextureCache getInstance() {
-        if (INSTANCE == null)
-            INSTANCE = new TextureCache();
+	public static synchronized TextureCache getInstance() {
+		if (INSTANCE == null) { INSTANCE = new TextureCache(); }
 
-        return INSTANCE;
-    }
+		return INSTANCE;
+	}
 
-    public Texture getTexture(String path) throws Exception {
-        Texture texture = texturesMap.get(path);
-        if (texture == null) {
-            texture = new Texture(path);
-            texturesMap.put(path, texture);
-        }
-        return texture;
-    }
-
+	public Texture getTexture(String path) throws Exception {
+		Texture texture = texturesMap.get(path);
+		if (texture == null) {
+			texture = new Texture(path);
+			texturesMap.put(path, texture);
+		}
+		return texture;
+	}
 
 }

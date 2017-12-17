@@ -4,10 +4,10 @@ import pl.oblivion.base.Model;
 
 public interface BroadPhase {
 
-    void insertObject(final Model model);
+	void insertObject(final Model model);
 
-    void clean();
+	void clean();
 
-    void update();
+	void update();
 
 }

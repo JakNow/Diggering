@@ -12,38 +12,39 @@ import pl.oblivion.utils.MyFile;
 
 public class WorldShader extends ShaderProgram {
 
-    protected UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
-    protected UniformMatrix viewMatrix = new UniformMatrix("viewMatrix");
-    protected UniformMatrix transformationMatrix = new UniformMatrix("transformationMatrix");
+	protected UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
+	protected UniformMatrix viewMatrix = new UniformMatrix("viewMatrix");
+	protected UniformMatrix transformationMatrix = new UniformMatrix("transformationMatrix");
 
-    protected UniformMaterial material = new UniformMaterial("material");
-    protected UniformSampler diffuseTexture = new UniformSampler("diffuseTexture");
-    protected UniformSampler normalTexture = new UniformSampler("normalTexture");
+	protected UniformMaterial material = new UniformMaterial("material");
+	protected UniformSampler diffuseTexture = new UniformSampler("diffuseTexture");
+	protected UniformSampler normalTexture = new UniformSampler("normalTexture");
 
-    public WorldShader() {
-        super(new MyFile(Config.WORLD_VERT), new MyFile(Config.WORLD_FRAG), "in_position", "in_textures");
-        super.storeAllUniformLocations(projectionMatrix, viewMatrix, transformationMatrix, diffuseTexture, normalTexture);
-        this.storeMaterialUniforms();
-        connectTextureUnits();
-    }
+	public WorldShader() {
+		super(new MyFile(Config.WORLD_VERT), new MyFile(Config.WORLD_FRAG), "in_position", "in_textures");
+		super.storeAllUniformLocations(projectionMatrix, viewMatrix, transformationMatrix, diffuseTexture,
+				normalTexture);
+		this.storeMaterialUniforms();
+		connectTextureUnits();
+	}
 
-    private void connectTextureUnits() {
-        super.start();
-        diffuseTexture.loadTexUnit(Material.DIFFUSE_TEXTURE_UNIT);
-        normalTexture.loadTexUnit(Material.NORMAL_TEXTURE_UNIT);
-        super.stop();
-    }
+	private void storeMaterialUniforms() {
+		material.ambientColour.storeUniformLocation(this.programID);
+		material.diffuseColour.storeUniformLocation(this.programID);
+		material.specularColour.storeUniformLocation(this.programID);
 
-    private void storeMaterialUniforms() {
-        material.ambientColour.storeUniformLocation(this.programID);
-        material.diffuseColour.storeUniformLocation(this.programID);
-        material.specularColour.storeUniformLocation(this.programID);
+		material.hasTexture.storeUniformLocation(this.programID);
+		material.hasNormalMap.storeUniformLocation(this.programID);
+	}
 
-        material.hasTexture.storeUniformLocation(this.programID);
-        material.hasNormalMap.storeUniformLocation(this.programID);
-    }
+	private void connectTextureUnits() {
+		super.start();
+		diffuseTexture.loadTexUnit(Material.DIFFUSE_TEXTURE_UNIT);
+		normalTexture.loadTexUnit(Material.NORMAL_TEXTURE_UNIT);
+		super.stop();
+	}
 
-    public void loadViewMatrix(Camera camera) {
-        viewMatrix.loadMatrix(Maths.getViewMatrix(camera));
-    }
+	public void loadViewMatrix(Camera camera) {
+		viewMatrix.loadMatrix(Maths.getViewMatrix(camera));
+	}
 }
