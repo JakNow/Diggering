@@ -23,7 +23,7 @@ hs_err_pid*
 
 #Intellij
 .idea/
-Diggering.iml
+*.iml
 out/
 
 #Libraries
@@ -31,3 +31,6 @@ lib/
 
 #Project
 assets/
+schemas/
+*.blend
+*.blend*

@@ -2,19 +2,26 @@ package pl.oblivion.base;
 
 public class ModelPart {
 
-    private final AABB aabb;
-    private final TexturedMesh[] texturedMeshes;
+	private final TexturedMesh[] texturedMeshes;
+	private final float furthestPoint;
 
-    public ModelPart(AABB aabb, TexturedMesh... texturedMeshes) {
-        this.aabb = aabb;
-        this.texturedMeshes = texturedMeshes;
-    }
+	public ModelPart(TexturedMesh... texturedMeshes) {
+		this.texturedMeshes = texturedMeshes;
 
-    public AABB getAabb() {
-        return aabb;
-    }
+		float currentFurthestPoint = 0;
+		for (TexturedMesh texturedMesh : texturedMeshes) {
+			if (texturedMesh.getFurthestPoint() > currentFurthestPoint) {
+				currentFurthestPoint = texturedMesh.getFurthestPoint();
+			}
+		}
+		this.furthestPoint = currentFurthestPoint;
+	}
 
-    public TexturedMesh[] getTexturedMeshes() {
-        return texturedMeshes;
-    }
+	public TexturedMesh[] getTexturedMeshes() {
+		return texturedMeshes;
+	}
+
+	public float getFurthestPoint() {
+		return furthestPoint;
+	}
 }

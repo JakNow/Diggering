@@ -1,77 +1,63 @@
 package pl.oblivion.staticModels;
 
-
-import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
-import pl.oblivion.base.ModelPart;
 import pl.oblivion.base.TexturedMesh;
-import pl.oblivion.components.moveable.RotateComponent;
 import pl.oblivion.core.Window;
 import pl.oblivion.game.Camera;
 import pl.oblivion.shaders.RendererProgram;
-import pl.oblivion.shaders.ShaderProgram;
-import pl.oblivion.utils.Maths;
+
+import java.util.List;
 
 public class StaticRenderer extends RendererProgram {
 
-    private static StaticShader shader = new StaticShader();
-    private static StaticRendererHandler rendererHandler = new StaticRendererHandler();
+	private static StaticShader shader = new StaticShader();
+	private static StaticRendererHandler rendererHandler = new StaticRendererHandler(shader);
 
-    public StaticRenderer(Window window) {
-        super(shader, rendererHandler, window);
+	public StaticRenderer(Window window) {
+		super(shader, rendererHandler, window);
 
-        shader.start();
-        shader.projectionMatrix.loadMatrix(projectionMatrix);
-        shader.stop();
-    }
+		shader.start();
+		shader.projectionMatrix.loadMatrix(this.getProjectionMatrix());
+		shader.stop();
 
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glCullFace(GL11.GL_BACK);
+	}
 
-    @Override
-    public void render(Window window, Camera camera) {
-        //staticModel.getComponent(MoveComponent.class).move(new Vector3f(0.0f,0.f,-0.002f));
-        shader.start();
-        shader.projectionMatrix.loadMatrix(window.getProjectionMatrix());
-        shader.loadViewMatrix(camera);
+	@Override
+	public void render(Window window, Camera camera) {
+		this.prepare(window, camera);
+		for (TexturedMesh texturedMesh : rendererHandler.getTexturedMeshMap().keySet()) {
+			rendererHandler.prepareModel(texturedMesh);
+			List<StaticModel> batch = rendererHandler.getTexturedMeshMap().get(texturedMesh);
+			for (StaticModel staticModel : batch) {
+				rendererHandler.prepareInstance(staticModel);
+				GL11.glDrawElements(GL11.GL_TRIANGLES, texturedMesh.getMesh().getIndexCount(), GL11.GL_UNSIGNED_INT, 0);
+			}
+			rendererHandler.unbindTexturedMesh(texturedMesh);
+		}
+		end();
+	}
 
+	@Override
+	public void prepare(Window window, Camera camera) {
+		shader.start();
+		shader.projectionMatrix.loadMatrix(window.getProjectionMatrix());
+		shader.loadViewMatrix(camera);
+	}
 
-        StaticModel staticModel = rendererHandler.getStaticModel();
-        for (int i = 0; i < staticModel.getModelView().getModelParts().length; i++) {
-            ModelPart modelPart = staticModel.getModelView().getModelParts()[i];
-            for (int j = 0; j < modelPart.getTexturedMeshes().length; j++) {
+	@Override
+	public void delete() {
+		rendererHandler.delete();
+	}
 
-                TexturedMesh texturedMesh = modelPart.getTexturedMeshes()[j];
-                texturedMesh.getMesh().bind(0, 1);
-                shader.material.loadMaterial(texturedMesh.getMaterial());
+	@Override
+	public void end() {
+		shader.stop();
+	}
 
-                Matrix4f transformationMatrix = Maths.createTransformationMatrix(rendererHandler.getStaticModel());
-                shader.transformationMatrix.loadMatrix(transformationMatrix);
-                GL11.glDrawElements(GL11.GL_TRIANGLES, texturedMesh.getMesh().getIndexCount(), GL11.GL_UNSIGNED_INT, 0);
-                texturedMesh.getMesh().unbind(0, 1);
-            }
-        }
-
-        shader.stop();
-    }
-
-    @Override
-    public void update() {
-        rendererHandler.getStaticModel().getComponent(RotateComponent.class).rotate(false, true, false);
-    }
-
-    @Override
-    public void delete() {
-        rendererHandler.getStaticModel().delete();
-    }
-
-    @Override
-    public ShaderProgram getShaderProgram() {
-        return shader;
-    }
-
-    @Override
-    public StaticRendererHandler getRendererHandler() {
-        return rendererHandler;
-    }
-
-
+	@Override
+	public StaticRendererHandler getRendererHandler() {
+		return rendererHandler;
+	}
 }

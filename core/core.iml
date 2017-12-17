@@ -3,15 +3,19 @@
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
-    <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/target" />
+    <content url="file://$MODULE_DIR$/../../Diggering/core">
+      <sourceFolder url="file://$MODULE_DIR$/../../Diggering/core/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Diggering/core/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Diggering/core/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/../../Diggering/core/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="engine" />
     <orderEntry type="module" module-name="models" />
+    <orderEntry type="library" name="Maven: org.l33tlabs.twl:pngdecoder:1.0" level="project" />
+    <orderEntry type="module" module-name="physics" />
+    <orderEntry type="library" name="Maven: Diggering:physicsEngine:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl:3.1.2" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-assimp:3.1.2" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-bgfx:3.1.2" level="project" />

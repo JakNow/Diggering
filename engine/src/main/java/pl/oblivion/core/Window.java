@@ -16,155 +16,146 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
 
+	private final Matrix4f projectionMatrix;
+	// The window handle
+	private long window;
+	private int width;
+	private int height;
+	private String title;
+	private boolean resized;
+	private boolean vSync;
 
-    private final Matrix4f projectionMatrix;
-    // The window handle
-    private long window;
-    private int width;
-    private int height;
-    private String title;
-    private boolean resized;
-    private boolean vSync;
+	public Window() {
+		this.width = Config.WIDTH;
+		this.height = Config.HEIGHT;
+		this.title = Config.TITLE;
+		this.resized = false;
+		this.vSync = true;
+		projectionMatrix = new Matrix4f();
+		this.init();
+	}
 
-    public Window() {
-        this.width = Config.WIDTH;
-        this.height = Config.HEIGHT;
-        this.title = Config.TITLE;
-        this.resized = false;
-        this.vSync = true;
-        projectionMatrix = new Matrix4f();
-        this.init();
-    }
+	public void init() {
+		// Setup an error callback. The default implementation
+		// will print the error message in System.err.
+		GLFWErrorCallback.createPrint(System.err).set();
 
-    public static Matrix4f updateProjectionMatrix(Matrix4f matrix, int width, int height) {
-        float aspectRatio = (float) width / (float) height;
-        return matrix.setPerspective(Config.FOV, aspectRatio, Config.NEAR, Config.FAR);
-    }
+		// Initialize GLFW. Most GLFW functions will not work before doing this.
+		if (! glfwInit()) { throw new IllegalStateException("Unable to initialize GLFW"); }
 
-    public void destroy() {
+		// Configure GLFW
+		glfwDefaultWindowHints(); // optional, the current window hints are already the default
+		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
-        // Free the window callbacks and destroy the window
-        glfwFreeCallbacks(window);
-        glfwDestroyWindow(window);
+		// Create the window
+		window = glfwCreateWindow(width, height, title, NULL, NULL);
 
-        // Terminate GLFW and free the error callback
-        glfwTerminate();
-        glfwSetErrorCallback(null).free();
-    }
+		glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
+			this.width = width;
+			this.height = height;
+			this.setResized(true);
+		});
 
-    public void init() {
-        // Setup an error callback. The default implementation
-        // will print the error message in System.err.
-        GLFWErrorCallback.createPrint(System.err).set();
+		if (window == NULL) { throw new RuntimeException("Failed to create the GLFW window"); }
 
-        // Initialize GLFW. Most GLFW functions will not work before doing this.
-        if (!glfwInit())
-            throw new IllegalStateException("Unable to initialize GLFW");
+		// Get the thread stack and push a new frame
+		try (MemoryStack stack = stackPush()) {
+			IntBuffer pWidth = stack.mallocInt(1); // int*
+			IntBuffer pHeight = stack.mallocInt(1); // int*
 
-        // Configure GLFW
-        glfwDefaultWindowHints(); // optional, the current window hints are already the default
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
+			// Get the window size passed to glfwCreateWindow
+			glfwGetWindowSize(window, pWidth, pHeight);
 
-        // Create the window
-        window = glfwCreateWindow(width, height, title, NULL, NULL);
+			// Get the resolution of the primary monitor
+			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-        glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
-            this.width = width;
-            this.height = height;
-            this.setResized(true);
-        });
+			// Center the window
+			glfwSetWindowPos(
+					window,
+					(vidmode.width() - pWidth.get(0)) / 2,
+					(vidmode.height() - pHeight.get(0)) / 2
+			);
+		} // the stack frame is popped automatically
 
-        if (window == NULL)
-            throw new RuntimeException("Failed to create the GLFW window");
+		// Make the OpenGL context current
+		glfwMakeContextCurrent(window);
 
-        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-                glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
-        });
+		if (isvSync()) {
+			// Enable v-sync
+			glfwSwapInterval(1);
+		}
 
-        // Get the thread stack and push a new frame
-        try (MemoryStack stack = stackPush()) {
-            IntBuffer pWidth = stack.mallocInt(1); // int*
-            IntBuffer pHeight = stack.mallocInt(1); // int*
+		// Make the window visible
+		glfwShowWindow(window);
+		GL.createCapabilities();
 
-            // Get the window size passed to glfwCreateWindow
-            glfwGetWindowSize(window, pWidth, pHeight);
+		glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+	}
 
-            // Get the resolution of the primary monitor
-            GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	public boolean isvSync() {
+		return vSync;
+	}
 
-            // Center the window
-            glfwSetWindowPos(
-                    window,
-                    (vidmode.width() - pWidth.get(0)) / 2,
-                    (vidmode.height() - pHeight.get(0)) / 2
-            );
-        } // the stack frame is popped automatically
+	public void setvSync(boolean vSync) {
+		this.vSync = vSync;
+	}
 
-        // Make the OpenGL context current
-        glfwMakeContextCurrent(window);
+	public static Matrix4f updateProjectionMatrix(Matrix4f matrix, int width, int height) {
+		float aspectRatio = (float) width / (float) height;
+		return matrix.setPerspective(Config.FOV, aspectRatio, Config.NEAR, Config.FAR);
+	}
 
-        if (isvSync()) {
-            // Enable v-sync
-            glfwSwapInterval(1);
-        }
+	public void destroy() {
 
-        // Make the window visible
-        glfwShowWindow(window);
-        GL.createCapabilities();
+		// Free the window callbacks and destroy the window
+		glfwFreeCallbacks(window);
+		glfwDestroyWindow(window);
 
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
-    }
+		// Terminate GLFW and free the error callback
+		glfwTerminate();
+		glfwSetErrorCallback(null).free();
+	}
 
-    public void updateAfter() {
-        glfwSwapBuffers(window); // swap the color buffers
-        glfwPollEvents();
-    }
+	public void updateAfter() {
+		glfwSwapBuffers(window); // swap the color buffers
+		glfwPollEvents();
+	}
 
-    public boolean windowShouldClose() {
-        return glfwWindowShouldClose(window);
-    }
+	public boolean windowShouldClose() {
+		return glfwWindowShouldClose(window);
+	}
 
-    public boolean isResized() {
-        return resized;
-    }
+	public boolean isResized() {
+		return resized;
+	}
 
-    public void setResized(boolean resized) {
-        this.resized = resized;
-    }
+	public void setResized(boolean resized) {
+		this.resized = resized;
+	}
 
-    public boolean isvSync() {
-        return vSync;
-    }
+	public Matrix4f updateProjectionMatrix() {
+		float aspectRatio = (float) width / (float) height;
+		return projectionMatrix.setPerspective(Config.FOV, aspectRatio, Config.NEAR, Config.FAR);
+	}
 
-    public void setvSync(boolean vSync) {
-        this.vSync = vSync;
-    }
+	public Matrix4f getProjectionMatrix() {
+		return projectionMatrix;
+	}
 
-    public Matrix4f updateProjectionMatrix() {
-        float aspectRatio = (float) width / (float) height;
-        return projectionMatrix.setPerspective(Config.FOV, aspectRatio, Config.NEAR, Config.FAR);
-    }
+	public long getWindowHandle() {
+		return window;
+	}
 
-    public Matrix4f getProjectionMatrix() {
-        return projectionMatrix;
-    }
+	public boolean isKeyPressed(int keyCode) {
+		return glfwGetKey(window, keyCode) == GLFW_PRESS;
+	}
 
-    public long getWindowHandle() {
-        return window;
-    }
+	public int getWidth() {
+		return width;
+	}
 
-    public boolean isKeyPressed(int keyCode) {
-        return glfwGetKey(window, keyCode) == GLFW_PRESS;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
+	public int getHeight() {
+		return height;
+	}
 }

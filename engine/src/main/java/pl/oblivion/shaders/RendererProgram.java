@@ -6,29 +6,32 @@ import pl.oblivion.game.Camera;
 
 public abstract class RendererProgram {
 
-    public ShaderProgram shaderProgram;
-    public RendererHandler rendererHandler;
-    public Matrix4f projectionMatrix;
+	private ShaderProgram shader;
+	private RendererHandler rendererHandler;
+	private Matrix4f projectionMatrix;
 
-    public RendererProgram(ShaderProgram shaderProgram, RendererHandler rendererHandler, Window window) {
-        this.shaderProgram = shaderProgram;
-        this.rendererHandler = rendererHandler;
-        this.projectionMatrix = window.getProjectionMatrix();
-    }
+	public RendererProgram(ShaderProgram shader, RendererHandler rendererHandler, Window window) {
+		this.shader = shader;
+		this.rendererHandler = rendererHandler;
+		this.projectionMatrix = window.getProjectionMatrix();
+	}
 
-    public abstract void render(Window window, Camera camera);
+	public abstract void render(Window window, Camera camera);
 
-    public abstract void update();
+	public abstract void prepare(Window window, Camera camera);
 
-    public void cleanUp() {
-        shaderProgram.cleanUp();
-        rendererHandler.delete();
-    }
+	public void cleanUp() {
+		shader.cleanUp();
+		rendererHandler.delete();
+	}
 
-    public abstract void delete();
+	public abstract void delete();
 
-    public abstract ShaderProgram getShaderProgram();
+	public abstract void end();
 
-    public abstract RendererHandler getRendererHandler();
+	public abstract RendererHandler getRendererHandler();
 
+	public Matrix4f getProjectionMatrix() {
+		return projectionMatrix;
+	}
 }
