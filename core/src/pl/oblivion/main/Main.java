@@ -112,7 +112,6 @@ public class Main extends SimpleApp {
 		player.update(window, delta);
 		camera.update();
 		octree.update();
-		player.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().update();
 
 		player.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape()
 				.intersection((AABB) aabb.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape());
