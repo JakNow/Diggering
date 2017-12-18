@@ -14,6 +14,8 @@ import java.util.List;
 
 public class OctreeNode {
 
+	private final int numberOfChildren = 8;
+
 	private final int currentDepth;
 	private final Vector3f center;
 	private LinkedList<Model> objects;
@@ -35,10 +37,10 @@ public class OctreeNode {
 	private void createChildren(Vector3f pos, float halfWidth, int stopDepth) {
 		Vector3f offset = new Vector3f();
 		if (stopDepth > 0) {
-			this.children = new OctreeNode[8];
+			this.children = new OctreeNode[numberOfChildren];
 			float step = halfWidth * 0.5f;
 
-			for (int i = 0; i < 8; i++) {
+			for (int i = 0; i < children.length; i++) {
 				offset.x = (((i & 1) == 0) ? step : - step);
 				offset.y = (((i & 2) == 0) ? step : - step);
 				offset.z = (((i & 4) == 0) ? step : - step);
@@ -59,7 +61,7 @@ public class OctreeNode {
 		final float[] objPos = {modelsPosition.x, modelsPosition.y, modelsPosition.z};
 		final float[] nodePos = {center.x, center.y, center.z};
 
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < nodePos.length; i++) {
 			delta = nodePos[i] - objPos[i];
 
 			if (Math.abs(delta) <= model.getModelView().getFurthestPoint()) {
@@ -70,7 +72,9 @@ public class OctreeNode {
 			if (delta > 0.0f) { index |= (1 << i); }
 		}
 
-		if (! straddle && currentDepth > 0) { children[index].insertModel(model); } else {
+		if (!straddle && currentDepth > 0) {
+			children[index].insertModel(model);
+		} else {
 			objects.add(model);
 		}
 	}
@@ -85,14 +89,31 @@ public class OctreeNode {
 	}
 
 	public void update() {
+		updateModelsNode();
 		checkOwnObjectsForCollisions();
 		checkParentsObjects();
-
 		if (currentDepth > 0) {
 			for (OctreeNode child : children) {
 				child.update();
 			}
 		}
+	}
+
+	private void updateModelsNode() {
+		for (Model model : objects) {
+			updateModel(model);
+		}
+	}
+
+	private void updateModel(Model model) {
+		CollisionShape collisionShape = model.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape();
+		if (collisionShape.isMoving()) {
+			collisionShape.update();
+
+		}
+		/*
+		TODO if model isMoving() check if its new position can be moved upper (to parent's node) or bottom (1 of 8 child nodes).
+		 */
 	}
 
 	private void fillParentsObjectsList() {
@@ -148,7 +169,7 @@ public class OctreeNode {
 				collisionShape1.intersection((SphereCollider) collisionShape2);
 	}
 
-	public LinkedList<Model> getObjects() {
+	private LinkedList<Model> getObjects() {
 		return objects;
 	}
 }

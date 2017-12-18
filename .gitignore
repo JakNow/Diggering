@@ -25,12 +25,12 @@ hs_err_pid*
 .idea/
 *.iml
 out/
+*/*.iml
 
 #Libraries
 lib/
 
 #Project
-assets/
 schemas/
 *.blend
 *.blend*
