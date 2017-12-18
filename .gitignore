@@ -25,11 +25,8 @@ hs_err_pid*
 .idea/
 *.iml
 out/
-<<<<<<< HEAD
+*/target/
 */*.iml
-=======
-/*.iml
->>>>>>> master
 
 #Libraries
 lib/
