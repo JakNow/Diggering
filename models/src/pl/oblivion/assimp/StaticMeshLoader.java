@@ -28,7 +28,7 @@ public class StaticMeshLoader {
 
 	private static ModelView load(String resourcePath, String texturesDir, int flags) throws Exception {
 		AIScene aiScene = aiImportFile(resourcePath, flags);
-		if (aiScene == null) { throw new Exception("Error loading model"); }
+		if (aiScene == null) { throw new Exception("Couldn't load model: "+resourcePath); }
 
 		int numMaterials = aiScene.mNumMaterials();
 
