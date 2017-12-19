@@ -28,7 +28,7 @@ public class CylinderCollider extends CollisionShape {
 		TexturedMesh texturedMesh = null;
 		try {
 			texturedMesh =
-					StaticMeshLoader.load("primitives/cylinder.obj.", null).getModelParts()[0].getTexturedMeshes()[0];
+					StaticMeshLoader.load("primitives/cylinder.obj", null).getModelParts()[0].getTexturedMeshes()[0];
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

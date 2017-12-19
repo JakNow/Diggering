@@ -26,7 +26,7 @@ public class SphereCollider extends CollisionShape {
 		TexturedMesh texturedMesh = null;
 		try {
 			texturedMesh =
-					StaticMeshLoader.load("primitives/sphere.obj.", null).getModelParts()[0].getTexturedMeshes()[0];
+					StaticMeshLoader.load("primitives/sphere.obj", null).getModelParts()[0].getTexturedMeshes()[0];
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
