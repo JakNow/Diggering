@@ -9,5 +9,4 @@ public interface BroadPhase {
 	void clean();
 
 	void update();
-
 }

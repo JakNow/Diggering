@@ -21,14 +21,19 @@ import static org.lwjgl.assimp.Assimp.*;
 
 public class StaticMeshLoader {
 
+	public static String RESOURCE_PATH;
+	public static String TEXTURES_DIR;
+
 	public static ModelView load(String resourcePath, String texturesDir) throws Exception {
-		return load(Config.MODELS + resourcePath, texturesDir,
+		RESOURCE_PATH = Config.MODELS + resourcePath;
+		TEXTURES_DIR = texturesDir;
+		return load(RESOURCE_PATH, TEXTURES_DIR,
 				aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_FixInfacingNormals);
 	}
 
 	private static ModelView load(String resourcePath, String texturesDir, int flags) throws Exception {
 		AIScene aiScene = aiImportFile(resourcePath, flags);
-		if (aiScene == null) { throw new Exception("Couldn't load model: "+resourcePath); }
+		if (aiScene == null) { throw new Exception("Couldn't load model: " + resourcePath); }
 
 		int numMaterials = aiScene.mNumMaterials();
 

@@ -3,11 +3,11 @@ package pl.oblivion.shapes;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import pl.oblivion.assimp.StaticMeshLoader;
 import pl.oblivion.base.Mesh;
 import pl.oblivion.base.Model;
 import pl.oblivion.base.ModelPart;
 import pl.oblivion.base.TexturedMesh;
+import pl.oblivion.models.ModelsManager;
 import pl.oblivion.utils.PMaths;
 
 public class AABB extends CollisionShape {
@@ -39,12 +39,8 @@ public class AABB extends CollisionShape {
 
 	@Override
 	public TexturedMesh createTexturedMesh() {
-		TexturedMesh texturedMesh = null;
-		try {
-			texturedMesh = StaticMeshLoader.load("primitives/cube.obj", null).getModelParts()[0].getTexturedMeshes()[0];
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		TexturedMesh texturedMesh = ModelsManager.getPrimitiveCube();
+
 
 		assert texturedMesh != null;
 		float[] tempVert = texturedMesh.getMeshData().vertices;
@@ -123,6 +119,10 @@ public class AABB extends CollisionShape {
 
 	public Vector3f getCenter() {
 		return center;
+	}
+
+	public Vector3f getTempCenter() {
+		return tempCenter;
 	}
 
 	public static AABB create(Model model) {
@@ -206,10 +206,6 @@ public class AABB extends CollisionShape {
 
 	public Vector3f getCornerMax() {
 		return cornerMax;
-	}
-
-	public Vector3f getTempCenter() {
-		return tempCenter;
 	}
 
 	public float getWidth() {

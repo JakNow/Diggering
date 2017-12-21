@@ -23,6 +23,6 @@ public class Octree implements BroadPhase {
 
 	@Override
 	public void update() {
-		node.update();
+		node.dynamicUpdate();
 	}
 }
