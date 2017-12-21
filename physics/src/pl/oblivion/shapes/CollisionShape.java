@@ -16,10 +16,12 @@ public abstract class CollisionShape implements Intersection {
 	private Vector4f meshColour = isNotIntersectingColour.getFloats();
 	private Vector3f translation;
 	private Vector3f center;
+	private Vector3f tempCenter;
 
 	public CollisionShape(Model model) {
 		this.model = model;
 		this.center = model.getPosition();
+		this.tempCenter = model.getPosition();
 	}
 
 	@Override
@@ -75,5 +77,9 @@ public abstract class CollisionShape implements Intersection {
 
 	public Vector3f getCenter() {
 		return center;
+	}
+
+	public Vector3f getTempCenter() {
+		return tempCenter;
 	}
 }

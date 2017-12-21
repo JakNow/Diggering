@@ -9,6 +9,7 @@ import pl.oblivion.core.SimpleApp;
 import pl.oblivion.dataStructure.Octree;
 import pl.oblivion.game.Camera;
 import pl.oblivion.game.MouseInput;
+import pl.oblivion.models.ModelsManager;
 import pl.oblivion.player.Player;
 import pl.oblivion.shapes.AABB;
 import pl.oblivion.shapes.CylinderCollider;
@@ -33,7 +34,7 @@ public class Main extends SimpleApp {
 	private StaticModel[] testModel;
 
 	private Main() {
-
+		ModelsManager modelsManager = new ModelsManager();
 		StaticRenderer staticRenderer = new StaticRenderer(window);
 		rendererHandler.addRendererProgram(staticRenderer);
 
@@ -112,13 +113,6 @@ public class Main extends SimpleApp {
 		player.update(window, delta);
 		camera.update();
 		octree.update();
-
-		player.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape()
-				.intersection((AABB) aabb.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape());
-		player.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().intersection(
-				(SphereCollider) sphere.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape());
-		player.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().intersection(
-				(CylinderCollider) cylinder.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape());
 
 		if (window.isKeyPressed(GLFW_KEY_F1)) { CollisionMeshRenderer.ENABLE_RENDER = true; }
 		if (window.isKeyPressed(GLFW_KEY_F2)) { CollisionMeshRenderer.ENABLE_RENDER = false; }

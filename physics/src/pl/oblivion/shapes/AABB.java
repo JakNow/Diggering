@@ -125,6 +125,10 @@ public class AABB extends CollisionShape {
 		return center;
 	}
 
+	public Vector3f getTempCenter() {
+		return tempCenter;
+	}
+
 	public static AABB create(Model model) {
 		Vector3f tempMin = new Vector3f(10000, 10000, 10000);
 		Vector3f tempMax = new Vector3f(- 10000, - 10000, - 10000);
@@ -206,10 +210,6 @@ public class AABB extends CollisionShape {
 
 	public Vector3f getCornerMax() {
 		return cornerMax;
-	}
-
-	public Vector3f getTempCenter() {
-		return tempCenter;
 	}
 
 	public float getWidth() {

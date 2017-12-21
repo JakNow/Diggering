@@ -64,6 +64,10 @@ public class SphereCollider extends CollisionShape {
 		return center;
 	}
 
+	public Vector3f getTempCenter() {
+		return tempCenter;
+	}
+
 	public static SphereCollider create(Model model) {
 		AABB aabb = AABB.create(model);
 		return new SphereCollider(model, aabb.getCenter(), aabb.getCenter().distance(aabb.getCornerMin()));
@@ -127,9 +131,5 @@ public class SphereCollider extends CollisionShape {
 
 	public float getRadius() {
 		return radius;
-	}
-
-	public Vector3f getTempCenter() {
-		return tempCenter;
 	}
 }

@@ -58,6 +58,10 @@ public class CylinderCollider extends CollisionShape {
 		}
 	}
 
+	public Vector3f getTempCenter() {
+		return tempCenter;
+	}
+
 	public static CylinderCollider create(Model model, boolean inscribed) {
 		isInscribed = inscribed;
 		AABB aabb = AABB.create(model);
@@ -140,10 +144,6 @@ public class CylinderCollider extends CollisionShape {
 	@Override
 	public boolean intersection(MeshCollider meshCollider) {
 		return false;
-	}
-
-	public Vector3f getTempCenter() {
-		return tempCenter;
 	}
 
 	public float getRadius() {
