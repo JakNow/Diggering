@@ -44,6 +44,25 @@ public class Material {
 		this.reflectance = 0;
 	}
 
+	public Material(Material material) {
+		this.name = material.name;
+		this.ambientColour = new Vector4f(material.ambientColour);
+		this.diffuseColour = new Vector4f(material.diffuseColour);
+		this.specularColour = new Vector4f(material.specularColour);
+		this.shininess = material.shininess;
+		this.reflectance = material.reflectance;
+		this.ambientTexture = (material.ambientTexture != null) ? new Texture(material.ambientTexture) : null;
+		this.diffuseTexture = (material.diffuseTexture != null) ? new Texture(material.diffuseTexture) : null;
+		this.normalTexture = (material.normalTexture != null) ? new Texture(material.normalTexture) : null;
+		this.alphaTexture = (material.alphaTexture != null) ? new Texture(material.alphaTexture) : null;
+		this.bumpTexture = (material.bumpTexture != null) ? new Texture(material.bumpTexture) : null;
+		this.displacementTexture =
+				(material.displacementTexture != null) ? new Texture(material.displacementTexture) : null;
+		this.specularTexture = (material.specularTexture != null) ? new Texture(material.specularTexture) : null;
+		this.specularExponentTexture =
+				(material.specularExponentTexture != null) ? new Texture(material.specularExponentTexture) : null;
+	}
+
 	public void delete() {
 		if (diffuseTexture != null) { diffuseTexture.delete(); }
 		if (normalTexture != null) { normalTexture.delete(); }

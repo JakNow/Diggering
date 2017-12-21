@@ -19,10 +19,17 @@ public class TexturedMesh {
 	}
 
 	public TexturedMesh(Mesh mesh, Material material) {
-		this.mesh = mesh;
-		this.material = material;
 		this.meshData = null;
+		this.material = material;
 		this.furthestPoint = 0f;
+		this.mesh = mesh;
+	}
+
+	public TexturedMesh(TexturedMesh texturedMesh) {
+		this.meshData = new StaticMeshData(texturedMesh.meshData);
+		this.material = new Material(texturedMesh.material);
+		this.furthestPoint = texturedMesh.furthestPoint;
+		this.mesh = StaticModelLoader.createMesh((StaticMeshData) this.meshData);
 	}
 
 	public float getFurthestPoint() {
