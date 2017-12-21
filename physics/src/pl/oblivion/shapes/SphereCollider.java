@@ -1,10 +1,10 @@
 package pl.oblivion.shapes;
 
 import org.joml.Vector3f;
-import pl.oblivion.assimp.StaticMeshLoader;
 import pl.oblivion.base.Mesh;
 import pl.oblivion.base.Model;
 import pl.oblivion.base.TexturedMesh;
+import pl.oblivion.models.ModelsManager;
 
 public class SphereCollider extends CollisionShape {
 
@@ -23,19 +23,12 @@ public class SphereCollider extends CollisionShape {
 
 	@Override
 	public TexturedMesh createTexturedMesh() {
-		TexturedMesh texturedMesh = null;
-		try {
-			texturedMesh =
-					StaticMeshLoader.load("primitives/sphere.obj", null).getModelParts()[0].getTexturedMeshes()[0];
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		TexturedMesh texturedMesh = ModelsManager.getSphereCollider();
 
-		AABB aabb = AABB.create(getModel());
+		AABB aabb = AABB.createWithoutTexturedMesh(getModel());
 
 		float radius = aabb.getCenter().distance(aabb.getCornerMin());
 
-		assert texturedMesh != null;
 		float[] sphereVertices = texturedMesh.getMeshData().vertices;
 		for (int i = 0; i < sphereVertices.length; i += 3) {
 			sphereVertices[i] = sphereVertices[i] * radius;
@@ -69,7 +62,7 @@ public class SphereCollider extends CollisionShape {
 	}
 
 	public static SphereCollider create(Model model) {
-		AABB aabb = AABB.create(model);
+		AABB aabb = AABB.createWithoutTexturedMesh(model);
 		return new SphereCollider(model, aabb.getCenter(), aabb.getCenter().distance(aabb.getCornerMin()));
 	}
 

@@ -1,10 +1,10 @@
 package pl.oblivion.shapes;
 
 import org.joml.Vector3f;
-import pl.oblivion.assimp.StaticMeshLoader;
 import pl.oblivion.base.Mesh;
 import pl.oblivion.base.Model;
 import pl.oblivion.base.TexturedMesh;
+import pl.oblivion.models.ModelsManager;
 
 public class CylinderCollider extends CollisionShape {
 
@@ -25,15 +25,9 @@ public class CylinderCollider extends CollisionShape {
 
 	@Override
 	public TexturedMesh createTexturedMesh() {
-		TexturedMesh texturedMesh = null;
-		try {
-			texturedMesh =
-					StaticMeshLoader.load("primitives/cylinder.obj", null).getModelParts()[0].getTexturedMeshes()[0];
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		TexturedMesh texturedMesh = ModelsManager.getCylinderCollider();
 
-		AABB aabb = AABB.create(getModel());
+		AABB aabb = AABB.createWithoutTexturedMesh(this.getModel());
 
 		assert texturedMesh != null;
 		float[] cylinderVertices = texturedMesh.getMeshData().vertices;
@@ -42,6 +36,7 @@ public class CylinderCollider extends CollisionShape {
 			cylinderVertices[i + 1] = cylinderVertices[i + 1] * aabb.getHeight() + aabb.getHeight();
 			cylinderVertices[i + 2] = cylinderVertices[i + 2] * this.radius;
 		}
+
 		Mesh mesh = Mesh.create();
 		mesh.bind();
 		mesh.createIndexBuffer(texturedMesh.getMeshData().indices);
@@ -64,7 +59,7 @@ public class CylinderCollider extends CollisionShape {
 
 	public static CylinderCollider create(Model model, boolean inscribed) {
 		isInscribed = inscribed;
-		AABB aabb = AABB.create(model);
+		AABB aabb = AABB.createWithoutTexturedMesh(model);
 		float radius = getRadius(aabb.getDepth(), aabb.getWidth());
 
 		return new CylinderCollider(model, aabb.getCenter(), aabb.getHeight(), radius);
@@ -78,9 +73,8 @@ public class CylinderCollider extends CollisionShape {
 	}
 
 	public static CylinderCollider create(Model model) {
-		AABB aabb = AABB.create(model);
+		AABB aabb = AABB.createWithoutTexturedMesh(model);
 		float radius = getRadius(aabb.getDepth(), aabb.getWidth());
-
 		return new CylinderCollider(model, aabb.getCenter(), aabb.getHeight(), radius);
 	}
 

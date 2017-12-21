@@ -17,15 +17,16 @@ public class AABB extends CollisionShape {
 	private Vector3f center, tempCenter;
 	private float width, height, depth;
 
-	public AABB(Model model, Vector3f cornerMin, Vector3f cornerMax) {
+	public AABB(Model model, Vector3f cornerMin, Vector3f cornerMax, boolean withTexturedMesh) {
 		super(model);
 		this.cornerMin = cornerMin;
 		this.tempMin = cornerMin;
 		this.cornerMax = cornerMax;
 		this.tempMax = cornerMax;
 
-		this.setTexturedMesh(createTexturedMesh());
-
+		if (withTexturedMesh) {
+			this.setTexturedMesh(createTexturedMesh());
+		}
 		processShape();
 
 		this.center = new Vector3f(cornerMin).add(cornerMax).div(2);
@@ -39,11 +40,9 @@ public class AABB extends CollisionShape {
 
 	@Override
 	public TexturedMesh createTexturedMesh() {
-		TexturedMesh texturedMesh = ModelsManager.getPrimitiveCube();
-
-
-		assert texturedMesh != null;
+		TexturedMesh texturedMesh = ModelsManager.getAABBCollider();
 		float[] tempVert = texturedMesh.getMeshData().vertices;
+
 		for (int i = 0; i < tempVert.length; i += 3) {
 			tempVert[i] = convertVertices(tempVert[i], cornerMin.x, cornerMax.x);
 			tempVert[i + 1] = convertVertices(tempVert[i + 1], cornerMin.y, cornerMax.y);
@@ -139,7 +138,24 @@ public class AABB extends CollisionShape {
 			}
 		}
 
-		return new AABB(model, tempMin, tempMax);
+		return new AABB(model, tempMin, tempMax, true);
+	}
+
+	public static AABB createWithoutTexturedMesh(Model model) {
+		Vector3f tempMin = new Vector3f(10000, 10000, 10000);
+		Vector3f tempMax = new Vector3f(- 10000, - 10000, - 10000);
+		for (ModelPart modelPart : model.getModelView().getModelParts()) {
+			for (TexturedMesh texturedMesh : modelPart.getTexturedMeshes()) {
+				float[] vertices = texturedMesh.getMeshData().vertices;
+				for (int i = 0; i < vertices.length; i += 3) {
+					Vector4f tempPoint = new Vector4f(vertices[i], vertices[i + 1], vertices[i + 2], 1.0f);
+					tempMin = getMin(tempPoint, tempMin);
+					tempMax = getMax(tempPoint, tempMax);
+				}
+			}
+		}
+
+		return new AABB(model, tempMin, tempMax, false);
 	}
 
 	@Override

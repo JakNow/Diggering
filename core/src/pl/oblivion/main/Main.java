@@ -9,10 +9,8 @@ import pl.oblivion.core.SimpleApp;
 import pl.oblivion.dataStructure.Octree;
 import pl.oblivion.game.Camera;
 import pl.oblivion.game.MouseInput;
-import pl.oblivion.models.ModelsManager;
 import pl.oblivion.player.Player;
 import pl.oblivion.shapes.AABB;
-import pl.oblivion.shapes.CylinderCollider;
 import pl.oblivion.shapes.SphereCollider;
 import pl.oblivion.staticModels.StaticModel;
 import pl.oblivion.staticModels.StaticRenderer;
@@ -34,7 +32,6 @@ public class Main extends SimpleApp {
 	private StaticModel[] testModel;
 
 	private Main() {
-		ModelsManager modelsManager = new ModelsManager();
 		StaticRenderer staticRenderer = new StaticRenderer(window);
 		rendererHandler.addRendererProgram(staticRenderer);
 
@@ -53,9 +50,9 @@ public class Main extends SimpleApp {
 		aabb.addComponent(new CollisionComponent(AABB.create(aabb), null));
 
 		cylinder = new StaticModel(new Vector3f(- 16, - 0.5f, - 16f), new Vector3f(0, 0, 0), 1f, test);
-		cylinder.addComponent(new CollisionComponent(CylinderCollider.create(cylinder), null));
+		cylinder.addComponent(new CollisionComponent(AABB.create(cylinder), null));
 		sphere = new StaticModel(new Vector3f(16, - 0.5f, 16f), new Vector3f(0, 0, 0), 1f, test);
-		sphere.addComponent(new CollisionComponent(SphereCollider.create(sphere), null));
+		sphere.addComponent(new CollisionComponent(AABB.create(sphere), null));
 
 		WorldRenderer worldRenderer = new WorldRenderer(window);
 		rendererHandler.addRendererProgram(worldRenderer);
@@ -91,17 +88,19 @@ public class Main extends SimpleApp {
 		octree.insertObject(aabb);
 		octree.insertObject(cylinder);
 		octree.insertObject(sphere);
-		testModel = new StaticModel[150];
-		for (int i = 0; i < 150; i++) {
+		testModel = new StaticModel[1000];
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < 1000; i++) {
 			testModel[i] = new StaticModel(
 					new Vector3f((float) (Math.random() * 100 - 50), (float) (Math.random() * 100 - 50),
 							(float) (Math.random() * 100 - 50)), new Vector3f(0, 0, 0), 1f, test);
-			testModel[i].addComponent(new CollisionComponent(AABB.create(testModel[i]), null));
+			testModel[i].addComponent(new CollisionComponent(SphereCollider.create(testModel[i]), null));
 			octree.insertObject(testModel[i]);
 
 			collisionMeshRenderer.getRendererHandler().processModel(testModel[i]);
 			staticRenderer.getRendererHandler().processModel(testModel[i]);
 		}
+		System.out.println(System.currentTimeMillis() - start);
 	}
 
 	public static void main(String[] args) {

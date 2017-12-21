@@ -3,6 +3,7 @@ package pl.oblivion.core;
 import pl.oblivion.game.Camera;
 import pl.oblivion.game.MouseInput;
 import pl.oblivion.game.Renderer;
+import pl.oblivion.models.ModelsManager;
 
 public abstract class SimpleApp {
 
@@ -17,6 +18,7 @@ public abstract class SimpleApp {
 		this.mouseInput = new MouseInput(window);
 		this.timer = new Timer();
 		this.rendererHandler = new Renderer(window);
+		new ModelsManager();
 	}
 
 	public void run() {

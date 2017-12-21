@@ -67,6 +67,10 @@ public class Texture {
 		return textureId;
 	}
 
+	public Texture(Texture texture) {
+		this.id = texture.id;
+	}
+
 	/**
 	 * Binds the texture.
 	 */
