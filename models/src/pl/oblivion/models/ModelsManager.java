@@ -1,8 +1,8 @@
 package pl.oblivion.models;
 
 import org.apache.log4j.Logger;
-import pl.oblivion.assimp.StaticMeshLoader;
 import pl.oblivion.base.TexturedMesh;
+import pl.oblivion.models.primitives.PrimitiveCube;
 import pl.oblivion.models.primitives.PrimitivesInterface;
 
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.util.Properties;
 public class ModelsManager implements PrimitivesInterface {
 
 	private final static Logger logger = Logger.getLogger(ModelsManager.class);
-	private static final Map<String, TexturedMesh> texturedMeshMap = new HashMap<>();
+	public static final Map<String, TexturedMesh> texturedMeshMap = new HashMap<>();
 	private final Properties properties;
 
 	public ModelsManager() {
@@ -28,7 +28,7 @@ public class ModelsManager implements PrimitivesInterface {
 		Properties properties = new Properties();
 		InputStream stream = null;
 		try {
-			stream = Files.newInputStream(Paths.get("core\\resources\\models.properties"));
+			stream = Files.newInputStream(Paths.get("models\\resources\\models.properties"));
 		} catch (IOException e) {
 			logger.fatal("Couldn't load models.properties file!", e);
 		}
@@ -43,14 +43,17 @@ public class ModelsManager implements PrimitivesInterface {
 
 	@Override
 	public void loadPrimitiveCube() {
-		try {
-			texturedMeshMap.put("primitive_cube",
-					StaticMeshLoader.load(properties.getProperty("primitive_cube"), null).getModelParts()[0]
-							.getTexturedMeshes()[0]);
-			logger.info("Loading Primitive Cube was successful.");
-		} catch (Exception e) {
-			logger.fatal("Couldn't load Primitive Cube model:\n" + StaticMeshLoader.RESOURCE_PATH);
-		}
+		new PrimitiveCube(properties);
+	}
+
+	@Override
+	public void loadPrimitiveSphere() {
+
+	}
+
+	@Override
+	public void loadPrimitiveCylinder() {
+
 	}
 
 	public static void printAvaiableModels() {
@@ -59,7 +62,7 @@ public class ModelsManager implements PrimitivesInterface {
 		}
 	}
 
-	public static TexturedMesh getAABB() {
+	public static TexturedMesh getPrimitiveCube() {
 		return texturedMeshMap.get("primitive_cube");
 	}
 }
