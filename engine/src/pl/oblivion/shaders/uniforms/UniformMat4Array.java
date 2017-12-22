@@ -1,5 +1,6 @@
-package pl.oblivion.shaders;
+package pl.oblivion.shaders.uniforms;
 
+import org.apache.log4j.Logger;
 import org.joml.Matrix4f;
 
 public class UniformMat4Array extends Uniform {
@@ -25,5 +26,11 @@ public class UniformMat4Array extends Uniform {
 		for (int i = 0; i < matrices.length; i++) {
 			matrixUniforms[i].loadMatrix(matrices[i]);
 		}
+	}
+
+	@Override
+	public void logMissingUniform() {
+		logger = Logger.getLogger(UniformMat4Array.class);
+		logger.error("No uniform variable called "+name +" found!");
 	}
 }

@@ -1,5 +1,6 @@
-package pl.oblivion.shaders;
+package pl.oblivion.shaders.uniforms;
 
+import org.apache.log4j.Logger;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL20;
 
@@ -24,5 +25,11 @@ public class UniformVec2 extends Uniform {
 			used = true;
 			GL20.glUniform2f(super.getLocation(), x, y);
 		}
+	}
+
+	@Override
+	public void logMissingUniform() {
+		logger = Logger.getLogger(UniformVec2.class);
+		logger.error("No uniform variable called "+name +" found!");
 	}
 }

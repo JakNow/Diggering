@@ -1,12 +1,12 @@
 package pl.oblivion.world;
 
-import pl.oblivion.core.Config;
+import pl.oblivion.core.SimpleApp;
 import pl.oblivion.game.Camera;
 import pl.oblivion.materials.Material;
 import pl.oblivion.shaders.ShaderProgram;
-import pl.oblivion.shaders.UniformMaterial;
-import pl.oblivion.shaders.UniformMatrix;
-import pl.oblivion.shaders.UniformSampler;
+import pl.oblivion.shaders.uniforms.UniformMaterial;
+import pl.oblivion.shaders.uniforms.UniformMatrix;
+import pl.oblivion.shaders.uniforms.UniformSampler;
 import pl.oblivion.utils.Maths;
 import pl.oblivion.utils.MyFile;
 
@@ -21,7 +21,7 @@ public class WorldShader extends ShaderProgram {
 	protected UniformSampler normalTexture = new UniformSampler("normalTexture");
 
 	public WorldShader() {
-		super(new MyFile(Config.WORLD_VERT), new MyFile(Config.WORLD_FRAG), "in_position", "in_textures");
+		super(new MyFile(SimpleApp.properties.getProperty("shader.world.vertex")), new MyFile(SimpleApp.properties.getProperty("shader.world.fragment")), "in_position", "in_textures");
 		super.storeAllUniformLocations(projectionMatrix, viewMatrix, transformationMatrix, diffuseTexture,
 				normalTexture);
 		this.storeMaterialUniforms();

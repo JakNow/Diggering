@@ -19,16 +19,15 @@ public class ModelsManager implements CollidersShapesInterface {
 
 	private final static Logger logger = Logger.getLogger(ModelsManager.class);
 	private static final Map<String, TexturedMesh> texturedMeshMap = new HashMap<>();
-	private final Properties properties;
+	public static final Properties properties = loadProperties();
 
 	public ModelsManager() {
-		this.properties = loadProperties();
 		this.loadAABBCollider();
 		this.loadCylinderCollider();
 		this.loadSphereCollider();
 	}
 
-	private Properties loadProperties() {
+	private static Properties loadProperties() {
 		Properties properties = new Properties();
 		InputStream stream = null;
 		try {
@@ -61,14 +60,14 @@ public class ModelsManager implements CollidersShapesInterface {
 	}
 
 	public static TexturedMesh getAABBCollider() {
-		return new TexturedMesh(texturedMeshMap.get("shapes_colliders_AABBCollider"));
+		return new TexturedMesh(texturedMeshMap.get("shapes.colliders.AABBCollider"));
 	}
 
 	public static TexturedMesh getCylinderCollider() {
-		return new TexturedMesh(texturedMeshMap.get("shapes_colliders_CylinderCollider"));
+		return new TexturedMesh(texturedMeshMap.get("shapes.colliders.CylinderCollider"));
 	}
 
 	public static TexturedMesh getSphereCollider() {
-		return new TexturedMesh(texturedMeshMap.get("shapes_colliders_SphereCollider"));
+		return new TexturedMesh(texturedMeshMap.get("shapes.colliders.SphereCollider"));
 	}
 }

@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
+import java.util.Properties;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -21,14 +22,34 @@ public class Window {
 	private long window;
 	private int width;
 	private int height;
+
+	private static float FOV;
+	private static float NEAR;
+	private static float FAR;
+
+	public static float RED;
+	public static float GREEN;
+	public static float BLUE;
+	public static float ALPHA;
+
 	private String title;
 	private boolean resized;
 	private boolean vSync;
 
-	public Window() {
-		this.width = Config.WIDTH;
-		this.height = Config.HEIGHT;
-		this.title = Config.TITLE;
+	public Window(Properties properties) {
+			this.width = Integer.parseInt(properties.getProperty("window.width"));
+		this.height = Integer.parseInt(properties.getProperty("window.height"));
+
+		this.FOV = Float.parseFloat(properties.getProperty("camera.fov"));
+		this.NEAR = Float.parseFloat(properties.getProperty("camera.near"));
+		this.FAR = Float.parseFloat(properties.getProperty("camera.far"));
+
+		this.RED = Float.parseFloat(properties.getProperty("bg.red"));
+		this.GREEN = Float.parseFloat(properties.getProperty("bg.green"));
+		this.BLUE = Float.parseFloat(properties.getProperty("bg.blue"));
+		this.ALPHA = Float.parseFloat(properties.getProperty("bg.alpha"));
+
+			this.title = properties.getProperty("window.title");
 		this.resized = false;
 		this.vSync = true;
 		projectionMatrix = new Matrix4f();
@@ -109,7 +130,7 @@ public class Window {
 
 	public static Matrix4f updateProjectionMatrix(Matrix4f matrix, int width, int height) {
 		float aspectRatio = (float) width / (float) height;
-		return matrix.setPerspective(Config.FOV, aspectRatio, Config.NEAR, Config.FAR);
+		return matrix.setPerspective(FOV, aspectRatio, NEAR, FAR);
 	}
 
 	public void destroy() {
@@ -142,7 +163,7 @@ public class Window {
 
 	public Matrix4f updateProjectionMatrix() {
 		float aspectRatio = (float) width / (float) height;
-		return projectionMatrix.setPerspective(Config.FOV, aspectRatio, Config.NEAR, Config.FAR);
+		return projectionMatrix.setPerspective(FOV, aspectRatio, NEAR, FAR);
 	}
 
 	public Matrix4f getProjectionMatrix() {

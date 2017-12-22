@@ -1,5 +1,6 @@
-package pl.oblivion.shaders;
+package pl.oblivion.shaders.uniforms;
 
+import org.apache.log4j.Logger;
 import org.lwjgl.opengl.GL20;
 
 public class UniformSampler extends Uniform {
@@ -17,5 +18,11 @@ public class UniformSampler extends Uniform {
 			used = true;
 			currentValue = texUnit;
 		}
+	}
+
+	@Override
+	public void logMissingUniform() {
+		logger = Logger.getLogger(UniformSampler.class);
+		logger.error("No uniform variable called "+name +" found!");
 	}
 }

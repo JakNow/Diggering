@@ -1,5 +1,6 @@
-package pl.oblivion.shaders;
+package pl.oblivion.shaders.uniforms;
 
+import org.apache.log4j.Logger;
 import org.lwjgl.opengl.GL20;
 
 public class UniformBoolean extends Uniform {
@@ -9,6 +10,12 @@ public class UniformBoolean extends Uniform {
 
 	public UniformBoolean(String name) {
 		super(name);
+	}
+
+	@Override
+	public void logMissingUniform() {
+		logger = Logger.getLogger(UniformBoolean.class);
+		logger.error("No uniform variable called "+name +" found!");
 	}
 
 	public void loadBoolean(boolean bool) {

@@ -1,5 +1,6 @@
 package pl.oblivion.main;
 
+import org.apache.log4j.Logger;
 import org.joml.Vector3f;
 import pl.oblivion.assimp.StaticMeshLoader;
 import pl.oblivion.base.ModelView;
@@ -16,11 +17,17 @@ import pl.oblivion.staticModels.StaticModel;
 import pl.oblivion.staticModels.StaticRenderer;
 import pl.oblivion.world.WorldRenderer;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_F1;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_F2;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Properties;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 public class Main extends SimpleApp {
 
+	private static Logger logger = Logger.getLogger(Main.class);
 	private Player player;
 	private StaticModel aabb;
 	private StaticModel cylinder;
@@ -30,6 +37,8 @@ public class Main extends SimpleApp {
 	private Octree octree;
 
 	private StaticModel[] testModel;
+
+	public static Properties properties = loadProperties();
 
 	private Main() {
 		StaticRenderer staticRenderer = new StaticRenderer(window);
@@ -89,7 +98,6 @@ public class Main extends SimpleApp {
 		octree.insertObject(cylinder);
 		octree.insertObject(sphere);
 		testModel = new StaticModel[1000];
-		long start = System.currentTimeMillis();
 		for (int i = 0; i < 1000; i++) {
 			testModel[i] = new StaticModel(
 					new Vector3f((float) (Math.random() * 100 - 50), (float) (Math.random() * 100 - 50),
@@ -100,7 +108,6 @@ public class Main extends SimpleApp {
 			collisionMeshRenderer.getRendererHandler().processModel(testModel[i]);
 			staticRenderer.getRendererHandler().processModel(testModel[i]);
 		}
-		System.out.println(System.currentTimeMillis() - start);
 	}
 
 	public static void main(String[] args) {
@@ -115,5 +122,21 @@ public class Main extends SimpleApp {
 
 		if (window.isKeyPressed(GLFW_KEY_F1)) { CollisionMeshRenderer.ENABLE_RENDER = true; }
 		if (window.isKeyPressed(GLFW_KEY_F2)) { CollisionMeshRenderer.ENABLE_RENDER = false; }
+		if (window.isKeyPressed(GLFW_KEY_ESCAPE)) {glfwSetWindowShouldClose(window.getWindowHandle(),true);
+		logger.info("Quiting the app");}
 	}
+
+	private static Properties loadProperties(){
+		try{
+			InputStream stream = Files.newInputStream(Paths.get("core\\resources\\core.properties"));
+			Properties properties = new Properties();
+			properties.load(stream);
+			logger.info("Loaded core.properties file.");
+			return properties;
+		} catch (IOException e){
+			logger.fatal("Couldn't load core.properties for core!",e);
+		}
+		return null;
+	}
+
 }

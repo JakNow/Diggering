@@ -2,6 +2,7 @@ package pl.oblivion.shaders;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import pl.oblivion.shaders.uniforms.Uniform;
 import pl.oblivion.utils.MyFile;
 
 import java.io.BufferedReader;

@@ -13,8 +13,8 @@ public class SphereCollider {
 
 	public SphereCollider(Properties properties, Map<String, TexturedMesh> texturedMeshMap) {
 		try {
-			texturedMeshMap.put("shapes_colliders_SphereCollider",
-					StaticMeshLoader.load(properties.getProperty("shapes_colliders_SphereCollider"), null)
+			texturedMeshMap.put("shapes.colliders.SphereCollider",
+					StaticMeshLoader.load(properties.getProperty("shapes.colliders.SphereCollider"), null)
 							.getModelParts()[0]
 							.getTexturedMeshes()[0]);
 			logger.info("Loading SphereCollider was successful.");

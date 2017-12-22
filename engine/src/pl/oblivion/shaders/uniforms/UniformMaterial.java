@@ -1,5 +1,6 @@
-package pl.oblivion.shaders;
+package pl.oblivion.shaders.uniforms;
 
+import org.apache.log4j.Logger;
 import pl.oblivion.materials.Material;
 
 public class UniformMaterial extends Uniform {
@@ -28,6 +29,12 @@ public class UniformMaterial extends Uniform {
 
 		hasTexture.loadBoolean(material.isTextured());
 		hasNormalMap.loadBoolean(material.isNormal());
+	}
 
+
+	@Override
+	public void logMissingUniform() {
+		logger = Logger.getLogger(UniformMaterial.class);
+		logger.error("No uniform variable called "+name +" found!");
 	}
 }
