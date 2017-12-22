@@ -1,5 +1,6 @@
-package pl.oblivion.shaders;
+package pl.oblivion.shaders.uniforms;
 
+import org.apache.log4j.Logger;
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
@@ -21,5 +22,11 @@ public class UniformMatrix extends Uniform {
 			matrix.get(fb);
 			GL20.glUniformMatrix4fv(super.getLocation(), false, fb);
 		}
+	}
+
+	@Override
+	public void logMissingUniform() {
+		logger = Logger.getLogger(UniformMatrix.class);
+		logger.error("No uniform variable called "+name +" found!");
 	}
 }

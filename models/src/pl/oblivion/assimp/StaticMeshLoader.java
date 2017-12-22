@@ -4,12 +4,12 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
-import pl.oblivion.base.Config;
 import pl.oblivion.base.ModelPart;
 import pl.oblivion.base.ModelView;
 import pl.oblivion.base.TexturedMesh;
 import pl.oblivion.materials.Material;
 import pl.oblivion.materials.Texture;
+import pl.oblivion.models.ModelsManager;
 import pl.oblivion.staticModels.StaticMeshData;
 import pl.oblivion.staticModels.StaticModelView;
 
@@ -21,11 +21,16 @@ import static org.lwjgl.assimp.Assimp.*;
 
 public class StaticMeshLoader {
 
+
+	private static String MODELS_PATH = ModelsManager.properties.getProperty("path.assets.models");
+	private static String TEXTURES_PATH = ModelsManager.properties.getProperty("path.assets.textures");
+	private static String MATERIALS_PATH = ModelsManager.properties.getProperty("path.assets.materials");
+
 	public static String RESOURCE_PATH;
 	public static String TEXTURES_DIR;
 
 	public static ModelView load(String resourcePath, String texturesDir) throws Exception {
-		RESOURCE_PATH = Config.MODELS + resourcePath;
+		RESOURCE_PATH = MODELS_PATH + resourcePath;
 		TEXTURES_DIR = texturesDir;
 		return load(RESOURCE_PATH, TEXTURES_DIR,
 				aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_FixInfacingNormals);
@@ -84,7 +89,7 @@ public class StaticMeshLoader {
 		if (texturesDir != null) {
 
 			TextureCache textCache = TextureCache.getInstance();
-			diffuseTexture = textCache.getTexture(Config.TEXTURES + texturesDir);
+			diffuseTexture = textCache.getTexture(TEXTURES_PATH + texturesDir);
 		} else {
 			assert textPath != null;
 			if (textPath.length() > 0) {

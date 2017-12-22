@@ -13,8 +13,8 @@ public class CylinderCollider {
 
 	public CylinderCollider(Properties properties, Map<String, TexturedMesh> texturedMeshMap) {
 		try {
-			texturedMeshMap.put("shapes_colliders_CylinderCollider",
-					StaticMeshLoader.load(properties.getProperty("shapes_colliders_CylinderCollider"), null)
+			texturedMeshMap.put("shapes.colliders.CylinderCollider",
+					StaticMeshLoader.load(properties.getProperty("shapes.colliders.CylinderCollider"), null)
 							.getModelParts()[0]
 							.getTexturedMeshes()[0]);
 			logger.info("Loading CylinderCollider was successful.");
