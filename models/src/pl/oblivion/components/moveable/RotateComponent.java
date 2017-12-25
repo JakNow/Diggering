@@ -26,13 +26,14 @@ public class RotateComponent extends BaseComponent {
 		model.setRotation(this.rotation);
 	}
 
-	private float clampRotation(float rotation){
-		rotation%=360;
-		if(rotation<0){
-			rotation+=360;
+	private float clampRotation(float rotation) {
+		rotation %= 360;
+		if (rotation < 0) {
+			rotation += 360;
 		}
 		return rotation;
 	}
+
 	public Model getModel() {
 		return model;
 	}

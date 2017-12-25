@@ -7,4 +7,6 @@ public interface CollidersShapesInterface {
 	void loadSphereCollider();
 
 	void loadCylinderCollider();
+
+	void loadOctreeNode();
 }

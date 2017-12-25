@@ -8,7 +8,7 @@ public class Octree implements BroadPhase {
 	private final OctreeNode node;
 
 	public Octree(final float worldExtends, int worldDepth) {
-		node = new OctreeNode(new Vector3f(0, 0, 0), worldExtends, worldDepth, null);
+		node = new OctreeNode(new Vector3f(0, 0, 0), worldExtends, 0, worldDepth, null, this);
 	}
 
 	@Override
@@ -23,6 +23,10 @@ public class Octree implements BroadPhase {
 
 	@Override
 	public void update() {
-		node.dynamicUpdate();
+		node.update();
+	}
+
+	public OctreeNode getNode() {
+		return node;
 	}
 }

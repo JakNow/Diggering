@@ -3,6 +3,7 @@ package pl.oblivion.collisionMesh;
 import org.lwjgl.opengl.GL11;
 import pl.oblivion.base.Model;
 import pl.oblivion.core.Window;
+import pl.oblivion.dataStructure.OctreeNode;
 import pl.oblivion.game.Camera;
 import pl.oblivion.shaders.RendererHandler;
 import pl.oblivion.shaders.RendererProgram;
@@ -37,6 +38,14 @@ public class CollisionMeshRenderer extends RendererProgram {
 							GL11.GL_UNSIGNED_INT, 0);
 				}
 				rendererHandler.unbindCollisionShape(collisionShape);
+			}
+
+			for (OctreeNode octreeNode : rendererHandler.getOctreeTexturedMesh()) {
+
+				rendererHandler.prepareOctre(octreeNode);
+				GL11.glDrawElements(GL11.GL_TRIANGLES, octreeNode.getOctreeNodeShape().getMesh().getIndexCount(),
+						GL11.GL_UNSIGNED_INT, 0);
+				rendererHandler.unbindOctreeNode(octreeNode);
 			}
 			end();
 		}

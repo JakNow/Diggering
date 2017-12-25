@@ -3,6 +3,7 @@ package pl.oblivion.utils;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import pl.oblivion.base.Model;
+import pl.oblivion.dataStructure.OctreeNode;
 import pl.oblivion.game.Camera;
 
 public class Maths {
@@ -26,6 +27,10 @@ public class Maths {
 				.rotate((float) Math.toRadians(camera.getRotation().y), new Vector3f(0, 1, 0))
 				.rotate((float) Math.toRadians(camera.getRotation().z), new Vector3f(0, 0, 1))
 				.translate(negativeCameraPos);
+	}
+
+	public static Matrix4f createTransfromationMatrixOctree(OctreeNode octreeNode) {
+		return new Matrix4f().identity().translate(octreeNode.getCenter());
 	}
 
 }

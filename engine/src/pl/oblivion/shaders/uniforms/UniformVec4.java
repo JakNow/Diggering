@@ -21,6 +21,6 @@ public class UniformVec4 extends Uniform {
 	@Override
 	public void logMissingUniform() {
 		logger = Logger.getLogger(UniformVec4.class);
-		logger.error("No uniform variable called "+name +" found!");
+		logger.error("No uniform variable called " + name + " found!");
 	}
 }

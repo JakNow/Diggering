@@ -21,7 +21,8 @@ public class StaticShader extends ShaderProgram {
 	protected UniformSampler normalTexture = new UniformSampler("normalTexture");
 
 	public StaticShader() {
-		super(new MyFile(SimpleApp.properties.getProperty("shader.static.vertex")), new MyFile(SimpleApp.properties.getProperty("shader.static.fragment")), "in_position", "in_textures");
+		super(new MyFile(SimpleApp.properties.getProperty("shader.static.vertex")),
+				new MyFile(SimpleApp.properties.getProperty("shader.static.fragment")), "in_position", "in_textures");
 		super.storeAllUniformLocations(projectionMatrix, viewMatrix, transformationMatrix, diffuseTexture,
 				normalTexture, material.ambientColour, material.diffuseColour, material.specularColour,
 				material.hasTexture, material.hasNormalMap);

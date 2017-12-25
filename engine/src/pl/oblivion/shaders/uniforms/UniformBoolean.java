@@ -15,7 +15,7 @@ public class UniformBoolean extends Uniform {
 	@Override
 	public void logMissingUniform() {
 		logger = Logger.getLogger(UniformBoolean.class);
-		logger.error("No uniform variable called "+name +" found!");
+		logger.error("No uniform variable called " + name + " found!");
 	}
 
 	public void loadBoolean(boolean bool) {

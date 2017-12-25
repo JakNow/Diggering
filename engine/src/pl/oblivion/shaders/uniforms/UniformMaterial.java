@@ -31,10 +31,9 @@ public class UniformMaterial extends Uniform {
 		hasNormalMap.loadBoolean(material.isNormal());
 	}
 
-
 	@Override
 	public void logMissingUniform() {
 		logger = Logger.getLogger(UniformMaterial.class);
-		logger.error("No uniform variable called "+name +" found!");
+		logger.error("No uniform variable called " + name + " found!");
 	}
 }

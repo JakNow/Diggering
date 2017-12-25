@@ -1,83 +1,136 @@
 package pl.oblivion.dataStructure;
 
 import org.joml.Vector3f;
+import org.joml.Vector4f;
+import pl.oblivion.base.Mesh;
 import pl.oblivion.base.Model;
+import pl.oblivion.base.TexturedMesh;
 import pl.oblivion.components.CollisionComponent;
 import pl.oblivion.components.moveable.MoveComponent;
+import pl.oblivion.models.ModelsManager;
 import pl.oblivion.shapes.AABB;
 import pl.oblivion.shapes.CollisionShape;
 import pl.oblivion.shapes.CylinderCollider;
 import pl.oblivion.shapes.SphereCollider;
 import pl.oblivion.utils.PMaths;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-class OctreeNode {
+public class OctreeNode {
 
-	private final int numberOfChildren = 8;
-
-	private final int currentDepth;
-	private final Vector3f center;
-	private final float halfWidth;
-	private LinkedList<Model> staticModels;
-	private LinkedList<Model> dynamicModels;
-	private OctreeNode[] children;
+	private final float meshThickness = 0.05f;
+	//OctreeNode structure
+	private Vector3f center;
+	private float worldExtends;
+	private int currentDepth;
+	private int worldDepth;
 	private OctreeNode parent;
-	private LinkedList<Model> parentsStaticModels;
-	private LinkedList<Model> parentsDynamicModels;
-	private List<ModelPair> colliedObjects;
-	private String nodeId;
+	private OctreeNode[] children;
+	private Octree octree;
+	//Objects mapping
+	private List<Model> staticModels = new LinkedList<>();
+	private List<Model> dynamicModels = new LinkedList<>();
+	private List<Model> tempDynamicModels = new LinkedList<>();
+	private List<Model> parentsModels = new LinkedList<>();
+	private List<ModelPair> collidedObjects = new LinkedList<>();
+	//Visual params
+	private TexturedMesh octreeNodeShape;
+	private Vector4f colour;
 
-	OctreeNode(Vector3f pos, float halfWidth, int stopDepth, OctreeNode parent) {
-		this.currentDepth = stopDepth;
-		this.center = pos;
-		this.halfWidth = halfWidth;
+	OctreeNode(Vector3f center, float worldExtends, int currentDepth, int worldDepth, OctreeNode parent,
+			Octree octree) {
+		this.center = center;
+		this.worldExtends = worldExtends;
+		this.currentDepth = currentDepth;
+		this.worldDepth = worldDepth;
 		this.parent = parent;
-		this.staticModels = new LinkedList<>();
-		this.dynamicModels = new LinkedList<>();
-		this.parentsStaticModels = (parent != null) ? new LinkedList<>(parent.staticModels) : new LinkedList<>();
-		this.parentsDynamicModels = (parent != null) ? new LinkedList<>(parent.dynamicModels) : new LinkedList<>();
-		this.colliedObjects = new ArrayList<>();
-		this.nodeId = (parent != null) ? parent.nodeId + ":" + stopDepth : Integer.toString(stopDepth);
-		createChildren(pos, halfWidth, stopDepth);
+		this.octree = octree;
+		this.children = createChildren();
+		this.octreeNodeShape = createOctreeNodeShape();
+		this.colour = setColour();
 	}
 
-	private void createChildren(Vector3f pos, float halfWidth, int stopDepth) {
-		Vector3f offset = new Vector3f();
-		if (stopDepth > 0) {
-			this.children = new OctreeNode[numberOfChildren];
-			float step = halfWidth * 0.5f;
+	private OctreeNode[] createChildren() {
+		if (currentDepth < worldDepth) {
+			OctreeNode[] children = new OctreeNode[8];
+			float step = worldExtends / 2;
+			for (int i = 0; i < 8; i++) {
 
-			for (int i = 0; i < children.length; i++) {
-				offset.x = (((i & 1) == 0) ? step : - step);
-				offset.y = (((i & 2) == 0) ? step : - step);
-				offset.z = (((i & 4) == 0) ? step : - step);
-
-				children[i] = new OctreeNode(new Vector3f(pos).add(offset), step, stopDepth - 1, this);
+				Vector3f offset =
+						new Vector3f((((i & 1) == 0) ? step / 2 : - step / 2), (((i & 2) == 0) ? step / 2 : - step / 2),
+								(((i & 4) == 0) ? step / 2 : - step / 2));
+				children[i] = new OctreeNode(new Vector3f(this.center).add(offset), step, this.currentDepth + 1,
+						this.worldDepth, this, octree);
 			}
+			return children;
 		} else {
-			this.children = null;
+			return null;
 		}
 	}
 
-	void insertModel(final Model model) {
+	//Just for visual effect.
+	private TexturedMesh createOctreeNodeShape() {
+		TexturedMesh texturedMesh = ModelsManager.getOctreeNodeShape();
+		float[] tempVert = texturedMesh.getMeshData().vertices;
+
+		for (int i = 0; i < tempVert.length; i++) {
+			tempVert[i] = convertVertices(tempVert[i]);
+		}
+
+		Mesh mesh = Mesh.create();
+		mesh.bind();
+		mesh.createIndexBuffer(texturedMesh.getMeshData().indices);
+		mesh.createAttribute(0, tempVert, 3);
+		mesh.createAttribute(1, texturedMesh.getMeshData().textures, 2);
+		mesh.unbind();
+
+		return new TexturedMesh(mesh, texturedMesh.getMaterial());
+	}
+
+	private Vector4f setColour() {
+		switch (currentDepth) {
+			case 0:
+				return new Vector4f(1.0f, 0.0f, 0.0f, 1.0f);
+			case 1:
+				return new Vector4f(0.0f, 1.0f, 0.0f, 1.0f);
+			case 2:
+				return new Vector4f(0.0f, 0.0f, 1.0f, 1.0f);
+			case 3:
+				return new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+			default:
+				return new Vector4f(0.3f, 0.6f, 0.4f, 1.0f);
+		}
+	}
+
+	private float convertVertices(float vertices) {
+		if (vertices == 1.0f || vertices == - 1.0f) {
+			return vertices * worldExtends / 2;
+		} else if (vertices == - 0.98f) {
+			return - (worldExtends / 2 - meshThickness);
+		} else if (vertices == 0.98f) {
+			return (worldExtends / 2 - meshThickness);
+		} else if (vertices == 0.01f) {
+			return meshThickness;
+		} else if (vertices == - 0.01f) {
+			return - meshThickness;
+		} else { return 0; }
+	}
+
+	public void insertModel(final Model model) {
 		int index = 0;
-		boolean moveDown = true;
+		boolean straddle = false;
 		float delta;
 
-		Vector3f modelsCollisionShapeCenter =
-				model.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().getTempCenter();
+		final float[] modelsPosition = PMaths.vecToArray(model.getPosition());
+		final float[] nodePosition = PMaths.vecToArray(this.getCenter());
 
-		final float[] modelsCenter = PMaths.vecToArray(modelsCollisionShapeCenter);
-		final float[] nodeCenter = PMaths.vecToArray(center);
+		for (int i = 0; i < 3; i++) {
+			delta = nodePosition[i] - modelsPosition[i];
 
-		for (int i = 0; i < nodeCenter.length; i++) {
-			delta = nodeCenter[i] - modelsCenter[i];
-
-			if (Math.abs(delta) + model.getModelView().getFurthestPoint() >= halfWidth) {
-				moveDown = false;
+			if (Math.abs(delta) <= model.getModelView().getFurthestPoint()) {
+				straddle = true;
 				break;
 			}
 
@@ -86,191 +139,79 @@ class OctreeNode {
 			}
 		}
 
-		if (moveDown && currentDepth > 0) {
+		if (! straddle && currentDepth < worldDepth) {
 			children[index].insertModel(model);
-		} else if (moveDown && currentDepth == 0) {
-			if (model.getComponent(MoveComponent.class) != null) {
-				this.dynamicModels.add(model);
-			} else {
-				this.staticModels.add(model);
-			}
 		} else {
-			if (parent != null) {
-				if (model.getComponent(MoveComponent.class) != null) {
-					this.parent.dynamicModels.add(model);
-				} else {
-					this.parent.staticModels.add(model);
-				}
-			} else {
-				if (model.getComponent(MoveComponent.class) != null) {
-					this.dynamicModels.add(model);
-				} else {
-					this.staticModels.add(model);
-				}
+			putModelToList(model);
+		}
+	}
+
+	private void putModelToList(final Model model) {
+		model.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().setMeshColour(this.getColour());
+		if (model.getComponent(MoveComponent.class) != null) {
+			dynamicModels.add(model);
+		} else {
+			staticModels.add(model);
+		}
+	}
+
+	public void update() {
+		checkOwnObjectsForCollision();
+		updateDynamicModels();
+		if (currentDepth < worldDepth) {
+			for (OctreeNode child : children) {
+				child.update();
 			}
 		}
 	}
 
-	void removeModel(final Model model) {
-		boolean objectRemoved = false;
-
-		for (Model staticModel : staticModels) {
-			if (staticModel.equals(model)) {
-				staticModels.remove(staticModel);
-				objectRemoved = true;
-				break;
-			}
-		}
-		if (! objectRemoved) {
-			for (Model dynamicModel : dynamicModels) {
-				if (dynamicModel.equals(model)) {
-					dynamicModels.remove(dynamicModel);
-					objectRemoved = true;
-					break;
-				}
-			}
-		}
-
-		if (! objectRemoved) {
-			if (currentDepth > 0) {
-				for (OctreeNode child : children) {
-					child.removeModel(model);
-				}
-			}
-		}
-	}
-
-	void clean() {
-		this.staticModels.clear();
-		this.dynamicModels.clear();
-		if (currentDepth > 0) {
+	public void clean() {
+		staticModels.clear();
+		dynamicModels.clear();
+		if (currentDepth < worldDepth) {
 			for (OctreeNode child : children) {
 				child.clean();
 			}
 		}
 	}
 
-	void dynamicUpdate() {
-		updateModelsNode();
-		checkOwnObjectsForCollisions();
-		if (currentDepth > 0) {
-			for (OctreeNode child : children) {
-				child.dynamicUpdate();
-			}
-		}
-		if (this.colliedObjects.size() != 0) {
-			// System.out.println(this.colliedObjects.size());
+	private void updateDynamicModels() {
+		tempDynamicModels.clear();
+		tempDynamicModels.addAll(dynamicModels);
+		for (Model dynamicModel : tempDynamicModels) {
+			dynamicModel.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().update();
+			dynamicModels.remove(dynamicModel);
+			octree.insertObject(dynamicModel);
 		}
 	}
 
-	private void updateModelsNode() {
-		for (Model model : dynamicModels) {
-			updateModel(model);
-		}
-	}
-
-	private void updateModel(final Model model) {
-		model.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().update();
-		// this.changeModelsNode(model);
-	}
-
-	private void changeModelsNode(final Model model) {
-		this.removeModel(model);
-		this.insertModel(model);
-	}
-
-	private void noChildren(final Model model) {
-		boolean straddle = false;
-		float delta;
-
-		Vector3f modelsCollisionShapeCenter =
-				model.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().getTempCenter();
-		final float[] objPos =
-				{modelsCollisionShapeCenter.x, modelsCollisionShapeCenter.y, modelsCollisionShapeCenter.z};
-		final float[] parentPos = {parent.center.x, parent.center.y, parent.center.z};
-
-		for (int i = 0; i < parentPos.length; i++) {
-			delta = parentPos[i] - objPos[i];
-
-			if (Math.abs(delta) <= model.getModelView().getFurthestPoint()) {
-				straddle = true;
-				break;
-			}
-		}
-		if (! straddle) {
-
-		}
-	}
-    /*
-      int index = 0;
-        boolean straddle = false;
-        float delta;
-
-        Vector3f modelsCollisionShapeCenter = model.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape().getCenter();
-        final float[] objPos = {modelsCollisionShapeCenter.x, modelsCollisionShapeCenter.y, modelsCollisionShapeCenter.z};
-        final float[] nodePos = {center.x, center.y, center.z};
-
-        for (int i = 0; i < nodePos.length; i++) {
-            delta = nodePos[i] - objPos[i];
-
-            if (Math.abs(delta) <= model.getModelView().getFurthestPoint()) {
-                straddle = true;
-                break;
-            }
-
-            if (delta > 0.0f) {
-                index |= (1 << i);
-            }
-        }
-
-        if (!straddle && currentDepth > 0) {
-            children[index].insertModel(model);
-        } else {
-            if (model.getComponent(MoveComponent.class) != null) {
-                this.dynamicModels.add(model);
-            } else {
-                this.staticModels.add(model);
-            }
-        }
-     */
-
-	private void fillParentsObjectsList() {
+	private void fillParentsModels() {
 		if (parent != null) {
-			this.parentsStaticModels.clear();
-			this.parentsStaticModels.addAll(this.parent.parentsStaticModels);
-			this.parentsStaticModels.addAll(this.parent.staticModels);
-
-			this.parentsDynamicModels.clear();
-			this.parentsDynamicModels.addAll(this.parent.parentsDynamicModels);
-			this.parentsDynamicModels.addAll(this.parent.dynamicModels);
+			parentsModels.clear();
+			parentsModels.addAll(parent.dynamicModels);
+			parentsModels.addAll(parent.staticModels);
+			parentsModels.addAll(parent.parentsModels);
 		}
 	}
 
-	private void checkOwnObjectsForCollisions() {
-		this.colliedObjects.clear();
-		fillParentsObjectsList();
+	private void checkOwnObjectsForCollision() {
+		this.collidedObjects.clear();
+		fillParentsModels();
 		for (Model dynamicModel : dynamicModels) {
-			CollisionShape dynamicModelsCollisionShape =
+			CollisionShape dynamicModelCollisionShape =
 					dynamicModel.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape();
 			for (Model staticModel : staticModels) {
-				CollisionShape staticModelsCollisionShape =
+				CollisionShape staticModelCollisionShape =
 						staticModel.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape();
-				if (intersection(dynamicModelsCollisionShape, staticModelsCollisionShape)) {
-					this.colliedObjects.add(new ModelPair(dynamicModel, staticModel));
+				if (intersection(dynamicModelCollisionShape, staticModelCollisionShape)) {
+					this.collidedObjects.add(new ModelPair(dynamicModel, staticModel));
 				}
 			}
-			for (Model parentsStaticModel : parentsStaticModels) {
-				CollisionShape parentsStaticModelCollisionShape =
-						parentsStaticModel.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape();
-				if (intersection(dynamicModelsCollisionShape, parentsStaticModelCollisionShape)) {
-					this.colliedObjects.add(new ModelPair(dynamicModel, parentsStaticModel));
-				}
-			}
-			for (Model parentsDynamicModel : parentsDynamicModels) {
-				CollisionShape parentsDynamicModelCollisionShape =
-						parentsDynamicModel.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape();
-				if (intersection(dynamicModelsCollisionShape, parentsDynamicModelCollisionShape)) {
-					this.colliedObjects.add(new ModelPair(dynamicModel, parentsDynamicModel));
+			for (Model parentModel : parentsModels) {
+				CollisionShape parentModelCollisionShape =
+						parentModel.getComponent(CollisionComponent.class).getBroadPhaseCollisionShape();
+				if (intersection(dynamicModelCollisionShape, parentModelCollisionShape)) {
+					this.collidedObjects.add(new ModelPair(dynamicModel, parentModel));
 				}
 			}
 		}
@@ -287,4 +228,27 @@ class OctreeNode {
 				collisionShape1.intersection((SphereCollider) collisionShape2);
 	}
 
+	public int getCurrentDepth() {
+		return currentDepth;
+	}
+
+	public TexturedMesh getOctreeNodeShape() {
+		return octreeNodeShape;
+	}
+
+	public OctreeNode[] getChildren() {
+		return children;
+	}
+
+	public Vector3f getCenter() {
+		return center;
+	}
+
+	public int getWorldDepth() {
+		return worldDepth;
+	}
+
+	public Vector4f getColour() {
+		return colour;
+	}
 }

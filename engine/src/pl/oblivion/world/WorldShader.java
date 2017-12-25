@@ -21,7 +21,8 @@ public class WorldShader extends ShaderProgram {
 	protected UniformSampler normalTexture = new UniformSampler("normalTexture");
 
 	public WorldShader() {
-		super(new MyFile(SimpleApp.properties.getProperty("shader.world.vertex")), new MyFile(SimpleApp.properties.getProperty("shader.world.fragment")), "in_position", "in_textures");
+		super(new MyFile(SimpleApp.properties.getProperty("shader.world.vertex")),
+				new MyFile(SimpleApp.properties.getProperty("shader.world.fragment")), "in_position", "in_textures");
 		super.storeAllUniformLocations(projectionMatrix, viewMatrix, transformationMatrix, diffuseTexture,
 				normalTexture);
 		this.storeMaterialUniforms();

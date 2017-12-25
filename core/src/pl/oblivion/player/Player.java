@@ -14,7 +14,8 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Player extends StaticModel {
 
 	private static final float SCALE = 1f;
-	private static Vector3f POSITION = new Vector3f(0, 0, 0);
+	public static float height = 64;
+	private static Vector3f POSITION = new Vector3f(64, height, 64);
 	private static Vector3f ROTATION = new Vector3f(0, 0, 0);
 	private float currentSpeed = 0;
 	private float currentTurnSpeed = 0;
@@ -24,7 +25,7 @@ public class Player extends StaticModel {
 	private float gravity = Float.parseFloat(Main.properties.getProperty("world.gravity"));
 	private float runSpeed = Float.parseFloat(Main.properties.getProperty("player.run_speed"));
 	private float rotationSpeed = Float.parseFloat(Main.properties.getProperty("player.rotation_speed"));
-	private float jumpPower= Float.parseFloat(Main.properties.getProperty("player.jump_power"));
+	private float jumpPower = Float.parseFloat(Main.properties.getProperty("player.jump_power"));
 
 	private boolean isInAir = false;
 	private MoveComponent moveComponent;
@@ -46,14 +47,14 @@ public class Player extends StaticModel {
 		float dx = (float) (currentSpeed * Math.sin(Math.toRadians(super.getRotation().y)));
 		float dz = (float) (currentSpeed * Math.cos(Math.toRadians(super.getRotation().y)));
 
-		dx += (float) (currentSideSpeed * Math.sin(Math.toRadians(super.getRotation().y+90)));
-		dz += (float) (currentSideSpeed * Math.cos(Math.toRadians(super.getRotation().y+90)));
+		dx += (float) (currentSideSpeed * Math.sin(Math.toRadians(super.getRotation().y + 90)));
+		dz += (float) (currentSideSpeed * Math.cos(Math.toRadians(super.getRotation().y + 90)));
 
 		upwardSpeed -= gravity;
 		moveComponent.move(dx, upwardSpeed, dz, delta);
-		if (super.getPosition().y < 0) {
+		if (super.getPosition().y < height) {
 			upwardSpeed = 0;
-			super.getPosition().y = 0;
+			super.getPosition().y = height;
 			isInAir = false;
 		}
 
@@ -68,11 +69,11 @@ public class Player extends StaticModel {
 			this.currentSpeed = 0;
 		}
 
-		if(window.isKeyPressed(GLFW_KEY_Q)){
+		if (window.isKeyPressed(GLFW_KEY_Q)) {
 			this.currentSideSpeed = runSpeed;
-		} else if (window.isKeyPressed(GLFW_KEY_E)){
-			this.currentSideSpeed = -runSpeed;
-		} else{
+		} else if (window.isKeyPressed(GLFW_KEY_E)) {
+			this.currentSideSpeed = - runSpeed;
+		} else {
 			this.currentSideSpeed = 0;
 		}
 
