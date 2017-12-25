@@ -1,5 +1,6 @@
 package pl.oblivion.core;
 
+import org.apache.log4j.Logger;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -17,27 +18,25 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
 
-	private final Matrix4f projectionMatrix;
-	// The window handle
-	private long window;
-	private int width;
-	private int height;
-
-	private static float FOV;
-	private static float NEAR;
-	private static float FAR;
-
 	public static float RED;
 	public static float GREEN;
 	public static float BLUE;
 	public static float ALPHA;
-
+	private static float FOV;
+	private static float NEAR;
+	private static float FAR;
+	private final Matrix4f projectionMatrix;
+	private Logger logger = Logger.getLogger(Window.class);
+	// The window handle
+	private long window;
+	private int width;
+	private int height;
 	private String title;
 	private boolean resized;
 	private boolean vSync;
 
 	public Window(Properties properties) {
-			this.width = Integer.parseInt(properties.getProperty("window.width"));
+		this.width = Integer.parseInt(properties.getProperty("window.width"));
 		this.height = Integer.parseInt(properties.getProperty("window.height"));
 
 		this.FOV = Float.parseFloat(properties.getProperty("camera.fov"));
@@ -49,7 +48,7 @@ public class Window {
 		this.BLUE = Float.parseFloat(properties.getProperty("bg.blue"));
 		this.ALPHA = Float.parseFloat(properties.getProperty("bg.alpha"));
 
-			this.title = properties.getProperty("window.title");
+		this.title = properties.getProperty("window.title");
 		this.resized = false;
 		this.vSync = true;
 		projectionMatrix = new Matrix4f();
@@ -64,12 +63,14 @@ public class Window {
 		// Initialize GLFW. Most GLFW functions will not work before doing this.
 		if (! glfwInit()) { throw new IllegalStateException("Unable to initialize GLFW"); }
 
+		logger.info("Initializing Window.");
 		// Configure GLFW
 		glfwDefaultWindowHints(); // optional, the current window hints are already the default
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
 		if (System.getProperty("os.name").equals("Mac OS X")) {
+			logger.info("Settting Mac OS X properties.");
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -77,7 +78,7 @@ public class Window {
 		}
 		// Create the window
 		window = glfwCreateWindow(width, height, title, NULL, NULL);
-
+		logger.info("Creating Window.");
 		glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
 			this.width = width;
 			this.height = height;
@@ -135,6 +136,7 @@ public class Window {
 
 	public void destroy() {
 
+		logger.info("Destroying Window.");
 		// Free the window callbacks and destroy the window
 		glfwFreeCallbacks(window);
 		glfwDestroyWindow(window);
@@ -162,6 +164,7 @@ public class Window {
 	}
 
 	public Matrix4f updateProjectionMatrix() {
+		logger.info("Updateing Projection Matrix due to resizing Window.");
 		float aspectRatio = (float) width / (float) height;
 		return projectionMatrix.setPerspective(FOV, aspectRatio, NEAR, FAR);
 	}

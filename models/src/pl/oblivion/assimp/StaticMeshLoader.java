@@ -21,13 +21,11 @@ import static org.lwjgl.assimp.Assimp.*;
 
 public class StaticMeshLoader {
 
-
+	public static String RESOURCE_PATH;
+	public static String TEXTURES_DIR;
 	private static String MODELS_PATH = ModelsManager.properties.getProperty("path.assets.models");
 	private static String TEXTURES_PATH = ModelsManager.properties.getProperty("path.assets.textures");
 	private static String MATERIALS_PATH = ModelsManager.properties.getProperty("path.assets.materials");
-
-	public static String RESOURCE_PATH;
-	public static String TEXTURES_DIR;
 
 	public static ModelView load(String resourcePath, String texturesDir) throws Exception {
 		RESOURCE_PATH = MODELS_PATH + resourcePath;

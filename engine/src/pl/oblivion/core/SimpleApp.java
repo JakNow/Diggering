@@ -15,15 +15,14 @@ import java.util.Properties;
 public abstract class SimpleApp {
 
 	protected static final Logger logger = Logger.getLogger(SimpleApp.class);
+	public static Properties properties = loadProperties();
 	protected final Window window;
 	protected final Renderer rendererHandler;
 	protected final MouseInput mouseInput;
-	public static Properties properties = loadProperties();
 	private final Timer timer;
-	protected Camera camera;
-
 	private final int ups = Integer.parseInt(properties.getProperty("window.ups"));
 	private final int fps = Integer.parseInt(properties.getProperty("window.fps"));
+	protected Camera camera;
 
 	protected SimpleApp() {
 
@@ -32,6 +31,19 @@ public abstract class SimpleApp {
 		this.timer = new Timer();
 		this.rendererHandler = new Renderer(window);
 		new ModelsManager();
+	}
+
+	private static Properties loadProperties() {
+		try {
+			InputStream stream = Files.newInputStream(Paths.get("engine\\resources\\engine.properties"));
+			Properties properties = new Properties();
+			properties.load(stream);
+			logger.info("Loaded engine.properties file.");
+			return properties;
+		} catch (IOException e) {
+			logger.fatal("Couldn't load engine.properties for core!", e);
+		}
+		return null;
 	}
 
 	public void run() {
@@ -74,26 +86,12 @@ public abstract class SimpleApp {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException ie) {
-				logger.error("Problem with syncing app.",ie);
+				logger.error("Problem with syncing app.", ie);
 			}
 		}
 	}
 
 	private void cleanUp() {
 		rendererHandler.cleanUp();
-	}
-
-
-	private static Properties loadProperties(){
-		try{
-			InputStream stream = Files.newInputStream(Paths.get("engine\\resources\\engine.properties"));
-			Properties properties = new Properties();
-			properties.load(stream);
-			logger.info("Loaded engine.properties file.");
-			return properties;
-		} catch (IOException e){
-			logger.fatal("Couldn't load engine.properties for core!",e);
-		}
-		return null;
 	}
 }

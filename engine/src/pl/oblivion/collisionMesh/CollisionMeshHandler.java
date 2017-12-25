@@ -4,6 +4,8 @@ import org.joml.Matrix4f;
 import pl.oblivion.base.Model;
 import pl.oblivion.base.TexturedMesh;
 import pl.oblivion.components.CollisionComponent;
+import pl.oblivion.dataStructure.Octree;
+import pl.oblivion.dataStructure.OctreeNode;
 import pl.oblivion.shaders.RendererHandler;
 import pl.oblivion.shapes.CollisionShape;
 import pl.oblivion.utils.Maths;
@@ -16,7 +18,7 @@ import java.util.Map;
 public class CollisionMeshHandler extends RendererHandler {
 
 	private Map<CollisionShape, List<Model>> collisionShapeListMap = new HashMap<>();
-
+	private List<OctreeNode> octreeTexturedMesh = new ArrayList<>();
 	private CollisionMeshShader shader;
 
 	CollisionMeshHandler(CollisionMeshShader shader) {
@@ -64,6 +66,31 @@ public class CollisionMeshHandler extends RendererHandler {
 		}
 	}
 
+	public void processOctree(Octree octree) {
+		processOctreeNode(octree.getNode());
+	}
+
+	private void processOctreeNode(OctreeNode octreeNode) {
+		octreeTexturedMesh.add(octreeNode);
+		if (octreeNode.getCurrentDepth() < octreeNode.getWorldDepth()) {
+			for (OctreeNode child : octreeNode.getChildren()) {
+				processOctreeNode(child);
+			}
+		}
+	}
+
+	public void prepareOctre(OctreeNode octreeNode) {
+		octreeNode.getOctreeNodeShape().getMesh()
+				.bind(bindingAttributes);
+		shader.meshColour.loadVec4(octreeNode.getColour());
+		Matrix4f transformationMatrix = Maths.createTransfromationMatrixOctree(octreeNode);
+		shader.transformationMatrix.loadMatrix(transformationMatrix);
+	}
+
+	public void unbindOctreeNode(OctreeNode octreeNode) {
+		octreeNode.getOctreeNodeShape().getMesh().unbind();
+	}
+
 	public void prepareModel(CollisionShape collisionShape) {
 		collisionShape.getTexturedMesh().getMesh().bind(bindingAttributes);
 		shader.meshColour.loadVec4(collisionShape.getMeshColour());
@@ -75,5 +102,9 @@ public class CollisionMeshHandler extends RendererHandler {
 
 	Map<CollisionShape, List<Model>> getCollisionShapeListMap() {
 		return collisionShapeListMap;
+	}
+
+	List<OctreeNode> getOctreeTexturedMesh() {
+		return octreeTexturedMesh;
 	}
 }

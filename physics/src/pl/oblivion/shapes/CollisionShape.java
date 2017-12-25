@@ -8,9 +8,9 @@ import pl.oblivion.utils.Color;
 
 public abstract class CollisionShape implements Intersection {
 
-	private final Color isIntersectingColour = new Color(255, 0, 0, 255);
-	private final Color isNotIntersectingColour = new Color(42, 135, 211, 255);
 	private final Model model;
+	private Color isIntersectingColour = new Color(255, 0, 0, 255);
+	private Color isNotIntersectingColour = new Color(42, 135, 211, 0);
 	private boolean isMoving;
 	private TexturedMesh mesh;
 	private Vector4f meshColour = isNotIntersectingColour.getFloats();
@@ -26,13 +26,13 @@ public abstract class CollisionShape implements Intersection {
 
 	@Override
 	public void changeColour(boolean isIntersecting, CollisionShape collisionShape) {
-		if (isIntersecting) {
+	/*	if (isIntersecting) {
 			collisionShape.setMeshColour(collisionShape.isIntersectingColour);
 			this.setMeshColour(collisionShape.isIntersectingColour);
 		} else {
 			collisionShape.setMeshColour(collisionShape.isNotIntersectingColour);
 			this.setMeshColour(collisionShape.isNotIntersectingColour);
-		}
+		}*/
 	}
 
 	public Model getModel() {
@@ -63,6 +63,10 @@ public abstract class CollisionShape implements Intersection {
 		return meshColour;
 	}
 
+	public void setMeshColour(Vector4f colour) {
+		this.meshColour = colour;
+	}
+
 	private void setMeshColour(Color color) {
 		this.meshColour = color.getFloats();
 	}
@@ -81,5 +85,14 @@ public abstract class CollisionShape implements Intersection {
 
 	public Vector3f getTempCenter() {
 		return tempCenter;
+	}
+
+	public Color getIsNotIntersectingColour() {
+		return isNotIntersectingColour;
+	}
+
+	public void setIsNotIntersectingColour(Color isNotIntersectingColour) {
+		this.isNotIntersectingColour = isNotIntersectingColour;
+		this.meshColour = isNotIntersectingColour.getFloats();
 	}
 }

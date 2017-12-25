@@ -22,15 +22,15 @@ public class UniformMat4Array extends Uniform {
 		}
 	}
 
+	@Override
+	public void logMissingUniform() {
+		logger = Logger.getLogger(UniformMat4Array.class);
+		logger.error("No uniform variable called " + name + " found!");
+	}
+
 	public void loadMatrixArray(Matrix4f[] matrices) {
 		for (int i = 0; i < matrices.length; i++) {
 			matrixUniforms[i].loadMatrix(matrices[i]);
 		}
-	}
-
-	@Override
-	public void logMissingUniform() {
-		logger = Logger.getLogger(UniformMat4Array.class);
-		logger.error("No uniform variable called "+name +" found!");
 	}
 }

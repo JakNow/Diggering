@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.joml.Vector3f;
 import pl.oblivion.assimp.StaticMeshLoader;
 import pl.oblivion.base.ModelView;
+import pl.oblivion.collisionMesh.CollisionMeshHandler;
 import pl.oblivion.collisionMesh.CollisionMeshRenderer;
 import pl.oblivion.components.CollisionComponent;
 import pl.oblivion.core.SimpleApp;
@@ -28,17 +29,14 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Main extends SimpleApp {
 
 	private static Logger logger = Logger.getLogger(Main.class);
+	public static Properties properties = loadProperties();
 	private Player player;
 	private StaticModel aabb;
 	private StaticModel cylinder;
 	private StaticModel sphere;
-
 	private StaticModel plane;
 	private Octree octree;
-
 	private StaticModel[] testModel;
-
-	public static Properties properties = loadProperties();
 
 	private Main() {
 		StaticRenderer staticRenderer = new StaticRenderer(window);
@@ -92,16 +90,22 @@ public class Main extends SimpleApp {
 
 		//  plane.addComponent(new CollisionComponent(AABB.create(plane), MeshCollider.create(plane)));
 
-		octree = new Octree(128, 3);
+		int size = 64;
+		player.setPostion(4f, 4f, 4f);
+		player.height = 4.0f;
+		octree = new Octree(size * 2, 3);
+		CollisionMeshHandler cmh = (CollisionMeshHandler) collisionMeshRenderer.getRendererHandler();
+		cmh.processOctree(octree);
 		octree.insertObject(player);
 		octree.insertObject(aabb);
 		octree.insertObject(cylinder);
 		octree.insertObject(sphere);
 		testModel = new StaticModel[1000];
 		for (int i = 0; i < 1000; i++) {
+
 			testModel[i] = new StaticModel(
-					new Vector3f((float) (Math.random() * 100 - 50), (float) (Math.random() * 100 - 50),
-							(float) (Math.random() * 100 - 50)), new Vector3f(0, 0, 0), 1f, test);
+					new Vector3f(randomNumber(- size, size), randomNumber(- size, size), randomNumber(- size, size)),
+					new Vector3f(0, 0, 0), 1f, test);
 			testModel[i].addComponent(new CollisionComponent(SphereCollider.create(testModel[i]), null));
 			octree.insertObject(testModel[i]);
 
@@ -110,8 +114,25 @@ public class Main extends SimpleApp {
 		}
 	}
 
+	private static float randomNumber(float min, float max) {
+		return (float) (min + (Math.random() * ((max - (min)) + 1)));
+	}
+
 	public static void main(String[] args) {
 		new Main().run();
+	}
+
+	private static Properties loadProperties() {
+		try {
+			InputStream stream = Files.newInputStream(Paths.get("core\\resources\\core.properties"));
+			Properties properties = new Properties();
+			properties.load(stream);
+			logger.info("Loaded core.properties file.");
+			return properties;
+		} catch (IOException e) {
+			logger.fatal("Couldn't load core.properties for core!", e);
+		}
+		return null;
 	}
 
 	@Override
@@ -122,21 +143,9 @@ public class Main extends SimpleApp {
 
 		if (window.isKeyPressed(GLFW_KEY_F1)) { CollisionMeshRenderer.ENABLE_RENDER = true; }
 		if (window.isKeyPressed(GLFW_KEY_F2)) { CollisionMeshRenderer.ENABLE_RENDER = false; }
-		if (window.isKeyPressed(GLFW_KEY_ESCAPE)) {glfwSetWindowShouldClose(window.getWindowHandle(),true);
-		logger.info("Quiting the app");}
-	}
-
-	private static Properties loadProperties(){
-		try{
-			InputStream stream = Files.newInputStream(Paths.get("core\\resources\\core.properties"));
-			Properties properties = new Properties();
-			properties.load(stream);
-			logger.info("Loaded core.properties file.");
-			return properties;
-		} catch (IOException e){
-			logger.fatal("Couldn't load core.properties for core!",e);
+		if (window.isKeyPressed(GLFW_KEY_ESCAPE)) {
+			glfwSetWindowShouldClose(window.getWindowHandle(), true);
 		}
-		return null;
 	}
 
 }

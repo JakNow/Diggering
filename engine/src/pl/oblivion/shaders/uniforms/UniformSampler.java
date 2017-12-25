@@ -23,6 +23,6 @@ public class UniformSampler extends Uniform {
 	@Override
 	public void logMissingUniform() {
 		logger = Logger.getLogger(UniformSampler.class);
-		logger.error("No uniform variable called "+name +" found!");
+		logger.error("No uniform variable called " + name + " found!");
 	}
 }

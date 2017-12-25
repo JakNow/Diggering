@@ -14,6 +14,8 @@ public class Renderer {
 	public static List<RendererProgram> rendererProgramList = new ArrayList<>();
 
 	private Window window;
+	private float currentWidht;
+	private float currentHeight;
 
 	public Renderer(Window window) {
 		this.window = window;
@@ -27,7 +29,11 @@ public class Renderer {
 
 	public void prepare() {
 		glViewport(0, 0, window.getWidth(), window.getHeight());
-		window.updateProjectionMatrix();
+		if (currentWidht != window.getWidth() || currentHeight != window.getHeight()) {
+			window.updateProjectionMatrix();
+			currentWidht = window.getWidth();
+			currentHeight = window.getHeight();
+		}
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL11.GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 		glClearColor(Window.RED, Window.GREEN, Window.BLUE, Window.ALPHA);

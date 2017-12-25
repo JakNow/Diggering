@@ -42,6 +42,12 @@ public abstract class Model {
 		this.position = position;
 	}
 
+	public void setPostion(float x, float y, float z) {
+		this.position.x = x;
+		this.position.y = y;
+		this.position.z = z;
+	}
+
 	public Vector3f getRotation() {
 		return rotation;
 	}
