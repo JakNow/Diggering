@@ -39,14 +39,14 @@ public class Window {
 		this.width = Integer.parseInt(properties.getProperty("window.width"));
 		this.height = Integer.parseInt(properties.getProperty("window.height"));
 
-		this.FOV = Float.parseFloat(properties.getProperty("camera.fov"));
-		this.NEAR = Float.parseFloat(properties.getProperty("camera.near"));
-		this.FAR = Float.parseFloat(properties.getProperty("camera.far"));
+		FOV = Float.parseFloat(properties.getProperty("camera.fov"));
+		NEAR = Float.parseFloat(properties.getProperty("camera.near"));
+		FAR = Float.parseFloat(properties.getProperty("camera.far"));
 
-		this.RED = Float.parseFloat(properties.getProperty("bg.red"));
-		this.GREEN = Float.parseFloat(properties.getProperty("bg.green"));
-		this.BLUE = Float.parseFloat(properties.getProperty("bg.blue"));
-		this.ALPHA = Float.parseFloat(properties.getProperty("bg.alpha"));
+		RED = Float.parseFloat(properties.getProperty("bg.red"));
+		GREEN = Float.parseFloat(properties.getProperty("bg.green"));
+		BLUE = Float.parseFloat(properties.getProperty("bg.blue"));
+		ALPHA = Float.parseFloat(properties.getProperty("bg.alpha"));
 
 		this.title = properties.getProperty("window.title");
 		this.resized = false;

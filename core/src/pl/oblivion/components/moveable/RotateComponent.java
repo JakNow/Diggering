@@ -8,10 +8,22 @@ public class RotateComponent extends BaseComponent {
 
 	private final Model model;
 	private Vector3f rotation;
+	private float currentTurnSpeed;
+	private float rotationSpeed;
 
 	public RotateComponent(Model model) {
 		this.model = model;
 		this.rotation = new Vector3f(model.getRotation());
+	}
+
+	public RotateComponent(Model model, float rotationSpeed) {
+		this.model = model;
+		this.rotation = new Vector3f(model.getRotation());
+		this.rotationSpeed = rotationSpeed;
+	}
+
+	public void update(float delta) {
+		rotate(0, currentTurnSpeed, 0, delta);
 	}
 
 	public void rotate(float dx, float dy, float dz, float delta) {
@@ -34,7 +46,19 @@ public class RotateComponent extends BaseComponent {
 		return rotation;
 	}
 
-	public Model getModel() {
-		return model;
+	public float getRotationSpeed() {
+		return rotationSpeed;
+	}
+
+	public void setRotationSpeed(float rotationSpeed) {
+		this.rotationSpeed = rotationSpeed;
+	}
+
+	public float getCurrentTurnSpeed() {
+		return currentTurnSpeed;
+	}
+
+	public void setCurrentTurnSpeed(float currentTurnSpeed) {
+		this.currentTurnSpeed = currentTurnSpeed;
 	}
 }
