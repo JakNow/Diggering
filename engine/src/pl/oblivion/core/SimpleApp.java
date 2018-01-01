@@ -1,6 +1,7 @@
 package pl.oblivion.core;
 
 import org.apache.log4j.Logger;
+import pl.oblivion.core.broadPhase.Octree;
 import pl.oblivion.game.Camera;
 import pl.oblivion.game.MouseInput;
 import pl.oblivion.game.Renderer;
@@ -23,6 +24,7 @@ public abstract class SimpleApp {
 	private final int ups = Integer.parseInt(properties.getProperty("window.ups"));
 	private final int fps = Integer.parseInt(properties.getProperty("window.fps"));
 	protected Camera camera;
+	protected Octree octree;
 
 	protected SimpleApp() {
 
@@ -31,6 +33,7 @@ public abstract class SimpleApp {
 		this.timer = new Timer();
 		this.rendererHandler = new Renderer(window);
 		new ModelsManager();
+		this.octree = new Octree(256, 3);
 	}
 
 	private static Properties loadProperties() {

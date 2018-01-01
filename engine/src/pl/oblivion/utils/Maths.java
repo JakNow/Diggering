@@ -3,7 +3,7 @@ package pl.oblivion.utils;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import pl.oblivion.base.Model;
-import pl.oblivion.dataStructure.OctreeNode;
+import pl.oblivion.core.broadPhase.OctreeNode;
 import pl.oblivion.game.Camera;
 
 public class Maths {

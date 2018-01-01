@@ -14,8 +14,12 @@ public abstract class Model {
 
 	private HashMap<Class, BaseComponent> componentHashMap = new HashMap<>();
 
+	private float height;
+	private boolean isStatic = true;
+
 	public Model(Vector3f position, Vector3f rotation, float scale, ModelView modelView) {
 		this.position = position;
+		this.height = position.y;
 		this.rotation = rotation;
 		this.scale = scale;
 		this.modelView = modelView;
@@ -72,5 +76,21 @@ public abstract class Model {
 		T result = (T) componentHashMap.get(component);
 		if (result == null) { return null; }
 		return result;
+	}
+
+	public float getHeight() {
+		return height;
+	}
+
+	public void setHeight(float height) {
+		this.height = height;
+	}
+
+	public boolean isStatic() {
+		return isStatic;
+	}
+
+	public void setStatic(boolean aStatic) {
+		isStatic = aStatic;
 	}
 }
