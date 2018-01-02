@@ -1,29 +1,32 @@
 package pl.oblivion.core;
 
-public class Timer {
+import org.apache.log4j.Logger;
+
+ class Timer {
 
 	private double lastLoopTime;
-
-	public Timer() {
+	private static final Logger logger = Logger.getLogger(Timer.class);
+	 Timer() {
 		this.init();
+		logger.info("Initializing of Timer was successful.");
 	}
 
-	public void init() {
+	private void init() {
 		lastLoopTime = getTime();
 	}
 
-	public double getTime() {
+	 double getTime() {
 		return System.nanoTime() / 1000_000_000.0;
 	}
 
-	public float getElapsedTime() {
+	 float getElapsedTime() {
 		double time = getTime();
 		float elapsedTime = (float) (time - lastLoopTime);
 		lastLoopTime = time;
 		return elapsedTime;
 	}
 
-	public double getLastLoopTime() {
+	 double getLastLoopTime() {
 		return lastLoopTime;
 	}
 }

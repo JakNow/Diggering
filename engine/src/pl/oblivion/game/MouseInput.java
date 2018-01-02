@@ -1,5 +1,6 @@
 package pl.oblivion.game;
 
+import org.apache.log4j.Logger;
 import org.joml.Vector2d;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWScrollCallback;
@@ -24,6 +25,7 @@ public class MouseInput {
 	private Window window;
 	private GLFWScrollCallback sCallback;
 
+	private static final Logger logger = Logger.getLogger(MouseInput.class);
 	public MouseInput(Window window) {
 		this.window = window;
 		previousPos = new Vector2d(- 1, - 1);
@@ -53,6 +55,7 @@ public class MouseInput {
 			currentWheel += yoffset;
 
 		});
+		logger.info("Initializing mouse was successful.");
 	}
 
 	public Vector2f getDisplVec() {

@@ -3,11 +3,12 @@ package pl.oblivion.components.moveable;
 import org.joml.Vector3f;
 import pl.oblivion.base.Model;
 import pl.oblivion.components.BaseComponent;
+import pl.oblivion.components.ComponentType;
 
 public class MoveComponent extends BaseComponent {
 
 	private final Model model;
-
+	private static final ComponentType componentType = ComponentType.MOVE;
 	private float currentSpeed;
 	private float currentSideSpeed;
 	private float upwardSpeed;
@@ -18,10 +19,12 @@ public class MoveComponent extends BaseComponent {
 	private float jumpPower;
 
 	public MoveComponent(Model model) {
+		super(componentType);
 		this.model = model;
 	}
 
 	public MoveComponent(Model model, float gravity, float runSpeed, float jumpPower) {
+		super(componentType);
 		this.model = model;
 		this.gravity = gravity;
 		this.runSpeed = runSpeed;

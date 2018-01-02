@@ -5,11 +5,12 @@ import pl.oblivion.base.Model;
 
 public class CylinderCollider extends BasicCollider {
 
-	private final Vector3f center;
+	private static final ColliderType colliderType = ColliderType.CYLINDER;
+	private Vector3f center;
 	private float height, radius;
 
 	private CylinderCollider(Model model, Vector3f center, float height, float radius) {
-		super(model);
+		super(model,colliderType);
 		this.center = center;
 		this.height = height;
 		this.radius = radius;
@@ -80,5 +81,10 @@ public class CylinderCollider extends BasicCollider {
 
 	public float getHeight() {
 		return height;
+	}
+
+	@Override
+	public void update() {
+		this.center = new Vector3f(getModel().getPosition()).add(getTranslation());
 	}
 }

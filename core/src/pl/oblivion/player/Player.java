@@ -2,6 +2,7 @@ package pl.oblivion.player;
 
 import org.joml.Vector3f;
 import pl.oblivion.base.ModelView;
+import pl.oblivion.colliders.CylinderCollider;
 import pl.oblivion.components.collision.CollisionComponent;
 import pl.oblivion.components.moveable.MoveComponent;
 import pl.oblivion.components.moveable.RotateComponent;
@@ -29,7 +30,7 @@ public class Player extends StaticModel {
 
 		moveComponent = new MoveComponent(this, gravity, runSpeed, jumpPower);
 		rotateComponent = new RotateComponent(this, rotationSpeed);
-		collisionComponent = new PlayerCollisionComponent(this, octree);
+		collisionComponent = new PlayerCollisionComponent(this, octree, CylinderCollider.create(this,false),null);
 		this.addComponent(collisionComponent);
 		this.addComponent(moveComponent);
 		this.addComponent(rotateComponent);

@@ -21,17 +21,14 @@ public class ModelsManager {
 	}
 
 	private static Properties loadProperties() {
-		Properties properties = new Properties();
-		InputStream stream = null;
 		try {
-			stream = Files.newInputStream(Paths.get("models/resources/models.properties"));
+			InputStream stream = Files.newInputStream(Paths.get("models/resources/models.properties"));
+			Properties properties = new Properties();
+			properties.load(stream);
+			logger.info("Loaded models.properties file.");
+			return properties;
 		} catch (IOException e) {
 			logger.fatal("Couldn't load models.properties file!", e);
-		}
-		try {
-			properties.load(stream);
-		} catch (IOException e) {
-			logger.fatal("Couldn't load properties from file!");
 		}
 
 		return properties;

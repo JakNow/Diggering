@@ -4,6 +4,10 @@ import org.apache.log4j.Logger;
 import org.joml.Vector3f;
 import pl.oblivion.assimp.StaticMeshLoader;
 import pl.oblivion.base.ModelView;
+import pl.oblivion.colliders.AABB;
+import pl.oblivion.components.ComponentType;
+import pl.oblivion.components.collision.CollisionComponent;
+import pl.oblivion.components.collision.StaticCollisionComponent;
 import pl.oblivion.core.SimpleApp;
 import pl.oblivion.game.Camera;
 import pl.oblivion.game.MouseInput;
@@ -66,7 +70,7 @@ public class Main extends SimpleApp {
 					new Vector3f(CMaths.randomNumber(- size, size), CMaths.randomNumber(- size, size),
 							CMaths.randomNumber(- size, size)),
 					new Vector3f(0, 0, 0), 1f, test);
-			octree.insertObject(testPlanes[i]);
+			testPlanes[i].addComponent(new StaticCollisionComponent(testPlanes[i],octree,AABB.create(testPlanes[i])));
 			staticRenderer.getRendererHandler().processModel(testPlanes[i]);
 		}
 		

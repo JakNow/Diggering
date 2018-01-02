@@ -5,11 +5,13 @@ import pl.oblivion.base.Model;
 
 public class SphereCollider extends BasicCollider {
 
-	private final Vector3f center;
+	private static final ColliderType colliderType = ColliderType.SPHERE;
+
+	private Vector3f center;
 	private float radius;
 
 	private SphereCollider(Model model, Vector3f center, float radius) {
-		super(model);
+		super(model,colliderType);
 		this.center = center;
 		this.radius = radius;
 		this.setTranslation(new Vector3f(center).sub(model.getPosition()));
@@ -36,6 +38,11 @@ public class SphereCollider extends BasicCollider {
 	@Override
 	public boolean intersection(SphereCollider sphereCollider) {
 		return this.center.distance(sphereCollider.getCenter()) < (this.radius + sphereCollider.radius);
+	}
+
+	@Override
+	public void update() {
+		this.center = new Vector3f(getModel().getPosition()).add(getTranslation());
 	}
 
 	public Vector3f getCenter() {

@@ -6,13 +6,17 @@ import pl.oblivion.base.Model;
 public abstract class BasicCollider implements Intersection {
 
 	private final Model model;
+	private final ColliderType colliderType;
 	private Vector3f translation;
 	private Vector3f center;
 
-	BasicCollider(Model model) {
+	BasicCollider(Model model, ColliderType colliderType) {
 		this.model = model;
+		this.colliderType = colliderType;
 		this.center = model.getPosition();
 	}
+
+	public abstract void update();
 
 	public Model getModel() {
 		return model;
@@ -30,4 +34,7 @@ public abstract class BasicCollider implements Intersection {
 		return center;
 	}
 
+	public ColliderType getColliderType() {
+		return colliderType;
+	}
 }

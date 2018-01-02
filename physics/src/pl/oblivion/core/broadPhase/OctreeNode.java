@@ -64,7 +64,7 @@ public class OctreeNode {
 		}
 	}
 
-	public void insertModel(final Model model) {
+	void insertModel(final Model model) {
 		int index = 0;
 		boolean straddle = false;
 		float delta;
@@ -98,7 +98,7 @@ public class OctreeNode {
 		objects.add(model);
 	}
 
-	public void updateModelsPosition(final Model model) {
+	void updateModelsPosition(final Model model) {
 		octree.getModelOctreeNodeMap().remove(model);
 		objects.remove(model);
 		octree.insertObject(model);

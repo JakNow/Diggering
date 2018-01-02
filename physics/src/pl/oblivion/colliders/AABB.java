@@ -10,12 +10,14 @@ import pl.oblivion.utils.PMaths;
 
 public class AABB extends BasicCollider {
 
+	private static final ColliderType colliderType = ColliderType.AABB;
 	private Vector3f cornerMin, cornerMax;
 	private Vector3f center;
 	private float width, height, depth;
 
+
 	private AABB(Model model, Vector3f cornerMin, Vector3f cornerMax) {
-		super(model);
+		super(model,colliderType);
 		this.cornerMin = cornerMin;
 		this.cornerMax = cornerMax;
 
@@ -83,6 +85,13 @@ public class AABB extends BasicCollider {
 		}
 
 		return new AABB(model, tempMin, tempMax);
+	}
+
+	@Override
+	public void update() {
+		this.center = new Vector3f(getModel().getPosition()).add(getTranslation());
+		this.cornerMin = new Vector3f(center.x-width,center.y-height,center.z-depth);
+		this.cornerMax = new Vector3f(center.x+width,center.y+height,center.z+depth);
 	}
 
 	public Vector3f getCenter() {

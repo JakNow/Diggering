@@ -1,5 +1,6 @@
 package pl.oblivion.game;
 
+import org.apache.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import pl.oblivion.core.Window;
 import pl.oblivion.shaders.RendererProgram;
@@ -11,7 +12,8 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Renderer {
 
-	public static List<RendererProgram> rendererProgramList = new ArrayList<>();
+	private static final Logger logger = Logger.getLogger(Renderer.class);
+	private static List<RendererProgram> rendererProgramList = new ArrayList<>();
 
 	private Window window;
 	private float currentWidht;
@@ -20,9 +22,10 @@ public class Renderer {
 	public Renderer(Window window) {
 		this.window = window;
 		enableCullFace();
+		logger.info("Creating Renderer was successful.");
 	}
 
-	public void enableCullFace() {
+	private void enableCullFace() {
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 	}

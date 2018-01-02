@@ -3,20 +3,24 @@ package pl.oblivion.components.moveable;
 import org.joml.Vector3f;
 import pl.oblivion.base.Model;
 import pl.oblivion.components.BaseComponent;
+import pl.oblivion.components.ComponentType;
 
 public class RotateComponent extends BaseComponent {
 
 	private final Model model;
+	private static final ComponentType componentType = ComponentType.ROTATE;
 	private Vector3f rotation;
 	private float currentTurnSpeed;
 	private float rotationSpeed;
 
 	public RotateComponent(Model model) {
+		super(componentType);
 		this.model = model;
 		this.rotation = new Vector3f(model.getRotation());
 	}
 
 	public RotateComponent(Model model, float rotationSpeed) {
+		super(componentType);
 		this.model = model;
 		this.rotation = new Vector3f(model.getRotation());
 		this.rotationSpeed = rotationSpeed;

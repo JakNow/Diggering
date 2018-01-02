@@ -1,5 +1,6 @@
 package pl.oblivion.main;
 
+import pl.oblivion.components.ComponentType;
 import pl.oblivion.components.collision.CollisionComponent;
 import pl.oblivion.components.moveable.MoveComponent;
 import pl.oblivion.components.moveable.RotateComponent;
@@ -17,9 +18,9 @@ public class SimpleInputs extends Inputs {
 
 	public SimpleInputs(Window window, Player player) {
 		super(window);
-		this.playerMoveComponent = player.getComponent(MoveComponent.class);
-		this.playerRotateComponent = player.getComponent(RotateComponent.class);
-		this.playerCollisionComponent = player.getComponent(CollisionComponent.class);
+		this.playerMoveComponent = player.getComponent(ComponentType.MOVE);
+		this.playerRotateComponent = player.getComponent(ComponentType.ROTATE);
+		this.playerCollisionComponent = player.getComponent(ComponentType.COLLISION);
 	}
 
 	public void checkPlayerInputs() {

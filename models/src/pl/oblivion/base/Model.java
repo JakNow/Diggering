@@ -2,6 +2,7 @@ package pl.oblivion.base;
 
 import org.joml.Vector3f;
 import pl.oblivion.components.BaseComponent;
+import pl.oblivion.components.ComponentType;
 
 import java.util.HashMap;
 
@@ -12,7 +13,7 @@ public abstract class Model {
 	private Vector3f rotation;
 	private float scale;
 
-	private HashMap<Class, BaseComponent> componentHashMap = new HashMap<>();
+	private HashMap<ComponentType, BaseComponent> componentHashMap = new HashMap<>();
 
 	private float height;
 	private boolean isStatic = true;
@@ -69,11 +70,17 @@ public abstract class Model {
 	}
 
 	public void addComponent(BaseComponent component) {
-		componentHashMap.put(component.getClass(), component);
+		componentHashMap.put(component.getComponentType(), component);
 	}
 
-	public <T> T getComponent(Class<T> component) {
+	/*public <T> T getComponent(Class<T> component) {
 		T result = (T) componentHashMap.get(component);
+		if (result == null) { return null; }
+		return result;
+	}*/
+
+	public <T> T getComponent(ComponentType componentType){
+		T result = (T) componentHashMap.get(componentType);
 		if (result == null) { return null; }
 		return result;
 	}
@@ -92,5 +99,9 @@ public abstract class Model {
 
 	public void setStatic(boolean aStatic) {
 		isStatic = aStatic;
+	}
+
+	public HashMap<ComponentType, BaseComponent> getComponentHashMap() {
+		return componentHashMap;
 	}
 }

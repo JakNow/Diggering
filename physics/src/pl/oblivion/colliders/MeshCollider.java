@@ -15,10 +15,12 @@ import java.util.List;
 
 public class MeshCollider extends BasicCollider {
 
+	private static final ColliderType colliderType = ColliderType.MESH;
+
 	private List<Face> faces;
 
 	private MeshCollider(Model model, List<Face> faces) {
-		super(model);
+		super(model,colliderType);
 		this.faces = faces;
 	}
 
@@ -74,5 +76,10 @@ public class MeshCollider extends BasicCollider {
 
 	public List<Face> getFaces() {
 		return faces;
+	}
+
+	@Override
+	public void update() {
+
 	}
 }
