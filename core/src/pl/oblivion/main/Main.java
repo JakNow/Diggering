@@ -78,7 +78,7 @@ public class Main extends SimpleApp {
 
 	private static Properties loadProperties() {
 		try {
-			InputStream stream = Files.newInputStream(Paths.get("core\\resources\\core.properties"));
+			InputStream stream = Files.newInputStream(Paths.get("core/resources/core.properties"));
 			Properties properties = new Properties();
 			properties.load(stream);
 			logger.info("Loaded core.properties file.");

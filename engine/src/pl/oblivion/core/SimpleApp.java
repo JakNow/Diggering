@@ -38,7 +38,7 @@ public abstract class SimpleApp {
 
 	private static Properties loadProperties() {
 		try {
-			InputStream stream = Files.newInputStream(Paths.get("engine\\resources\\engine.properties"));
+			InputStream stream = Files.newInputStream(Paths.get("engine/resources/engine.properties"));
 			Properties properties = new Properties();
 			properties.load(stream);
 			logger.info("Loaded engine.properties file.");

@@ -24,7 +24,7 @@ public class ModelsManager {
 		Properties properties = new Properties();
 		InputStream stream = null;
 		try {
-			stream = Files.newInputStream(Paths.get("models\\resources\\models.properties"));
+			stream = Files.newInputStream(Paths.get("models/resources/models.properties"));
 		} catch (IOException e) {
 			logger.fatal("Couldn't load models.properties file!", e);
 		}
