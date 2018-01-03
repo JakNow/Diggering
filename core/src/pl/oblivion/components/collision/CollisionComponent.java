@@ -10,7 +10,6 @@ import java.util.List;
 
 public abstract class CollisionComponent extends BaseComponent {
 
-    private final Model model;
     private final Octree octree;
     private static final ComponentType componnentType = ComponentType.COLLISION;
     private BasicCollider broadCollider;
@@ -18,8 +17,7 @@ public abstract class CollisionComponent extends BaseComponent {
 
 
     public CollisionComponent(Model model, Octree octree, BasicCollider broadCollider, BasicCollider narrowCollider) {
-        super(componnentType);
-        this.model = model;
+        super(model,componnentType);
         this.octree = octree;
         this.broadCollider = broadCollider;
         if (narrowCollider == null) {
@@ -27,20 +25,13 @@ public abstract class CollisionComponent extends BaseComponent {
         } else {
             this.narrowCollider = narrowCollider;
         }
-        this.octree.insertObject(this.model);
-
-
-
+        this.octree.insertObject(this.getModel());
     }
 
     public abstract void update(float delta);
 
     public List<Model> getCollidableModelsList() {
         return octree.getCollidableModelsList(getModel());
-    }
-
-    public Model getModel() {
-        return model;
     }
 
     public Octree getOctree() {

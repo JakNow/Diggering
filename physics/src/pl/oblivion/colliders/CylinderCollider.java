@@ -3,6 +3,8 @@ package pl.oblivion.colliders;
 import org.joml.Vector3f;
 import pl.oblivion.base.Model;
 
+import java.util.Vector;
+
 public class CylinderCollider extends BasicCollider {
 
 	private static final ColliderType colliderType = ColliderType.CYLINDER;
@@ -84,7 +86,7 @@ public class CylinderCollider extends BasicCollider {
 	}
 
 	@Override
-	public void update() {
-		this.center = new Vector3f(getModel().getPosition()).add(getTranslation());
+	public void update(Vector3f position) {
+		this.center = new Vector3f(position).add(getTranslation());
 	}
 }

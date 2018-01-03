@@ -7,21 +7,18 @@ import pl.oblivion.components.ComponentType;
 
 public class RotateComponent extends BaseComponent {
 
-	private final Model model;
 	private static final ComponentType componentType = ComponentType.ROTATE;
 	private Vector3f rotation;
 	private float currentTurnSpeed;
 	private float rotationSpeed;
 
 	public RotateComponent(Model model) {
-		super(componentType);
-		this.model = model;
+		super(model,componentType);
 		this.rotation = new Vector3f(model.getRotation());
 	}
 
 	public RotateComponent(Model model, float rotationSpeed) {
-		super(componentType);
-		this.model = model;
+		super(model,componentType);
 		this.rotation = new Vector3f(model.getRotation());
 		this.rotationSpeed = rotationSpeed;
 	}
@@ -31,15 +28,15 @@ public class RotateComponent extends BaseComponent {
 	}
 
 	public void rotate(float dx, float dy, float dz, float delta) {
-		model.getRotation().x += dx * delta;
-		model.getRotation().y += dy * delta;
-		model.getRotation().z += dz * delta;
+		this.getModel().getRotation().x += dx * delta;
+		this.getModel().getRotation().y += dy * delta;
+		this.getModel().getRotation().z += dz * delta;
 
-		this.rotation.x = clampRotation(model.getRotation().x);
-		this.rotation.y = clampRotation(model.getRotation().y);
-		this.rotation.z = clampRotation(model.getRotation().z);
+		this.rotation.x = clampRotation(this.getModel().getRotation().x);
+		this.rotation.y = clampRotation(this.getModel().getRotation().y);
+		this.rotation.z = clampRotation(this.getModel().getRotation().z);
 
-		model.setRotation(this.rotation);
+		this.getModel().setRotation(this.rotation);
 	}
 
 	private float clampRotation(float rotation) {

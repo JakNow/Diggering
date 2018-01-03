@@ -39,6 +39,9 @@ public class StaticRendererHandler extends RendererHandler {
 		if (texturedMesh.getMaterial().getDiffuseTexture() != null) {
 			texturedMesh.getMaterial().getDiffuseTexture().bind(Material.DIFFUSE_TEXTURE_UNIT);
 		}
+		if(texturedMesh.getMaterial().getNormalTexture() != null){
+			texturedMesh.getMaterial().getNormalTexture().bind(Material.NORMAL_TEXTURE_UNIT);
+		}
 		shader.material.loadMaterial(texturedMesh.getMaterial());
 	}
 

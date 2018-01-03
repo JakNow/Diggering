@@ -16,7 +16,7 @@ public abstract class BasicCollider implements Intersection {
 		this.center = model.getPosition();
 	}
 
-	public abstract void update();
+	public abstract void update(Vector3f position);
 
 	public Model getModel() {
 		return model;

@@ -88,8 +88,8 @@ public class AABB extends BasicCollider {
 	}
 
 	@Override
-	public void update() {
-		this.center = new Vector3f(getModel().getPosition()).add(getTranslation());
+	public void update(Vector3f position) {
+		this.center = new Vector3f(position).add(getTranslation());
 		this.cornerMin = new Vector3f(center.x-width,center.y-height,center.z-depth);
 		this.cornerMax = new Vector3f(center.x+width,center.y+height,center.z+depth);
 	}

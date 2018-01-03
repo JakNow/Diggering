@@ -79,7 +79,7 @@ public class MeshCollider extends BasicCollider {
 	}
 
 	@Override
-	public void update() {
+	public void update(Vector3f position) {
 
 	}
 }

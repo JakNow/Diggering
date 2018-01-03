@@ -41,8 +41,8 @@ public class SphereCollider extends BasicCollider {
 	}
 
 	@Override
-	public void update() {
-		this.center = new Vector3f(getModel().getPosition()).add(getTranslation());
+	public void update(Vector3f position) {
+		this.center = new Vector3f(position).add(getTranslation());
 	}
 
 	public Vector3f getCenter() {

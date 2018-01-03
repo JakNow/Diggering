@@ -31,15 +31,12 @@ public class Player extends StaticModel {
 		moveComponent = new MoveComponent(this, gravity, runSpeed, jumpPower);
 		rotateComponent = new RotateComponent(this, rotationSpeed);
 		collisionComponent = new PlayerCollisionComponent(this, octree, CylinderCollider.create(this,false),null);
-		this.addComponent(collisionComponent);
-		this.addComponent(moveComponent);
-		this.addComponent(rotateComponent);
-
 	}
 
 	public void update(float delta) {
+		moveComponent.update();
 		collisionComponent.update(delta);
-		moveComponent.update(delta);
 		rotateComponent.update(delta);
+		moveComponent.move();
 	}
 }
