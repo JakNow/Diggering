@@ -26,34 +26,24 @@ public class SimpleInputs extends Inputs {
 	public void checkPlayerInputs() {
 		//MOVEMENT
 		if (getWindow().isKeyPressed(GLFW_KEY_W)) {
-			playerMoveComponent.setCurrentSpeed(playerMoveComponent.getRunSpeed());
+			playerMoveComponent.getVelocityGoal().z = 15;
 		} else if (getWindow().isKeyPressed(GLFW_KEY_S)) {
-			playerMoveComponent.setCurrentSpeed(- playerMoveComponent.getRunSpeed());
-		} else {
-			playerMoveComponent.setCurrentSpeed(0);
+			playerMoveComponent.getVelocityGoal().z = -15;
+		} else if(getWindow().isKeyReleased(GLFW_KEY_W) || getWindow().isKeyReleased(GLFW_KEY_S)){
+			playerMoveComponent.getVelocityGoal().z = 0;
 		}
 
-		if (getWindow().isKeyPressed(GLFW_KEY_Q)) {
-			playerMoveComponent.setCurrentSideSpeed(playerMoveComponent.getRunSpeed());
 
-		} else if (getWindow().isKeyPressed(GLFW_KEY_E)) {
-			playerMoveComponent.setCurrentSideSpeed(- playerMoveComponent.getRunSpeed());
-		} else {
-			playerMoveComponent.setCurrentSideSpeed(0);
+		if (getWindow().isKeyPressed(GLFW_KEY_A)) {
+			playerMoveComponent.getVelocityGoal().x = 15;
+		} else if (getWindow().isKeyPressed(GLFW_KEY_D)) {
+			playerMoveComponent.getVelocityGoal().x = -15;
+		} else  if(getWindow().isKeyReleased(GLFW_KEY_A) || getWindow().isKeyReleased(GLFW_KEY_D)){
+			playerMoveComponent.getVelocityGoal().x = 0;
 		}
 
 		//JUMPING
 		if (getWindow().isKeyPressed(GLFW_KEY_SPACE)) {
-			playerMoveComponent.jump();
-		}
-
-		//ROTATION
-		if (getWindow().isKeyPressed(GLFW_KEY_D)) {
-			playerRotateComponent.setCurrentTurnSpeed(- playerRotateComponent.getRotationSpeed());
-		} else if (getWindow().isKeyPressed(GLFW_KEY_A)) {
-			playerRotateComponent.setCurrentTurnSpeed(playerRotateComponent.getRotationSpeed());
-		} else {
-			playerRotateComponent.setCurrentTurnSpeed(0);
 		}
 	}
 }

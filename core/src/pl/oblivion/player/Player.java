@@ -34,9 +34,8 @@ public class Player extends StaticModel {
 	}
 
 	public void update(float delta) {
-		moveComponent.update();
+		moveComponent.update(delta);
 		collisionComponent.update(delta);
 		rotateComponent.update(delta);
-		moveComponent.move();
 	}
 }
