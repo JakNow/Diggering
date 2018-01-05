@@ -29,8 +29,8 @@ public class PlayerCollisionComponent extends CollisionComponent {
     }
 
     private void checkForPossibleCollision(float delta) {
-        moveComponent.calculateNewPosition(delta);
-        getBroadCollider().update(moveComponent.getNewPosition());
+        //TODO calculate before move position to find if spot is moveable
+        getBroadCollider().update(moveComponent.getModel().getPosition());
         for (Model model : collidableObjects) {
             if (model == getModel())
                 continue;
@@ -73,8 +73,7 @@ public class PlayerCollisionComponent extends CollisionComponent {
     }
 
     private void reactForCollision() {
-        MoveComponent moveComponent = getModel().getComponent(ComponentType.MOVE);
-        moveComponent.setNewPosition(getModel().getPosition());
+        //TODO react for collision
     }
 }
 
