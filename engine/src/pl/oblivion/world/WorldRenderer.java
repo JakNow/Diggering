@@ -4,7 +4,10 @@ import org.lwjgl.opengl.GL11;
 import pl.oblivion.base.TexturedMesh;
 import pl.oblivion.core.Window;
 import pl.oblivion.game.Camera;
+import pl.oblivion.game.Renderer;
+import pl.oblivion.lighting.Light;
 import pl.oblivion.shaders.RendererProgram;
+import pl.oblivion.shaders.ShaderProgram;
 import pl.oblivion.staticModels.StaticModel;
 
 import java.util.List;
@@ -18,6 +21,7 @@ public class WorldRenderer extends RendererProgram {
 		super(shader, rendererHandler, window);
 		shader.start();
 		shader.projectionMatrix.loadMatrix(this.getProjectionMatrix());
+		shader.brightness.loadFloat(Renderer.BRIGHTNESS);
 		shader.stop();
 	}
 
@@ -41,6 +45,8 @@ public class WorldRenderer extends RendererProgram {
 		shader.start();
 		shader.projectionMatrix.loadMatrix(window.getProjectionMatrix());
 		shader.loadViewMatrix(camera);
+		if(rendererHandler.getLight()!=null) //will be change to set of lights later
+			shader.light.loadLight(rendererHandler.getLight());
 	}
 
 	@Override
@@ -56,5 +62,10 @@ public class WorldRenderer extends RendererProgram {
 	@Override
 	public WorldRendererHandler getRendererHandler() {
 		return rendererHandler;
+	}
+
+	@Override
+	public WorldShader getShader() {
+		return shader;
 	}
 }

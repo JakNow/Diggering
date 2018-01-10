@@ -1,9 +1,13 @@
 package pl.oblivion.world;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import pl.oblivion.base.Model;
 import pl.oblivion.base.ModelPart;
 import pl.oblivion.base.TexturedMesh;
+import pl.oblivion.lighting.Light;
+import pl.oblivion.lighting.PointLight;
 import pl.oblivion.shaders.RendererHandler;
 import pl.oblivion.staticModels.StaticModel;
 import pl.oblivion.utils.PMaths;
@@ -19,9 +23,11 @@ public class WorldRendererHandler extends RendererHandler {
 
 	private WorldShader shader;
 
+	private Light light;
+
 	WorldRendererHandler(WorldShader shader) {
 		this.shader = shader;
-		bindingAttributes = new int[]{0, 1};
+		bindingAttributes = new int[]{0, 1,2};
 	}
 
 	@Override
@@ -64,6 +70,14 @@ public class WorldRendererHandler extends RendererHandler {
 				}
 			}
 		}
+	}
+
+	public Light getLight() {
+		return light;
+	}
+
+	public void setLight(Light light) {
+		this.light = light;
 	}
 
 	Map<TexturedMesh, List<StaticModel>> getTexturedMeshMap() {
