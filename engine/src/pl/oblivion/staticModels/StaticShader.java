@@ -1,12 +1,13 @@
 package pl.oblivion.staticModels;
 
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import pl.oblivion.core.SimpleApp;
 import pl.oblivion.game.Camera;
+import pl.oblivion.lighting.Light;
 import pl.oblivion.materials.Material;
 import pl.oblivion.shaders.ShaderProgram;
-import pl.oblivion.shaders.uniforms.UniformMaterial;
-import pl.oblivion.shaders.uniforms.UniformMatrix;
-import pl.oblivion.shaders.uniforms.UniformSampler;
+import pl.oblivion.shaders.uniforms.*;
 import pl.oblivion.utils.Maths;
 import pl.oblivion.utils.MyFile;
 
@@ -20,13 +21,28 @@ public class StaticShader extends ShaderProgram {
 	protected UniformSampler diffuseTexture = new UniformSampler("diffuseTexture");
 	protected UniformSampler normalTexture = new UniformSampler("normalTexture");
 
+	protected UniformLight light = new UniformLight("light");
+
+	protected UniformFloat brightness = new UniformFloat("brightness");
+
 	public StaticShader() {
 		super(new MyFile(SimpleApp.properties.getProperty("shader.static.vertex")),
-				new MyFile(SimpleApp.properties.getProperty("shader.static.fragment")), "in_position", "in_textures");
+				new MyFile(SimpleApp.properties.getProperty("shader.static.fragment")), "in_position", "in_textures","in_normals");
 		super.storeAllUniformLocations(projectionMatrix, viewMatrix, transformationMatrix, diffuseTexture,
-				normalTexture, material.ambientColour, material.diffuseColour, material.specularColour,
-				material.hasTexture, material.hasNormalMap);
+				normalTexture,brightness);
+		super.storeAllComplexUniformLocation(material.getAllUniforms(),light.getAllUniforms());
+		this.storeMaterialUniforms();
 		connectTextureUnits();
+
+	}
+
+	private void storeMaterialUniforms() {
+		material.ambientColour.storeUniformLocation(this.programID);
+		material.diffuseColour.storeUniformLocation(this.programID);
+		material.specularColour.storeUniformLocation(this.programID);
+
+		material.hasTexture.storeUniformLocation(this.programID);
+		material.hasNormalMap.storeUniformLocation(this.programID);
 	}
 
 	private void connectTextureUnits() {

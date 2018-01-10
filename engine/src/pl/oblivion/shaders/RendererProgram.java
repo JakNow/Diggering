@@ -3,6 +3,7 @@ package pl.oblivion.shaders;
 import org.joml.Matrix4f;
 import pl.oblivion.core.Window;
 import pl.oblivion.game.Camera;
+import pl.oblivion.lighting.Light;
 
 public abstract class RendererProgram {
 
@@ -30,6 +31,8 @@ public abstract class RendererProgram {
 	public abstract void end();
 
 	public abstract RendererHandler getRendererHandler();
+
+	public abstract ShaderProgram getShader();
 
 	public Matrix4f getProjectionMatrix() {
 		return projectionMatrix;

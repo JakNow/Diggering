@@ -10,14 +10,14 @@ import java.util.List;
 
 public abstract class CollisionComponent extends BaseComponent {
 
-    private final Octree octree;
     private static final ComponentType componnentType = ComponentType.COLLISION;
+    private final Octree octree;
     private BasicCollider broadCollider;
     private BasicCollider narrowCollider;
 
 
     public CollisionComponent(Model model, Octree octree, BasicCollider broadCollider, BasicCollider narrowCollider) {
-        super(model,componnentType);
+        super(model, componnentType);
         this.octree = octree;
         this.broadCollider = broadCollider;
         if (narrowCollider == null) {

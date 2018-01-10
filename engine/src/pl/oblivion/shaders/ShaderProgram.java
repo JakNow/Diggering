@@ -63,6 +63,11 @@ public abstract class ShaderProgram {
 		}
 		GL20.glValidateProgram(programID);
 	}
+	protected void storeAllComplexUniformLocation(Uniform[]... uniforms){
+		for(Uniform[] uniform : uniforms){
+			storeAllUniformLocations(uniform);
+		}
+	}
 
 	public void start() {
 		GL20.glUseProgram(programID);
