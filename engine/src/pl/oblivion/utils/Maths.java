@@ -16,7 +16,7 @@ public class Maths {
 	}
 
 	public static Matrix4f createTransformationMatrixMesh(Model model) {
-		return new Matrix4f().identity().translate(model.getPosition());//.scale(model.getScale());
+		return new Matrix4f().identity().translate(model.getPosition());
 	}
 
 	public static Matrix4f getViewMatrix(Camera camera) {
@@ -29,8 +29,16 @@ public class Maths {
 				.translate(negativeCameraPos);
 	}
 
-	public static Matrix4f createTransfromationMatrixOctree(OctreeNode octreeNode) {
-		return new Matrix4f().identity().translate(octreeNode.getCenter());
+	public static float clamp(float target, float min, float max){
+		if(target > max) {
+			return max;
+		}else if (target < min){
+			return min;
+		}else{
+			return target;
+		}
 	}
+
+
 
 }

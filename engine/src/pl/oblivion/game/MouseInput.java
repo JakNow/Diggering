@@ -13,7 +13,6 @@ public class MouseInput {
 	private final Vector2d previousPos;
 	private final Vector2d currentPos;
 	private final Vector2f displVec;
-	double mouseYoffset;
 	private double previousWheel;
 	private double currentWheel;
 	private float wheelVec;
@@ -21,13 +20,15 @@ public class MouseInput {
 	private boolean leftButtonPressed = false;
 	private boolean rightButtonPressed = false;
 	private boolean middleButtonPressed = false;
-	private boolean wheelScroll = false;
 	private Window window;
-	private GLFWScrollCallback sCallback;
+
+	private float mouseSensitivity;
+	private int swampAxis = 1;
 
 	private static final Logger logger = Logger.getLogger(MouseInput.class);
-	public MouseInput(Window window) {
+	public MouseInput(Window window, float mouseSensitivity) {
 		this.window = window;
+		this.mouseSensitivity = mouseSensitivity;
 		previousPos = new Vector2d(- 1, - 1);
 		currentPos = new Vector2d(0, 0);
 		displVec = new Vector2f();
@@ -94,7 +95,6 @@ public class MouseInput {
 			if (rotateY) { wheelVec = (float) deltaY; }
 		}
 		previousWheel = currentWheel;
-
 	}
 
 	public boolean isLeftButtonPressed() {
@@ -107,5 +107,17 @@ public class MouseInput {
 
 	public boolean isMiddleButtonPressed() {
 		return middleButtonPressed;
+	}
+
+	public float getMouseSensitivity() {
+		return mouseSensitivity;
+	}
+
+	public void setMouseSensitivity(float mouseSensitivity) {
+		this.mouseSensitivity = mouseSensitivity;
+	}
+
+	public int getSwampAxis() {
+		return swampAxis;
 	}
 }

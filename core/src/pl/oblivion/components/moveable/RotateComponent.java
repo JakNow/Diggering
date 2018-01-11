@@ -12,11 +12,6 @@ public class RotateComponent extends BaseComponent {
     private float currentTurnSpeed;
     private float rotationSpeed;
 
-    public RotateComponent(Model model) {
-        super(model, componentType);
-        this.rotation = new Vector3f(model.getRotation());
-    }
-
     public RotateComponent(Model model, float rotationSpeed) {
         super(model, componentType);
         this.rotation = new Vector3f(model.getRotation());
@@ -27,10 +22,11 @@ public class RotateComponent extends BaseComponent {
         rotate(0, currentTurnSpeed, 0, delta);
     }
 
-    public void rotate(float dx, float dy, float dz, float delta) {
-        this.getModel().getRotation().x += dx * delta;
-        this.getModel().getRotation().y += dy * delta;
-        this.getModel().getRotation().z += dz * delta;
+	private void rotate(float dx, float dy, float dz, float delta) {
+		this.getModel().getRotation().x += dx * delta;
+		this.getModel().getRotation().y += dy * delta;
+		this.getModel().getRotation().z += dz * delta;
+
 
         this.rotation.x = clampRotation(this.getModel().getRotation().x);
         this.rotation.y = clampRotation(this.getModel().getRotation().y);
@@ -39,27 +35,11 @@ public class RotateComponent extends BaseComponent {
         this.getModel().setRotation(this.rotation);
     }
 
-    private float clampRotation(float rotation) {
-        rotation %= 360;
-        if (rotation < 0) {
-            rotation += 360;
-        }
-        return rotation;
-    }
-
-    public float getRotationSpeed() {
-        return rotationSpeed;
-    }
-
-    public void setRotationSpeed(float rotationSpeed) {
-        this.rotationSpeed = rotationSpeed;
-    }
-
-    public float getCurrentTurnSpeed() {
-        return currentTurnSpeed;
-    }
-
-    public void setCurrentTurnSpeed(float currentTurnSpeed) {
-        this.currentTurnSpeed = currentTurnSpeed;
-    }
+	private float clampRotation(float rotation) {
+		rotation %= 360;
+		if (rotation < 0) {
+			rotation += 360;
+		}
+		return rotation;
+	}
 }

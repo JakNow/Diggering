@@ -4,59 +4,94 @@ import org.joml.Vector3f;
 import pl.oblivion.base.Model;
 import pl.oblivion.components.BaseComponent;
 import pl.oblivion.components.ComponentType;
+import pl.oblivion.main.Main;
+import pl.oblivion.world.World;
 
 public class MoveComponent extends BaseComponent {
 
-    private static final ComponentType componentType = ComponentType.MOVE;
+	private static final ComponentType componentType = ComponentType.MOVE;
 
-    private Vector3f velocity = new Vector3f();
-    private Vector3f gravity = new Vector3f();
-    private Vector3f velocityGoal = new Vector3f();
-    /**
-     * Can be used later as a param of the floor to create slippery surrface (10 - ice, 100 - normal (?) floor)
-     */
-    private float floorEffect = 80;
 
-    public MoveComponent(Model model, float gravity, float runSpeed, float jumpPower) {
-        super(model, componentType);
+	private float velocity;
+	private float velocityGoal;
 
-    }
+	private float sideVelocity;
+	private float sideVelocityGoal;
 
-    public void update(float delta) {
-        this.velocity.x = smoothMovement(velocityGoal.x, velocity.x, delta * floorEffect);
-        this.velocity.z = smoothMovement(velocityGoal.z, velocity.z, delta * floorEffect);
+	private Vector3f direction;
+	private Vector3f gravity;
 
-        updateModelsVectors(getModel().getPosition(), delta);
-    }
+	private float runSpeed;
+	private float jumpPower;
 
-    private float smoothMovement(float goalSpeed, float currentSpeed, float delta) {
-        float speedDifference = goalSpeed - currentSpeed;
+	private boolean moveSide = false;
+	public MoveComponent(Model model, World world, float runSpeed, float jumpPower) {
+		super(model,componentType);
+		this.direction = new Vector3f(0,0,0);
+		this.runSpeed = runSpeed;
+		this.jumpPower = jumpPower;
+		this.gravity = world.getGravity();
+	}
 
-        if (speedDifference > delta) {
-            return currentSpeed + delta;
-        }
-        if (speedDifference < -delta) {
-            return currentSpeed - delta;
-        }
-        return goalSpeed;
-    }
+	/**
+	 *Can be used later as a param of the floor to create slippery surrface (10 - ice, 100 - normal (?) floor)
+	 */
+	private float floorEffect = 80;
+	public void update(float delta) {
+		float dx = (float)(Math.sin(Math.toRadians(getModel().getRotation().y)));
+		float dz = (float)(Math.cos(Math.toRadians(getModel().getRotation().y)));
 
-    public Vector3f getVelocity() {
-        return velocity;
-    }
 
-    public Vector3f getVelocityGoal() {
-        return velocityGoal;
-    }
+		this.direction.x = dx;
+		this.direction.z = dz;
 
-    private void updateModelsVectors(Vector3f position, float delta) {
-        position.x += this.velocity.x * delta;
-        position.y += this.velocity.y * delta;
-        position.z += this.velocity.z * delta;
+		this.velocity = smoothMovement(velocityGoal,velocity,delta*floorEffect);
+		this.sideVelocity = smoothMovement(sideVelocityGoal,sideVelocity,delta*floorEffect);
 
-        this.velocity.x += this.gravity.x * delta;
-        this.velocity.y += this.gravity.y * delta;
-        this.velocity.z += this.gravity.z * delta;
-    }
+		updateModelsVectors(getModel().getPosition(),delta);
+		if(getModel().getPosition().y<getModel().getHeight()){
+			getModel().getPosition().y = getModel().getHeight();
+		}
+	}
+
+	private float smoothMovement(float goalSpeed, float currentSpeed, float delta){
+		float speedDifference = goalSpeed - currentSpeed;
+
+		if(speedDifference > delta){
+			return currentSpeed+delta;
+		}
+		if(speedDifference < -delta){
+			return currentSpeed-delta;
+		}
+		return goalSpeed;
+	}
+
+
+
+	private void updateModelsVectors(Vector3f position, float delta){
+		position.x += this.direction.x*this.velocity*delta + sideX()*this.sideVelocity*delta;
+		position.y += this.direction.y*this.velocity*delta;
+		position.z += this.direction.z*this.velocity*delta+ sideZ()*this.sideVelocity*delta;
+
+	}
+
+	private float sideX(){
+			return (float)(Math.sin(Math.toRadians(getModel().getRotation().y+90)));
+	}
+
+	private float sideZ(){
+		return (float)(Math.cos(Math.toRadians(getModel().getRotation().y+90)));
+	}
+	public float getRunSpeed() {
+		return runSpeed;
+	}
+
+	public void setVelocityGoal(float velocityGoal) {
+		this.velocityGoal = velocityGoal;
+	}
+
+	public void setSideVelocityGoal(float sideVelocityGoal) {
+		this.sideVelocityGoal = sideVelocityGoal;
+	}
 }
 
