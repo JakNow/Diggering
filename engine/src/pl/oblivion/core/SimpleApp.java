@@ -6,6 +6,7 @@ import pl.oblivion.game.Camera;
 import pl.oblivion.game.MouseInput;
 import pl.oblivion.game.Renderer;
 import pl.oblivion.models.ModelsManager;
+import pl.oblivion.world.World;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,15 +26,17 @@ public abstract class SimpleApp {
 	private final int fps = Integer.parseInt(properties.getProperty("window.fps"));
 	protected Camera camera;
 	protected Octree octree;
+	protected World world;
 
 	protected SimpleApp() {
 
 		this.window = new Window(properties);
-		this.mouseInput = new MouseInput(window);
+		this.mouseInput = new MouseInput(window,0.1f);
 		this.timer = new Timer();
 		this.rendererHandler = new Renderer(window);
 		new ModelsManager();
 		this.octree = new Octree(256, 3);
+		this.world = new World();
 	}
 
 	private static Properties loadProperties() {

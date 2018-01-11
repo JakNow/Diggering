@@ -15,6 +15,7 @@ import pl.oblivion.player.Player;
 import pl.oblivion.staticModels.StaticModel;
 import pl.oblivion.staticModels.StaticRenderer;
 import pl.oblivion.utils.CMaths;
+import pl.oblivion.world.World;
 import pl.oblivion.world.WorldRenderer;
 
 import java.io.IOException;
@@ -37,6 +38,7 @@ public class Main extends SimpleApp {
 	private Main() {
 		StaticRenderer staticRenderer = new StaticRenderer(window);
 		rendererHandler.addRendererProgram(staticRenderer);
+		world.gravity(new Vector3f(0f,9.81f,0f));
 
 		ModelView test = null;
 		try {
@@ -45,7 +47,7 @@ public class Main extends SimpleApp {
 			e.printStackTrace();
 		}
 
-		player = new Player(test, octree);
+		player = new Player(test, octree,world,mouseInput);
 		inputs = new SimpleInputs(window, player);
 		this.camera = new Camera(player, mouseInput);
 
@@ -98,8 +100,6 @@ public class Main extends SimpleApp {
 		inputs.checkPlayerInputs();
 		player.update(delta);
 		camera.update();
-		//octree.logCollision();
-
 		if (window.isKeyPressed(GLFW_KEY_ESCAPE)) {
 			glfwSetWindowShouldClose(window.getWindowHandle(), true);
 		}

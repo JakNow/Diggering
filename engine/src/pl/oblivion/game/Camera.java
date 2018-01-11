@@ -2,6 +2,7 @@ package pl.oblivion.game;
 
 import org.joml.Vector3f;
 import pl.oblivion.base.Model;
+import pl.oblivion.utils.Maths;
 
 public class Camera {
 
@@ -25,50 +26,48 @@ public class Camera {
 	private void cameraMove() {
 		calculateZoom();
 		calculatePitch();
-		calculateAngleAroundPlayer();
-
 		float horizontalDistance = calculateHorizontalDistance();
-		float verticalDistance = calculateVerticalDistance();
+		float verticalDistance = calculateVerticalDistnace();
 
 		calculateCameraPosition(horizontalDistance, verticalDistance);
 		this.rotation.y = 180 - (model.getRotation().y + angleAroundPlayer);
 
 	}
+	private void calculateCameraPosition(float horizontalDistance, float verticalDistance) {
+		float px = model.getPosition().x;
+		float py = model.getPosition().y;
+		float pz = model.getPosition().z;
+
+
+		float theta = model.getRotation().y + angleAroundPlayer;
+		float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(theta)));
+		float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(theta)));
+
+		position.x = px - offsetX;
+		position.z = pz - offsetZ;
+		position.y = py + overHead + verticalDistance;
+	}
+
+	private float calculateHorizontalDistance() {
+		return (float) (distanceFromPlayer * Math.cos(Math.toRadians(this.rotation.x)));
+	}
+
+	private float calculateVerticalDistnace() {
+		 return (float) (distanceFromPlayer * Math.sin(Math.toRadians(this.rotation.x)));
+
+	}
 
 	private void calculateZoom() {
-		float zoomLevel = mouseInput.getWheelY();
-		distanceFromPlayer -= zoomLevel;
+		float zoomLevel = mouseInput.getWheelY() * mouseInput.getMouseSensitivity()*3;
+		distanceFromPlayer += mouseInput.getSwampAxis()*zoomLevel;
+		distanceFromPlayer = Maths.clamp(distanceFromPlayer, 2, 10);
+
 	}
 
 	private void calculatePitch() {
 		if (mouseInput.isRightButtonPressed()) {
-			float pitchChange = mouseInput.getDisplVec().x * 0.1f;
-			rotation.x += pitchChange;
+			this.rotation.x += mouseInput.getSwampAxis()* mouseInput.getDisplVec().x * mouseInput.getMouseSensitivity();
 		}
-	}
-
-	private void calculateAngleAroundPlayer() {
-		if (mouseInput.isRightButtonPressed()) {
-			float angleChange = mouseInput.getDisplVec().y * 0.3f;
-			angleAroundPlayer -= angleChange;
-		}
-	}
-
-	private float calculateHorizontalDistance() {
-		return (float) (distanceFromPlayer * Math.cos(Math.toRadians(rotation.x)));
-	}
-
-	private float calculateVerticalDistance() {
-		return (float) (distanceFromPlayer * Math.sin(Math.toRadians(rotation.x)));
-	}
-
-	private void calculateCameraPosition(float horizontalDistance, float verticalDistance) {
-		float theta = model.getRotation().y + angleAroundPlayer;
-		float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(theta)));
-		float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(theta)));
-		position.x = model.getPosition().x - offsetX;
-		position.z = model.getPosition().z - offsetZ;
-		position.y = model.getPosition().y + verticalDistance + overHead;
 	}
 
 	public Vector3f getPosition() {
