@@ -2,15 +2,15 @@ package pl.oblivion.main;
 
 import org.apache.log4j.Logger;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import pl.oblivion.assimp.StaticMeshLoader;
 import pl.oblivion.base.ModelView;
 import pl.oblivion.colliders.AABB;
-import pl.oblivion.components.ComponentType;
-import pl.oblivion.components.collision.CollisionComponent;
 import pl.oblivion.components.collision.StaticCollisionComponent;
 import pl.oblivion.core.SimpleApp;
 import pl.oblivion.game.Camera;
 import pl.oblivion.game.MouseInput;
+import pl.oblivion.lighting.PointLight;
 import pl.oblivion.player.Player;
 import pl.oblivion.staticModels.StaticModel;
 import pl.oblivion.staticModels.StaticRenderer;
@@ -104,5 +104,4 @@ public class Main extends SimpleApp {
 			glfwSetWindowShouldClose(window.getWindowHandle(), true);
 		}
 	}
-
 }

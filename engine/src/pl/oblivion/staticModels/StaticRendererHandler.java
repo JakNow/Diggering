@@ -1,9 +1,13 @@
 package pl.oblivion.staticModels;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import pl.oblivion.base.Model;
 import pl.oblivion.base.ModelPart;
 import pl.oblivion.base.TexturedMesh;
+import pl.oblivion.lighting.Light;
+import pl.oblivion.lighting.PointLight;
 import pl.oblivion.materials.Material;
 import pl.oblivion.shaders.RendererHandler;
 import pl.oblivion.utils.PMaths;
@@ -19,9 +23,10 @@ public class StaticRendererHandler extends RendererHandler {
 
 	private StaticShader shader;
 
+	private Light light;
 	StaticRendererHandler(StaticShader shader) {
 		this.shader = shader;
-		bindingAttributes = new int[]{0, 1};
+		bindingAttributes = new int[]{0, 1,2};
 	}
 
 	@Override
@@ -49,6 +54,7 @@ public class StaticRendererHandler extends RendererHandler {
 	public void prepareInstance(Model model) {
 		Matrix4f transformationMatrix = PMaths.createTransformationMatrix(model);
 		shader.transformationMatrix.loadMatrix(transformationMatrix);
+
 	}
 
 	@Override
@@ -70,6 +76,14 @@ public class StaticRendererHandler extends RendererHandler {
 				}
 			}
 		}
+	}
+
+	public Light getLight(){
+		return light;
+	}
+
+	public void setLight(Light light){
+		this.light = light;
 	}
 
 	Map<TexturedMesh, List<StaticModel>> getTexturedMeshMap() {

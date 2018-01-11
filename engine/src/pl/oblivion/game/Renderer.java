@@ -19,6 +19,8 @@ public class Renderer {
 	private float currentWidht;
 	private float currentHeight;
 
+	public static float BRIGHTNESS = 0.2f;
+
 	public Renderer(Window window) {
 		this.window = window;
 		enableCullFace();

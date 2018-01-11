@@ -1,5 +1,6 @@
 package pl.oblivion.shaders;
 
+import org.apache.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import pl.oblivion.shaders.uniforms.Uniform;
@@ -9,7 +10,8 @@ import java.io.BufferedReader;
 
 public abstract class ShaderProgram {
 
-	public int programID;
+	protected int programID;
+	private final Logger logger = Logger.getLogger(ShaderProgram.class);
 
 	public ShaderProgram(MyFile vertexFile, MyFile fragmentFile, String... inVariables) {
 		int vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);
@@ -35,7 +37,7 @@ public abstract class ShaderProgram {
 			}
 			reader.close();
 		} catch (Exception e) {
-			System.err.println("Could not read file.");
+			logger.error("Could not read file.");
 			e.printStackTrace();
 			System.exit(- 1);
 		}
@@ -44,9 +46,10 @@ public abstract class ShaderProgram {
 		GL20.glCompileShader(shaderID);
 		if (GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
 			System.out.println(GL20.glGetShaderInfoLog(shaderID, 500));
-			System.err.println("Could not compile shader " + file);
+			logger.error("Could not compile shader "+file);
 			System.exit(- 1);
 		}
+		logger.info("Compiled shader "+file+" was successful.");
 		return shaderID;
 	}
 
@@ -62,6 +65,11 @@ public abstract class ShaderProgram {
 
 		}
 		GL20.glValidateProgram(programID);
+	}
+	protected void storeAllComplexUniformLocation(Uniform[]... uniforms){
+		for(Uniform[] uniform : uniforms){
+			storeAllUniformLocations(uniform);
+		}
 	}
 
 	public void start() {
