@@ -1,5 +1,6 @@
 package pl.oblivion.assimp;
 
+import org.apache.log4j.Logger;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.PointerBuffer;
@@ -21,8 +22,10 @@ import static org.lwjgl.assimp.Assimp.*;
 
 public class StaticMeshLoader {
 
-	public static String RESOURCE_PATH;
-	public static String TEXTURES_DIR;
+	private static Logger logger = Logger.getLogger(StaticMeshLoader.class);
+
+	private static String RESOURCE_PATH;
+	private static String TEXTURES_DIR;
 	private static String MODELS_PATH = ModelsManager.properties.getProperty("path.assets.models");
 	private static String TEXTURES_PATH = ModelsManager.properties.getProperty("path.assets.textures");
 	private static String MATERIALS_PATH = ModelsManager.properties.getProperty("path.assets.materials");
@@ -70,7 +73,7 @@ public class StaticMeshLoader {
 
 			modelParts[i] = new ModelPart(texturedMeshes);
 		}
-
+		logger.info("Model: "+resourcePath+ " loaded. Textures: "+texturesDir+" loaded. No. of model parts: "+numParts);
 		return new StaticModelView(modelParts);
 	}
 
