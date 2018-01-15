@@ -45,8 +45,7 @@ public class WorldRenderer extends RendererProgram {
 		shader.start();
 		shader.projectionMatrix.loadMatrix(window.getProjectionMatrix());
 		shader.loadViewMatrix(camera);
-		if(rendererHandler.getLight()!=null) //will be change to set of lights later
-			shader.light.loadLight(rendererHandler.getLight());
+		shader.light.loadLight(rendererHandler.getDefaultLight());
 	}
 
 	@Override

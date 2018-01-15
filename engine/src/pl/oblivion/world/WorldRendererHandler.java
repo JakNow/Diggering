@@ -23,8 +23,6 @@ public class WorldRendererHandler extends RendererHandler {
 
 	private WorldShader shader;
 
-	private Light light;
-
 	WorldRendererHandler(WorldShader shader) {
 		this.shader = shader;
 		bindingAttributes = new int[]{0, 1,2};
@@ -72,12 +70,8 @@ public class WorldRendererHandler extends RendererHandler {
 		}
 	}
 
-	public Light getLight() {
-		return light;
-	}
-
-	public void setLight(Light light) {
-		this.light = light;
+	public Light getDefaultLight() {
+		return defaultLight;
 	}
 
 	Map<TexturedMesh, List<StaticModel>> getTexturedMeshMap() {

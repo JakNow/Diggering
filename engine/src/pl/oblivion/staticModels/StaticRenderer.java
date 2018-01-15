@@ -1,15 +1,11 @@
 package pl.oblivion.staticModels;
 
-import org.joml.Vector3f;
-import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 import pl.oblivion.base.TexturedMesh;
 import pl.oblivion.core.Window;
 import pl.oblivion.game.Camera;
 import pl.oblivion.game.Renderer;
-import pl.oblivion.lighting.Light;
 import pl.oblivion.shaders.RendererProgram;
-import pl.oblivion.shaders.ShaderProgram;
 
 import java.util.List;
 
@@ -50,9 +46,10 @@ public class StaticRenderer extends RendererProgram {
 		shader.start();
 		shader.projectionMatrix.loadMatrix(window.getProjectionMatrix());
 		shader.loadViewMatrix(camera);
-		if(rendererHandler.getLight()!=null) { //will be change to set of lights later
-			shader.light.loadLight(rendererHandler.getLight());
-		}
+
+		shader.brightness.loadFloat(Renderer.BRIGHTNESS);
+		shader.light.loadLight(rendererHandler.getDefaultLight());
+
 	}
 
 	@Override

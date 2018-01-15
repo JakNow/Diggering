@@ -23,7 +23,6 @@ public class StaticRendererHandler extends RendererHandler {
 
 	private StaticShader shader;
 
-	private Light light;
 	StaticRendererHandler(StaticShader shader) {
 		this.shader = shader;
 		bindingAttributes = new int[]{0, 1,2};
@@ -78,12 +77,8 @@ public class StaticRendererHandler extends RendererHandler {
 		}
 	}
 
-	public Light getLight(){
-		return light;
-	}
-
-	public void setLight(Light light){
-		this.light = light;
+	public Light getDefaultLight(){
+		return defaultLight;
 	}
 
 	Map<TexturedMesh, List<StaticModel>> getTexturedMeshMap() {

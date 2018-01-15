@@ -31,19 +31,10 @@ public class StaticShader extends ShaderProgram {
 		super.storeAllUniformLocations(projectionMatrix, viewMatrix, transformationMatrix, diffuseTexture,
 				normalTexture,brightness);
 		super.storeAllComplexUniformLocation(material.getAllUniforms(),light.getAllUniforms());
-		this.storeMaterialUniforms();
 		connectTextureUnits();
 
 	}
 
-	private void storeMaterialUniforms() {
-		material.ambientColour.storeUniformLocation(this.programID);
-		material.diffuseColour.storeUniformLocation(this.programID);
-		material.specularColour.storeUniformLocation(this.programID);
-
-		material.hasTexture.storeUniformLocation(this.programID);
-		material.hasNormalMap.storeUniformLocation(this.programID);
-	}
 
 	private void connectTextureUnits() {
 		super.start();
